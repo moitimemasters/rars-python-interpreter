@@ -14,8 +14,7 @@
 #define SBRK 9
 
 /* Defining wrapper functions */
-void printstr(const char *str)
-{
+void printstr(const char *str) {
     asm volatile(
         "mv a0, %0\n\t"
         "li a7, %1\n\t"
@@ -25,8 +24,7 @@ void printstr(const char *str)
         : "a0", "a7");
 }
 
-void printchar(char val)
-{
+void printchar(char val) {
     asm volatile(
         "mv a0, %0\n\t"
         "li a7, %1\n\t"
@@ -36,8 +34,7 @@ void printchar(char val)
         : "a0", "a7");
 }
 
-void printint(int val)
-{
+void printint(int val) {
     asm volatile(
         "mv a0, %0\n\t"
         "li a7, %1\n\t"
@@ -47,8 +44,7 @@ void printint(int val)
         : "a0", "a7");
 }
 
-int readint()
-{
+int readint() {
     int val;
     asm volatile(
         "li a7, %1\n\t"
@@ -60,8 +56,7 @@ int readint()
     return val;
 }
 
-void *sbrk(int nbytes)
-{
+void *sbrk(int nbytes) {
     void *ptr;
     asm volatile(
         "mv a0, %1\n\t"
@@ -74,8 +69,7 @@ void *sbrk(int nbytes)
     return ptr;
 }
 
-float readFloat()
-{
+float readFloat() {
     float val;
     asm volatile(
         "li a7, %1\n\t"
@@ -87,8 +81,7 @@ float readFloat()
     return val;
 }
 
-double readDouble()
-{
+double readDouble() {
     double val;
     asm volatile(
         "li a7, %1\n\t"
@@ -100,8 +93,7 @@ double readDouble()
     return val;
 }
 
-void printFloat(float val)
-{
+void printFloat(float val) {
     asm volatile(
         "fmv.s fa0, %0\n\t"
         "li a7, %1\n\t"
@@ -111,8 +103,7 @@ void printFloat(float val)
         : "fa0", "a7");
 }
 
-void printDouble(double val)
-{
+void printDouble(double val) {
     asm volatile(
         "fmv.d fa0, %0\n\t"
         "li a7, %1\n\t"
@@ -122,8 +113,7 @@ void printDouble(double val)
         : "fa0", "a7");
 }
 
-void readString(char *str, int n)
-{
+void readString(char *str, int n) {
     asm volatile(
         "mv a0, %0\n\t"
         "mv a1, %1\n\t"
@@ -134,8 +124,7 @@ void readString(char *str, int n)
         : "a0", "a1", "a7");
 }
 
-void Exit()
-{
+void Exit() {
     asm volatile(
         "li a7, %0\n\t"
         "ecall\n\t"

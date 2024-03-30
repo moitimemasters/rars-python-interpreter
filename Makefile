@@ -17,10 +17,10 @@ CLEANUP_SCRIPT := cleanup.py
 all: $(OUTDIR) $(ASMS) cleanup rars
 
 $(OUTDIR):
-	mkdir -p -Os $(OUTDIR)
+	mkdir -p $(OUTDIR)
 
 $(OUTDIR)/%.s : %.c
-	$(CROSS) -S -mstrict-align $< -o $@
+	$(CROSS) -S -mstrict-align -O0 $< -o $@
 
 cleanup:
 	mkdir -p $(CLEANEDDIR)

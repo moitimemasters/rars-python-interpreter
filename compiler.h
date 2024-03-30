@@ -1,57 +1,51 @@
 #include "ast.h"
 #include "lib.h"
-#include "allocator.h"
 
-#ifndef COMPILER_HF
+#ifndef COMPILER_H
 #define COMPILER_H
 
-typedef enum
-{
-    LABEL,
-    LOAD,
-    STORE,
-    CALL,
-    DEF,
-    PUSH,
+typedef enum {
+    COMP_LOAD,
+    COMP_LOAD_INT,
+    COMP_LOAD_FLOAT,
+    COMP_LOAD_BOOL,
+    COMP_JUMP_REL,
+    COMP_JUMP_REL_IF_FALSE,
+    COMP_BINOP,
 } InstructionType;
 
-typedef struct
-{
+typedef struct {
     InstructionType type;
-    union
-    {
-        struct
-        {
-            string_view_t name;
-        } label;
-        struct
-        {
-            string_view_t name;
-        } load;
-        struct
-        {
+    union {
+        int int_value;
+        float float_value;
+        bool bool_value;
+        struct {
+            TokenType op;
+        } binop;
 
-        } push;
+        struct {
+            int target;
+        } jump_relative;
+
+        struct {
+            int target;
+        } jump_relative_if_false;
     } data;
 
 } Instruction;
 
-typedef struct
-{
-    ASTNode *node;
+typedef struct {
+    MemoryPool *pool;
     linked_list *instructions;
 } CompilationUnit;
 
-typedef struct
-{
+typedef struct {
+    MemoryPool *pool;
     ASTNode *root;
     linked_list *compilation_units;
 } Compiler;
 
-typedef enum
-{
-    COMPILE_SUCCESS,
-    COMPILE_ERROR,
-} CompileErrorCode;
+linked_list *compile(Compiler *compiler);
 
 #endif

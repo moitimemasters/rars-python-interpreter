@@ -3,8 +3,7 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-typedef enum
-{
+typedef enum {
     TOK_INT,         /* integer */
     TOK_FLOAT,       /* float */
     TOK_STRING,      /* string */
@@ -73,12 +72,12 @@ typedef enum
     TOK_YIELD,       /* "yield" */
     TOK_END,         /* end of input */
     TOK_INVALID,     /* invalid token */
-    TOK_INDENT,      /* token that indicated one indentation unit (by default 4 spaces) */
+    TOK_INDENT,      /* token that indicated one indentation unit (by default 4
+                        spaces) */
     TOK_NEWLINE,     /* token that indicated a new line */
 } TokenType;
 
-typedef struct
-{
+typedef struct {
     TokenType type;     /* token type */
     const char *lexeme; /* token lexeme */
     int literal;        /* token literal (int or float) */
@@ -86,8 +85,7 @@ typedef struct
     size_t size;        /* token size */
 } Token;
 
-typedef struct
-{
+typedef struct {
     const char *source;  /* source code */
     int current;         /* current position in the source code */
     int line;            /* current line number */

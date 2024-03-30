@@ -1,12 +1,11 @@
 #ifndef AST_H
 #define AST_H
 
-#include "lexer.h"
 #include "allocator.h"
+#include "lexer.h"
 #include "lib.h"
 
-typedef struct
-{
+typedef struct {
     MemoryPool *pool;
     Token *tokens;
     int current;
@@ -14,8 +13,7 @@ typedef struct
     int current_indentation;
 } ASTParser;
 
-typedef enum
-{
+typedef enum {
     AST_INT,
     AST_FLOAT,
     AST_STRING,
@@ -52,111 +50,90 @@ typedef enum
 } ASTNodeType;
 
 // AST node structure
-typedef struct ASTNode
-{
+typedef struct ASTNode {
     ASTNodeType type;
-    union
-    {
+    union {
         int int_value;
         float float_value;
         string_view_t string_value;
         bool bool_value;
         string_view_t ident_name;
-        struct
-        {
+        struct {
             struct ASTNode *left;
             struct ASTNode *right;
             TokenType op;
         } binary_op;
-        struct
-        {
+        struct {
             struct ASTNode *operand;
             TokenType op;
         } unary_op;
-        struct
-        {
+        struct {
             struct ASTNode *target;
             struct ASTNode *value;
             TokenType op;
         } assign;
-        struct
-        {
+        struct {
             struct ASTNode *if_body;
             struct ASTNode *if_expr;
             struct ASTNode *else_body;
         } ternary_if;
-        struct
-        {
+        struct {
             linked_list *arguments;
         } argument_list;
-        struct
-        {
+        struct {
             struct ASTNode *args;
             struct ASTNode *body;
         } lambda_def;
-        struct
-        {
+        struct {
             struct ASTNode *arguments;
         } function_call_partial;
-        struct
-        {
+        struct {
             struct ASTNode *callee;
             struct ASTNode *argument_list;
         } function_call;
-        struct
-        {
+        struct {
             linked_list *items;
         } sequence;
-        struct
-        {
+        struct {
             linked_list *keys;
             linked_list *values;
         } mapping;
-        struct
-        {
+        struct {
             struct ASTNode *subject;
             struct ASTNode *index;
         } index_or_slice;
-        struct
-        {
+        struct {
             struct ASTNode *start;
             struct ASTNode *end;
             struct ASTNode *step;
         } slice_partial;
-        struct
-        {
+        struct {
             struct ASTNode *index;
         } index_partial;
-        struct
-        {
+        struct {
             struct ASTNode *condition;
             linked_list *body;
         } if_partial;
-        struct
-        {
+        struct {
             struct ASTNode *if_part;
             linked_list *elifs;
             struct ASTNode *else_part;
         } if_statement;
-        struct
-        {
+        struct {
             struct ASTNode *identifier;
             struct ASTNode *iterable;
             linked_list *body;
         } for_loop;
-        struct
-        {
+        struct {
             struct ASTNode *condition;
             linked_list *body;
         } while_loop;
-        struct
-        {
+        struct {
             struct ASTNode *name;
             struct ASTNode *arguments;
             linked_list *body;
         } function_def;
-        struct
-        {
+        struct {
             struct ASTNode *target;
         } unary_stmt;
         // Add more fields as needed for other AST node types
@@ -164,8 +141,7 @@ typedef struct ASTNode
 } ASTNode;
 
 // Error codes
-typedef enum
-{
+typedef enum {
     PARSE_SUCCESS,
     PARSE_ERROR_INVALID_TOKEN,
     PARSE_ERROR_UNEXPECTED_TOKEN,

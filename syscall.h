@@ -17,4 +17,4 @@ void printDouble(double val);
 void readString(char *str, int n);
 void Exit();
 
-#endif // SYSCALL_H
+#endif  // SYSCALL_H

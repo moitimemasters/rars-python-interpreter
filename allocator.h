@@ -1,17 +1,15 @@
 #ifndef ALLOCATOR_H
 #define ALLOCATOR_H
 
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
-typedef struct MemoryPool
-{
+typedef struct MemoryPool {
     void *start;
     void *end;
 } MemoryPool;
 
-typedef struct MBlock
-{
+typedef struct MBlock {
     size_t size;
     bool free;
     struct MBlock *next;

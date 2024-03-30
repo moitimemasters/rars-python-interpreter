@@ -1,0 +1,76 @@
+	.text
+.align 2
+	.globl	create_pyobject
+create_pyobject:
+	addi	sp,sp,-16
+	sd	s0,0(sp)
+	mv	s0,a1
+	li	a1,24
+	sd	ra,8(sp)
+	call	my_alloc
+	ld	ra,8(sp)
+	sw	s0,0(a0)
+	ld	s0,0(sp)
+	addi	sp,sp,16
+	jr	ra
+	.globl	create_value
+create_value:
+	addi	sp,sp,-16
+	sd	s0,0(sp)
+	mv	s0,a1
+	li	a1,24
+	sd	ra,8(sp)
+	call	my_alloc
+	ld	ra,8(sp)
+	sw	s0,8(a0)
+	ld	s0,0(sp)
+	sw	zero,0(a0)
+	addi	sp,sp,16
+	jr	ra
+	.globl	create_int
+create_int:
+	addi	sp,sp,-16
+	sd	s0,0(sp)
+	mv	s0,a1
+	li	a1,24
+	sd	ra,8(sp)
+	call	my_alloc
+	ld	ra,8(sp)
+	sw	s0,12(a0)
+	ld	s0,0(sp)
+	sw	zero,0(a0)
+	sw	zero,8(a0)
+	addi	sp,sp,16
+	jr	ra
+	.globl	create_float
+create_float:
+	addi	sp,sp,-32
+	li	a1,24
+	fsd	fs0,8(sp)
+	sd	ra,24(sp)
+	fmv.s	fs0,fa0
+	call	my_alloc
+	ld	ra,24(sp)
+	li	a4,1
+	fsw	fs0,12(a0)
+	sw	zero,0(a0)
+	sw	a4,8(a0)
+	fld	fs0,8(sp)
+	addi	sp,sp,32
+	jr	ra
+	.globl	create_bool
+create_bool:
+	addi	sp,sp,-16
+	sd	s0,0(sp)
+	mv	s0,a1
+	li	a1,24
+	sd	ra,8(sp)
+	call	my_alloc
+	ld	ra,8(sp)
+	sb	s0,12(a0)
+	ld	s0,0(sp)
+	li	a4,2
+	sw	zero,0(a0)
+	sw	a4,8(a0)
+	addi	sp,sp,16
+	jr	ra
