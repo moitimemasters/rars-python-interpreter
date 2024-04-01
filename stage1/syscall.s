@@ -14,7 +14,7 @@ printstr:
 	sd	a0,-24(s0)
 	ld	a5,-24(s0)
  #APP
-# 19 "syscall.c" 1
+# 18 "syscall.c" 1
 	mv a0, a5
 	li a7, 4
 	ecall
@@ -37,7 +37,7 @@ printchar:
 	sb	a5,-17(s0)
 	lbu	a5,-17(s0)
  #APP
-# 30 "syscall.c" 1
+# 28 "syscall.c" 1
 	mv a0, a5
 	li a7, 11
 	ecall
@@ -60,7 +60,7 @@ printint:
 	sw	a5,-20(s0)
 	lw	a5,-20(s0)
  #APP
-# 41 "syscall.c" 1
+# 38 "syscall.c" 1
 	mv a0, a5
 	li a7, 1
 	ecall
@@ -80,7 +80,7 @@ readint:
 	sd	s0,24(sp)
 	addi	s0,sp,32
  #APP
-# 53 "syscall.c" 1
+# 49 "syscall.c" 1
 	li a7, 5
 	ecall
 	mv a5, a0
@@ -105,7 +105,7 @@ sbrk:
 	sw	a5,-36(s0)
 	lw	a5,-36(s0)
  #APP
-# 66 "syscall.c" 1
+# 61 "syscall.c" 1
 	mv a0, a5
 	li a7, 9
 	ecall
@@ -128,7 +128,7 @@ readFloat:
 	sd	s0,24(sp)
 	addi	s0,sp,32
  #APP
-# 80 "syscall.c" 1
+# 74 "syscall.c" 1
 	li a7, 6
 	ecall
 	fmv.s fa5, fa0
@@ -150,7 +150,7 @@ readDouble:
 	sd	s0,24(sp)
 	addi	s0,sp,32
  #APP
-# 93 "syscall.c" 1
+# 86 "syscall.c" 1
 	li a7, 7
 	ecall
 	fmv.d fa5, fa0
@@ -174,7 +174,7 @@ printFloat:
 	fsw	fa0,-20(s0)
 	flw	fa5,-20(s0)
  #APP
-# 105 "syscall.c" 1
+# 97 "syscall.c" 1
 	fmv.s fa0, fa5
 	li a7, 2
 	ecall
@@ -196,7 +196,7 @@ printDouble:
 	fsd	fa0,-24(s0)
 	fld	fa5,-24(s0)
  #APP
-# 116 "syscall.c" 1
+# 107 "syscall.c" 1
 	fmv.d fa0, fa5
 	li a7, 3
 	ecall
@@ -221,7 +221,7 @@ readString:
 	ld	a5,-24(s0)
 	lw	a4,-28(s0)
  #APP
-# 127 "syscall.c" 1
+# 117 "syscall.c" 1
 	mv a0, a5
 	mv a1, a4
 	li a7, 8
@@ -242,7 +242,7 @@ Exit:
 	sd	s0,8(sp)
 	addi	s0,sp,16
  #APP
-# 139 "syscall.c" 1
+# 128 "syscall.c" 1
 	li a7, 10
 	ecall
 	

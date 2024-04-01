@@ -976,6 +976,129 @@ hash_table_get_string:
 	addi	sp,sp,48
 	jr	ra
 	.size	hash_table_get_string, .-hash_table_get_string
+	.align	1
+	.globl	hash_table_upsert
+	.type	hash_table_upsert, @function
+hash_table_upsert:
+	addi	sp,sp,-80
+	sd	ra,72(sp)
+	sd	s0,64(sp)
+	addi	s0,sp,80
+	sd	a0,-56(s0)
+	mv	a5,a1
+	sd	a2,-72(s0)
+	sw	a5,-60(s0)
+	ld	a5,-56(s0)
+	ld	a5,8(a5)
+	ld	a5,0(a5)
+	sd	a5,-24(s0)
+	j	.L69
+.L72:
+	ld	a5,-24(s0)
+	ld	a5,0(a5)
+	sd	a5,-32(s0)
+	ld	a5,-32(s0)
+	lw	a4,0(a5)
+	lw	a5,-60(s0)
+	sext.w	a5,a5
+	bne	a5,a4,.L70
+	ld	a5,-32(s0)
+	ld	a5,8(a5)
+	sd	a5,-40(s0)
+	ld	a5,-32(s0)
+	ld	a4,-72(s0)
+	sd	a4,8(a5)
+	ld	a5,-40(s0)
+	j	.L71
+.L70:
+	ld	a5,-24(s0)
+	ld	a5,8(a5)
+	sd	a5,-24(s0)
+.L69:
+	ld	a5,-24(s0)
+	bne	a5,zero,.L72
+	lw	a5,-60(s0)
+	ld	a2,-72(s0)
+	mv	a1,a5
+	ld	a0,-56(s0)
+	call	hash_table_insert
+	li	a5,0
+.L71:
+	mv	a0,a5
+	ld	ra,72(sp)
+	ld	s0,64(sp)
+	addi	sp,sp,80
+	jr	ra
+	.size	hash_table_upsert, .-hash_table_upsert
+	.align	1
+	.globl	hash_table_upsert_string
+	.type	hash_table_upsert_string, @function
+hash_table_upsert_string:
+	addi	sp,sp,-48
+	sd	ra,40(sp)
+	sd	s0,32(sp)
+	addi	s0,sp,48
+	sd	a0,-24(s0)
+	sd	a1,-40(s0)
+	sd	a2,-32(s0)
+	sd	a3,-48(s0)
+	ld	a0,-40(s0)
+	ld	a1,-32(s0)
+	call	strhash
+	mv	a5,a0
+	ld	a2,-48(s0)
+	mv	a1,a5
+	ld	a0,-24(s0)
+	call	hash_table_upsert
+	mv	a5,a0
+	mv	a0,a5
+	ld	ra,40(sp)
+	ld	s0,32(sp)
+	addi	sp,sp,48
+	jr	ra
+	.size	hash_table_upsert_string, .-hash_table_upsert_string
+	.align	1
+	.globl	linked_list_reverse
+	.type	linked_list_reverse, @function
+linked_list_reverse:
+	addi	sp,sp,-64
+	sd	s0,56(sp)
+	addi	s0,sp,64
+	sd	a0,-56(s0)
+	ld	a5,-56(s0)
+	ld	a5,0(a5)
+	sd	a5,-24(s0)
+	j	.L76
+.L78:
+	ld	a5,-24(s0)
+	ld	a5,8(a5)
+	sd	a5,-32(s0)
+	ld	a5,-24(s0)
+	ld	a5,16(a5)
+	sd	a5,-40(s0)
+	ld	a5,-24(s0)
+	ld	a4,-40(s0)
+	sd	a4,8(a5)
+	ld	a5,-24(s0)
+	ld	a4,-32(s0)
+	sd	a4,16(a5)
+	ld	a5,-32(s0)
+	bne	a5,zero,.L77
+	ld	a5,-56(s0)
+	ld	a4,-24(s0)
+	sd	a4,0(a5)
+.L77:
+	ld	a5,-32(s0)
+	sd	a5,-24(s0)
+.L76:
+	ld	a5,-24(s0)
+	bne	a5,zero,.L78
+	nop
+	nop
+	ld	s0,56(sp)
+	addi	sp,sp,64
+	jr	ra
+	.size	linked_list_reverse, .-linked_list_reverse
 	.section	.rodata
 	.align	3
 .LC0:

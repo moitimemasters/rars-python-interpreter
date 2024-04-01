@@ -16,6 +16,12 @@ void populate_c_functions(hash_table *ht) {
     hash_table_insert_string(ht, const_string_view("sub_binop"), &sub_binop);
     hash_table_insert_string(ht, const_string_view("mul_binop"), &mul_binop);
     hash_table_insert_string(ht, const_string_view("div_binop"), &div_binop);
+    hash_table_insert_string(ht, const_string_view("lt_binop"), &lt_binop);
+    hash_table_insert_string(ht, const_string_view("leq_binop"), &leq_binop);
+    hash_table_insert_string(ht, const_string_view("gt_binop"), &gt_binop);
+    hash_table_insert_string(ht, const_string_view("geq_binop"), &geq_binop);
+    hash_table_insert_string(ht, const_string_view("eq_binop"), &eq_binop);
+    hash_table_insert_string(ht, const_string_view("neq_binop"), &neq_binop);
 }
 
 int main() {
@@ -23,7 +29,10 @@ int main() {
     pool.start = (void *)HEAP_START;
     pool.end = (void *)HEAP_END;
 
-    const char *program = "4 if 0 else 5 + 3";
+    const char *program =
+        "def foo(n):\n"
+        "    return foo(n - 1) + foo(n - 2) if n >= 1 else 1\n"
+        "foo(6)";
 
     Lexer lexer;
     lexer.pool = &pool;
@@ -66,9 +75,7 @@ int main() {
     Compiler *compiler = my_alloc(&pool, sizeof(Compiler));
     compiler->pool = &pool;
     compiler->root = result;
-    compiler->compilation_units = linked_list_create(&pool);
-    linked_list *compilation_result = compile(compiler);
-    my_printf("compiled size: %d\n", compilation_result->size);
+    CompilationUnit *compilation_result = compile(compiler);
     if (compilation_result == NULL) {
         my_printf("Error compiling\n");
         Exit();
@@ -77,13 +84,31 @@ int main() {
     Env *env = my_alloc(&pool, sizeof(Env));
     env->context = hash_table_create(&pool);
     env->parent = NULL;
+    env->pool = &pool;
     Interpreter *interpreter = my_alloc(&pool, sizeof(Interpreter));
+    interpreter->program = compilation_result;
     interpreter->pool = &pool;
-    interpreter->compilation_units = compilation_result;
     interpreter->env = env;
     interpreter->stack = stack_create(&pool);
     interpreter->c_functions = hash_table_create(&pool);
     populate_c_functions(interpreter->c_functions);
+    my_printf("started interpreting\n");
     interpret(interpreter);
+    my_printf("ended interpreting\n");
+    PyObject *interpretation_result = interpreter->stack->head->item;
+    if (interpretation_result->object_type == OBJ_T_VALUE) {
+        if (interpretation_result->data.value.type == PY_INT) {
+            my_printf("Interpretation result: %d\n",
+                      interpretation_result->data.value.data.int_value);
+        } else if (interpretation_result->data.value.type == PY_FLOAT) {
+            my_printf("Interpretation result: %f\n",
+                      interpretation_result->data.value.data.float_value);
+        } else {
+            my_printf("Unsupported type: %d\n",
+                      interpretation_result->data.value.type);
+        }
+    } else {
+        my_printf("Unsupported type\n");
+    }
     Exit();
 }

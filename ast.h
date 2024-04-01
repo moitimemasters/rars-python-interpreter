@@ -46,7 +46,7 @@ typedef enum {
     AST_DEL,
     AST_BREAK,
     AST_RETURN,
-    // Add more AST node types as needed
+    AST_SUBPROGRAM,
 } ASTNodeType;
 
 // AST node structure
@@ -131,12 +131,14 @@ typedef struct ASTNode {
         struct {
             struct ASTNode *name;
             struct ASTNode *arguments;
-            linked_list *body;
+            struct ASTNode *body;
         } function_def;
         struct {
             struct ASTNode *target;
         } unary_stmt;
-        // Add more fields as needed for other AST node types
+        struct {
+            linked_list *statements;
+        } subprogram;
     } data;
 } ASTNode;
 

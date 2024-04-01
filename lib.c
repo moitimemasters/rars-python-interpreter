@@ -228,3 +228,37 @@ void *linked_list_at(linked_list *list, size_t item) {
 void *hash_table_get_string(hash_table *table, string_view_t string_key) {
     return hash_table_get(table, strhash(string_key));
 }
+
+void *hash_table_upsert(hash_table *table, int key_hash, void *value) {
+    linked_list_node *node = table->entries->head;
+    while (node != NULL) {
+        hash_table_entry *entry = node->item;
+        if (entry->key_hash == key_hash) {
+            void *old_value = entry->value;
+            entry->value = value;
+            return old_value;
+        }
+        node = node->next;
+    }
+    hash_table_insert(table, key_hash, value);
+    return NULL;
+}
+
+void *hash_table_upsert_string(hash_table *table, string_view_t string_key,
+                               void *value) {
+    return hash_table_upsert(table, strhash(string_key), value);
+}
+
+void linked_list_reverse(linked_list *list) {
+    linked_list_node *node = list->head;
+    while (node != NULL) {
+        linked_list_node *next = node->next;
+        linked_list_node *previous = node->previous;
+        node->next = previous;
+        node->previous = next;
+        if (next == NULL) {
+            list->head = node;
+        }
+        node = next;
+    }
+}

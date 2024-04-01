@@ -6,6 +6,7 @@ typedef enum {
     DivisionByZeroError,
     UnrecognizedOperationError,
     NoMatchingImplementationError,
+    NotEnoughArgsError,
 } InterpreterError;
 
 #endif  // INTERPRETER_ERROR_H

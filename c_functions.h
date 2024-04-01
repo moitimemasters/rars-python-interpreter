@@ -69,4 +69,22 @@ PyObject* div_binop_int_float(MemoryPool* pool, PyObject* lhs, PyObject* rhs,
 PyObject* div_binop(MemoryPool* pool, linked_list* objects,
                     InterpreterError* error);
 
+PyObject* lt_binop(MemoryPool* pool, linked_list* objects,
+                   InterpreterError* error);
+
+PyObject* leq_binop(MemoryPool* pool, linked_list* objects,
+                    InterpreterError* error);
+
+PyObject* gt_binop(MemoryPool* pool, linked_list* objects,
+                   InterpreterError* error);
+
+PyObject* geq_binop(MemoryPool* pool, linked_list* objects,
+                    InterpreterError* error);
+
+PyObject* eq_binop(MemoryPool* pool, linked_list* objects,
+                   InterpreterError* error);
+
+PyObject* neq_binop(MemoryPool* pool, linked_list* objects,
+                    InterpreterError* error);
+
 #endif  // C_FUNCTIONS_H

@@ -178,7 +178,6 @@ ASTNode *parse_set_or_dict(ASTParser *parser, ParseErrorCode *error_code) {
     ASTNode *node = create_ast_node(parser, AST_DICT);
     node->data.mapping.keys = keys;
     node->data.mapping.values = values;
-    my_printf("parsed set or dict\n");
     return node;
 }
 
@@ -234,9 +233,6 @@ ASTNode *parse_list_or_tuple(ASTParser *parser, ParseErrorCode *error_code) {
     }
     if (!trailing_comma && node->data.sequence.items->size == 1 &&
         closing == TOK_RPAR) {
-        // primary expression actually
-        my_printf("parsed tuple but it is primary expression\n");
-        // can't return NULL because already consumed the expression inside
         ast_consume(parser);
         return node->data.sequence.items->head->item;
     }
@@ -364,7 +360,7 @@ ASTNode *parse_function_call_partial(ASTParser *parser,
     ASTNode *expression_list = parse_expression_list(parser, error_code);
     if (expression_list == NULL && ast_peek(parser).type != TOK_RPAR) {
         report_parse_error(error_code,
-                           "Expected expression list or \":\" after \"(\"");
+                           "Expected expression list or \")\" after \"(\"");
         return NULL;
     }
     if (ast_peek(parser).type != TOK_RPAR) {
@@ -577,8 +573,53 @@ ASTNode *parse_primary(ASTParser *parser, ParseErrorCode *error_code) {
     }
 }
 
+ASTNode *parse_expression_stripped(ASTParser *parser,
+                                   ParseErrorCode *error_code) {
+    return parse_primary(parser, error_code);
+}
+
+ASTNode *parse_tail(ASTParser *parser, ParseErrorCode *error_code) {
+    ASTNode *node = parse_expression_stripped(parser, error_code);
+    if (node == NULL) {
+        return NULL;
+    }
+    while (true) {
+        ASTNode *index_or_slice =
+            parse_index_or_slice_partial(parser, error_code);
+        if (index_or_slice != NULL) {
+            if (*error_code != PARSE_SUCCESS) {
+                my_free(parser->pool, node);
+                return NULL;
+            }
+            ASTNode *new_node = create_ast_node(
+                parser, (index_or_slice->type == AST_SLICE_PARTIAL)
+                            ? AST_SLICE
+                            : AST_INDEX);
+            new_node->data.index_or_slice.index = index_or_slice;
+            new_node->data.index_or_slice.subject = node;
+            node = new_node;
+            continue;
+        }
+        ASTNode *function_call =
+            parse_function_call_partial(parser, error_code);
+        if (function_call) {
+            if (*error_code != PARSE_SUCCESS) {
+                my_free(parser->pool, node);
+                return NULL;
+            }
+            ASTNode *new_node = create_ast_node(parser, AST_FUNCTION_CALL);
+            new_node->data.function_call.callee = node;
+            new_node->data.function_call.argument_list = function_call;
+            node = new_node;
+            continue;
+        }
+        break;
+    }
+    return node;
+}
+
 ASTNode *parse_product(ASTParser *parser, ParseErrorCode *error_code) {
-    ASTNode *left = parse_primary(parser, error_code);
+    ASTNode *left = parse_tail(parser, error_code);
     if (*error_code != PARSE_SUCCESS) {
         return NULL;
     }
@@ -688,9 +729,10 @@ ASTNode *parse_logical(ASTParser *parser, ParseErrorCode *error_code) {
     return left;
 }
 
-ASTNode *parse_ternary(ASTParser *parser, ParseErrorCode *error_code) {
+ASTNode *parse_expression(ASTParser *parser, ParseErrorCode *error_code) {
     ASTNode *if_body = parse_logical(parser, error_code);
     if (!if_body) {
+        my_printf("if tern expr is null\n");
         return NULL;
     }
     if (is_end(parser)) {
@@ -701,6 +743,7 @@ ASTNode *parse_ternary(ASTParser *parser, ParseErrorCode *error_code) {
         return if_body;
     }
     ast_consume(parser);
+    my_printf("parsing ternary...\n");
     ASTNode *if_expr = parse_logical(parser, error_code);
     if (!if_expr) {
         report_parse_error(error_code, "Expected expression after ternary if");
@@ -728,50 +771,6 @@ ASTNode *parse_ternary(ASTParser *parser, ParseErrorCode *error_code) {
     node->data.ternary_if.if_body = if_body;
     node->data.ternary_if.if_expr = if_expr;
     node->data.ternary_if.else_body = else_body;
-    return node;
-}
-
-ASTNode *parse_expression_stripped(ASTParser *parser,
-                                   ParseErrorCode *error_code) {
-    return parse_ternary(parser, error_code);
-}
-ASTNode *parse_expression(ASTParser *parser, ParseErrorCode *error_code) {
-    ASTNode *node = parse_expression_stripped(parser, error_code);
-    if (node == NULL) {
-        return NULL;
-    }
-    while (true) {
-        ASTNode *index_or_slice =
-            parse_index_or_slice_partial(parser, error_code);
-        if (index_or_slice != NULL) {
-            if (*error_code != PARSE_SUCCESS) {
-                my_free(parser->pool, node);
-                return NULL;
-            }
-            ASTNode *new_node = create_ast_node(
-                parser, (index_or_slice->type == AST_SLICE_PARTIAL)
-                            ? AST_SLICE
-                            : AST_INDEX);
-            new_node->data.index_or_slice.index = index_or_slice;
-            new_node->data.index_or_slice.subject = node;
-            node = new_node;
-            continue;
-        }
-        ASTNode *function_call =
-            parse_function_call_partial(parser, error_code);
-        if (function_call) {
-            if (*error_code != PARSE_SUCCESS) {
-                my_free(parser->pool, node);
-                return NULL;
-            }
-            ASTNode *new_node = create_ast_node(parser, AST_FUNCTION_CALL);
-            new_node->data.function_call.callee = node;
-            new_node->data.function_call.argument_list = function_call;
-            node = new_node;
-            continue;
-        }
-        break;
-    }
     return node;
 }
 
@@ -1139,8 +1138,10 @@ ASTNode *parse_function_definition(ASTParser *parser,
     ASTNode *node = create_ast_node(parser, AST_FUNCTION_DEF);
     node->data.function_def.name = identifier;
     node->data.function_def.arguments = argument_list;
-    node->data.function_def.body = linked_list_create(parser->pool);
-    linked_list_push(node->data.function_def.body, first_statement);
+    ASTNode *subprogram = create_ast_node(parser, AST_SUBPROGRAM);
+    subprogram->data.subprogram.statements = linked_list_create(parser->pool);
+    node->data.function_def.body = subprogram;
+    linked_list_push(subprogram->data.subprogram.statements, first_statement);
     while (true) {
         ast_skip_indentation(parser);
         if (is_end(parser) ||
@@ -1152,17 +1153,19 @@ ASTNode *parse_function_definition(ASTParser *parser,
             if (*error_code != PARSE_SUCCESS) {
                 my_free(parser->pool, node);
                 my_free(parser->pool, argument_list);
-                linked_list_free(node->data.function_def.body);
+                my_free(parser->pool, subprogram);
+                linked_list_free(subprogram->data.subprogram.statements);
                 return NULL;
             }
             break;
         }
-        linked_list_push(node->data.while_loop.body, statement);
+        linked_list_push(subprogram->data.subprogram.statements, statement);
     }
     if (parser->current_indentation > current_indentation + 1) {
         my_free(parser->pool, node);
         my_free(parser->pool, argument_list);
-        linked_list_free(node->data.function_def.body);
+        my_free(parser->pool, subprogram);
+        linked_list_free(subprogram->data.subprogram.statements);
         report_parse_error(
             error_code,
             "Unexpected indentation after function definition loop");
@@ -1249,7 +1252,6 @@ ASTNode *parse_break(ASTParser *parser, ParseErrorCode *error_code) {
 
 ASTNode *parse_statement(ASTParser *parser, ParseErrorCode *error_code) {
     if (is_end(parser)) {
-        report_parse_error(error_code, "Unexpected end of input");
         return NULL;
     }
     parse_and_return(parse_if_statement, if_stmt);
@@ -1266,5 +1268,23 @@ ASTNode *parse_statement(ASTParser *parser, ParseErrorCode *error_code) {
 
 ASTNode *parse(ASTParser *parser) {
     ParseErrorCode error_code = PARSE_SUCCESS;
-    return parse_statement(parser, &error_code);
+    linked_list *statements = linked_list_create(parser->pool);
+    ASTNode *stmt;
+    parser->current_indentation = 0;
+    while ((stmt = parse_statement(parser, &error_code)) != NULL) {
+        if (parser->current_indentation != 0) {
+            report_parse_error(&error_code, "Unexpected indentation");
+            linked_list_free(statements);
+            return NULL;
+        }
+        if (error_code != PARSE_SUCCESS) {
+            linked_list_free(statements);
+            return NULL;
+        }
+        linked_list_push(statements, stmt);
+        ast_skip_indentation(parser);
+    }
+    ASTNode *node = create_ast_node(parser, AST_SUBPROGRAM);
+    node->data.subprogram.statements = statements;
+    return node;
 }

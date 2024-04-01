@@ -55,7 +55,7 @@ interpret_instruction:
 	ld	a5,-24(s0)
 	lw	a5,0(a5)
 	mv	a3,a5
-	li	a4,6
+	li	a4,12
 	bgtu	a3,a4,.L7
 	slli	a4,a5,2
 	lui	a5,%hi(.L9)
@@ -65,7 +65,13 @@ interpret_instruction:
 	jr	a5
 	.section	.rodata
 .L9:
+	.word	.L19
+	.word	.L18
+	.word	.L17
+	.word	.L16
 	.word	.L7
+	.word	.L15
+	.word	.L14
 	.word	.L13
 	.word	.L12
 	.word	.L7
@@ -73,42 +79,87 @@ interpret_instruction:
 	.word	.L10
 	.word	.L8
 	.text
-.L13:
+.L19:
 	ld	a3,-48(s0)
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
-	call	interpret_load_int
+	call	interpret_load
 	j	.L6
-.L12:
+.L18:
 	ld	a3,-48(s0)
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
-	call	interpret_load_float
-	j	.L6
-.L8:
-	ld	a3,-48(s0)
-	ld	a2,-40(s0)
-	ld	a1,-32(s0)
-	ld	a0,-24(s0)
-	call	interpret_binop
-	j	.L6
-.L11:
-	ld	a3,-48(s0)
-	ld	a2,-40(s0)
-	ld	a1,-32(s0)
-	ld	a0,-24(s0)
-	call	interpret_jump_relative
+	call	interpret_load_none
 	j	.L6
 .L10:
 	ld	a3,-48(s0)
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
+	call	interpret_return
+	j	.L6
+.L17:
+	ld	a3,-48(s0)
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
+	call	interpret_load_int
+	j	.L6
+.L16:
+	ld	a3,-48(s0)
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
+	call	interpret_load_float
+	j	.L6
+.L13:
+	ld	a3,-48(s0)
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
+	call	interpret_binop
+	j	.L6
+.L15:
+	ld	a3,-48(s0)
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
+	call	interpret_jump_relative
+	j	.L6
+.L14:
+	ld	a3,-48(s0)
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
 	call	interpret_jump_relative_if_false
 	j	.L6
+.L12:
+	ld	a3,-48(s0)
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
+	call	interpret_store
+	j	.L6
+.L11:
+	ld	a3,-48(s0)
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
+	call	interpret_anon_fun
+	j	.L6
+.L8:
+	ld	a3,-48(s0)
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
+	call	interpret_call
+	j	.L6
 .L7:
+	ld	a5,-48(s0)
+	li	a4,2
+	sw	a4,0(a5)
 	ld	a5,-24(s0)
 	lw	a5,0(a5)
 	mv	a1,a5
@@ -138,7 +189,7 @@ interpret_load_float:
 	call	create_value
 	sd	a0,-24(s0)
 	ld	a5,-40(s0)
-	flw	fa5,4(a5)
+	flw	fa5,8(a5)
 	ld	a5,-24(s0)
 	fsw	fa5,12(a5)
 	ld	a5,-56(s0)
@@ -173,7 +224,7 @@ interpret_load_int:
 	call	create_value
 	sd	a0,-24(s0)
 	ld	a5,-40(s0)
-	lw	a4,4(a5)
+	lw	a4,8(a5)
 	ld	a5,-24(s0)
 	sw	a4,12(a5)
 	ld	a5,-56(s0)
@@ -200,86 +251,306 @@ interpret_load_int:
 	.string	"mul_binop"
 .LC4:
 	.string	"div_binop"
+.LC5:
+	.string	"lt_binop"
+.LC6:
+	.string	"leq_binop"
+.LC7:
+	.string	"gt_binop"
+.LC8:
+	.string	"geq_binop"
+.LC9:
+	.string	"eq_binop"
+.LC10:
+	.string	"neq_binop"
 	.text
 .align 2
 	.globl	interpret_binop
 interpret_binop:
-	addi	sp,sp,-240
-	sd	ra,232(sp)
-	sd	s0,224(sp)
-	addi	s0,sp,240
-	sd	a0,-216(s0)
-	sd	a1,-224(s0)
-	sd	a2,-232(s0)
-	sd	a3,-240(s0)
-	ld	a5,-232(s0)
+	addi	sp,sp,-480
+	sd	ra,472(sp)
+	sd	s0,464(sp)
+	addi	s0,sp,480
+	sd	a0,-456(s0)
+	sd	a1,-464(s0)
+	sd	a2,-472(s0)
+	sd	a3,-480(s0)
+	ld	a5,-472(s0)
 	ld	a5,16(a5)
 	ld	a5,0(a5)
 	ld	a5,0(a5)
 	sd	a5,-24(s0)
-	ld	a5,-232(s0)
+	ld	a5,-472(s0)
 	ld	a5,16(a5)
 	mv	a0,a5
 	call	stack_pop
-	ld	a5,-232(s0)
+	ld	a5,-472(s0)
 	ld	a5,16(a5)
 	ld	a5,0(a5)
 	ld	a5,0(a5)
 	sd	a5,-32(s0)
-	ld	a5,-232(s0)
+	ld	a5,-472(s0)
 	ld	a5,16(a5)
 	mv	a0,a5
 	call	stack_pop
-	ld	a5,-216(s0)
-	lw	a5,4(a5)
+	ld	a5,-456(s0)
+	lw	a5,8(a5)
 	sw	a5,-36(s0)
 	lw	a5,-36(s0)
-	sext.w	a4,a5
-	li	a5,17
-	beq	a4,a5,.L18
-	lw	a5,-36(s0)
-	sext.w	a4,a5
-	li	a5,17
-	bgtu	a4,a5,.L19
-	lw	a5,-36(s0)
-	sext.w	a4,a5
-	li	a5,15
-	beq	a4,a5,.L20
-	lw	a5,-36(s0)
-	sext.w	a4,a5
-	li	a5,15
-	bgtu	a4,a5,.L19
-	lw	a5,-36(s0)
-	sext.w	a4,a5
-	li	a5,10
-	beq	a4,a5,.L21
-	lw	a5,-36(s0)
-	sext.w	a4,a5
-	li	a5,13
-	beq	a4,a5,.L22
-	j	.L19
-.L21:
-	ld	a5,-232(s0)
+	addiw	a3,a5,-10
+	sext.w	a4,a3
+	li	a5,24
+	bgtu	a4,a5,.L24
+	slli	a5,a3,32
+	srli	a5,a5,32
+	slli	a4,a5,2
+	lui	a5,%hi(.L26)
+	addi	a5,a5,%lo(.L26)
+	add	a5,a4,a5
+	lw	a5,0(a5)
+	jr	a5
+	.section	.rodata
+.L26:
+	.word	.L35
+	.word	.L24
+	.word	.L24
+	.word	.L34
+	.word	.L24
+	.word	.L33
+	.word	.L24
+	.word	.L32
+	.word	.L24
+	.word	.L24
+	.word	.L24
+	.word	.L24
+	.word	.L24
+	.word	.L24
+	.word	.L24
+	.word	.L24
+	.word	.L24
+	.word	.L24
+	.word	.L24
+	.word	.L31
+	.word	.L30
+	.word	.L29
+	.word	.L28
+	.word	.L27
+	.word	.L25
+	.text
+.L35:
+	ld	a5,-472(s0)
 	ld	a4,32(a5)
 	lui	a5,%hi(.LC1)
 	addi	a5,a5,%lo(.LC1)
-	sd	a5,-152(s0)
+	sd	a5,-296(s0)
 	li	a5,9
-	sd	a5,-144(s0)
-	ld	a1,-152(s0)
-	ld	a2,-144(s0)
+	sd	a5,-288(s0)
+	ld	a1,-296(s0)
+	ld	a2,-288(s0)
+	mv	a0,a4
+	call	hash_table_get_string
+	mv	a5,a0
+	sd	a5,-264(s0)
+	ld	a5,-264(s0)
+	bne	a5,zero,.L36
+	ld	a5,-480(s0)
+	li	a4,3
+	sw	a4,0(a5)
+	j	.L23
+.L36:
+	ld	a5,-472(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	linked_list_create
+	sd	a0,-272(s0)
+	ld	a1,-32(s0)
+	ld	a0,-272(s0)
+	call	linked_list_push
+	ld	a1,-24(s0)
+	ld	a0,-272(s0)
+	call	linked_list_push
+	ld	a5,-472(s0)
+	ld	a4,0(a5)
+	ld	a5,-264(s0)
+	ld	a2,-480(s0)
+	ld	a1,-272(s0)
+	mv	a0,a4
+	jalr	a5
+	sd	a0,-280(s0)
+	ld	a5,-480(s0)
+	bne	a5,zero,.L68
+	ld	a5,-472(s0)
+	ld	a5,16(a5)
+	ld	a1,-280(s0)
+	mv	a0,a5
+	call	stack_push
+	j	.L39
+.L34:
+	ld	a5,-472(s0)
+	ld	a4,32(a5)
+	lui	a5,%hi(.LC2)
+	addi	a5,a5,%lo(.LC2)
+	sd	a5,-312(s0)
+	li	a5,9
+	sd	a5,-304(s0)
+	ld	a1,-312(s0)
+	ld	a2,-304(s0)
+	mv	a0,a4
+	call	hash_table_get_string
+	mv	a5,a0
+	sd	a5,-240(s0)
+	ld	a5,-240(s0)
+	bne	a5,zero,.L41
+	ld	a5,-480(s0)
+	li	a4,3
+	sw	a4,0(a5)
+	j	.L23
+.L41:
+	ld	a5,-472(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	linked_list_create
+	sd	a0,-248(s0)
+	ld	a1,-32(s0)
+	ld	a0,-248(s0)
+	call	linked_list_push
+	ld	a1,-24(s0)
+	ld	a0,-248(s0)
+	call	linked_list_push
+	ld	a5,-472(s0)
+	ld	a4,0(a5)
+	ld	a5,-240(s0)
+	ld	a2,-480(s0)
+	ld	a1,-248(s0)
+	mv	a0,a4
+	jalr	a5
+	sd	a0,-256(s0)
+	ld	a5,-480(s0)
+	bne	a5,zero,.L69
+	ld	a5,-472(s0)
+	ld	a5,16(a5)
+	ld	a1,-256(s0)
+	mv	a0,a5
+	call	stack_push
+	j	.L39
+.L33:
+	ld	a5,-472(s0)
+	ld	a4,32(a5)
+	lui	a5,%hi(.LC3)
+	addi	a5,a5,%lo(.LC3)
+	sd	a5,-328(s0)
+	li	a5,9
+	sd	a5,-320(s0)
+	ld	a1,-328(s0)
+	ld	a2,-320(s0)
+	mv	a0,a4
+	call	hash_table_get_string
+	mv	a5,a0
+	sd	a5,-216(s0)
+	ld	a5,-216(s0)
+	bne	a5,zero,.L44
+	ld	a5,-480(s0)
+	li	a4,3
+	sw	a4,0(a5)
+	j	.L23
+.L44:
+	ld	a5,-472(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	linked_list_create
+	sd	a0,-224(s0)
+	ld	a1,-32(s0)
+	ld	a0,-224(s0)
+	call	linked_list_push
+	ld	a1,-24(s0)
+	ld	a0,-224(s0)
+	call	linked_list_push
+	ld	a5,-472(s0)
+	ld	a4,0(a5)
+	ld	a5,-216(s0)
+	ld	a2,-480(s0)
+	ld	a1,-224(s0)
+	mv	a0,a4
+	jalr	a5
+	sd	a0,-232(s0)
+	ld	a5,-480(s0)
+	bne	a5,zero,.L70
+	ld	a5,-472(s0)
+	ld	a5,16(a5)
+	ld	a1,-232(s0)
+	mv	a0,a5
+	call	stack_push
+	j	.L39
+.L32:
+	ld	a5,-472(s0)
+	ld	a4,32(a5)
+	lui	a5,%hi(.LC4)
+	addi	a5,a5,%lo(.LC4)
+	sd	a5,-344(s0)
+	li	a5,9
+	sd	a5,-336(s0)
+	ld	a1,-344(s0)
+	ld	a2,-336(s0)
+	mv	a0,a4
+	call	hash_table_get_string
+	mv	a5,a0
+	sd	a5,-192(s0)
+	ld	a5,-192(s0)
+	bne	a5,zero,.L47
+	ld	a5,-480(s0)
+	li	a4,3
+	sw	a4,0(a5)
+	j	.L23
+.L47:
+	ld	a5,-472(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	linked_list_create
+	sd	a0,-200(s0)
+	ld	a1,-32(s0)
+	ld	a0,-200(s0)
+	call	linked_list_push
+	ld	a1,-24(s0)
+	ld	a0,-200(s0)
+	call	linked_list_push
+	ld	a5,-472(s0)
+	ld	a4,0(a5)
+	ld	a5,-192(s0)
+	ld	a2,-480(s0)
+	ld	a1,-200(s0)
+	mv	a0,a4
+	jalr	a5
+	sd	a0,-208(s0)
+	ld	a5,-480(s0)
+	bne	a5,zero,.L71
+	ld	a5,-472(s0)
+	ld	a5,16(a5)
+	ld	a1,-208(s0)
+	mv	a0,a5
+	call	stack_push
+	j	.L39
+.L29:
+	ld	a5,-472(s0)
+	ld	a4,32(a5)
+	lui	a5,%hi(.LC5)
+	addi	a5,a5,%lo(.LC5)
+	sd	a5,-360(s0)
+	li	a5,8
+	sd	a5,-352(s0)
+	ld	a1,-360(s0)
+	ld	a2,-352(s0)
 	mv	a0,a4
 	call	hash_table_get_string
 	mv	a5,a0
 	sd	a5,-120(s0)
 	ld	a5,-120(s0)
-	bne	a5,zero,.L23
-	ld	a5,-240(s0)
+	bne	a5,zero,.L50
+	ld	a5,-480(s0)
 	li	a4,3
 	sw	a4,0(a5)
-	j	.L17
-.L23:
-	ld	a5,-232(s0)
+	j	.L23
+.L50:
+	ld	a5,-472(s0)
 	ld	a5,0(a5)
 	mv	a0,a5
 	call	linked_list_create
@@ -290,44 +561,44 @@ interpret_binop:
 	ld	a1,-24(s0)
 	ld	a0,-128(s0)
 	call	linked_list_push
-	ld	a5,-232(s0)
+	ld	a5,-472(s0)
 	ld	a4,0(a5)
 	ld	a5,-120(s0)
-	ld	a2,-240(s0)
+	ld	a2,-480(s0)
 	ld	a1,-128(s0)
 	mv	a0,a4
 	jalr	a5
 	sd	a0,-136(s0)
-	ld	a5,-240(s0)
-	bne	a5,zero,.L37
-	ld	a5,-232(s0)
+	ld	a5,-480(s0)
+	bne	a5,zero,.L72
+	ld	a5,-472(s0)
 	ld	a5,16(a5)
 	ld	a1,-136(s0)
 	mv	a0,a5
 	call	stack_push
-	j	.L26
-.L22:
-	ld	a5,-232(s0)
+	j	.L39
+.L28:
+	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC2)
-	addi	a5,a5,%lo(.LC2)
-	sd	a5,-168(s0)
+	lui	a5,%hi(.LC6)
+	addi	a5,a5,%lo(.LC6)
+	sd	a5,-376(s0)
 	li	a5,9
-	sd	a5,-160(s0)
-	ld	a1,-168(s0)
-	ld	a2,-160(s0)
+	sd	a5,-368(s0)
+	ld	a1,-376(s0)
+	ld	a2,-368(s0)
 	mv	a0,a4
 	call	hash_table_get_string
 	mv	a5,a0
 	sd	a5,-96(s0)
 	ld	a5,-96(s0)
-	bne	a5,zero,.L28
-	ld	a5,-240(s0)
+	bne	a5,zero,.L53
+	ld	a5,-480(s0)
 	li	a4,3
 	sw	a4,0(a5)
-	j	.L17
-.L28:
-	ld	a5,-232(s0)
+	j	.L23
+.L53:
+	ld	a5,-472(s0)
 	ld	a5,0(a5)
 	mv	a0,a5
 	call	linked_list_create
@@ -338,44 +609,44 @@ interpret_binop:
 	ld	a1,-24(s0)
 	ld	a0,-104(s0)
 	call	linked_list_push
-	ld	a5,-232(s0)
+	ld	a5,-472(s0)
 	ld	a4,0(a5)
 	ld	a5,-96(s0)
-	ld	a2,-240(s0)
+	ld	a2,-480(s0)
 	ld	a1,-104(s0)
 	mv	a0,a4
 	jalr	a5
 	sd	a0,-112(s0)
-	ld	a5,-240(s0)
-	bne	a5,zero,.L38
-	ld	a5,-232(s0)
+	ld	a5,-480(s0)
+	bne	a5,zero,.L73
+	ld	a5,-472(s0)
 	ld	a5,16(a5)
 	ld	a1,-112(s0)
 	mv	a0,a5
 	call	stack_push
-	j	.L26
-.L20:
-	ld	a5,-232(s0)
+	j	.L39
+.L27:
+	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC3)
-	addi	a5,a5,%lo(.LC3)
-	sd	a5,-184(s0)
-	li	a5,9
-	sd	a5,-176(s0)
-	ld	a1,-184(s0)
-	ld	a2,-176(s0)
+	lui	a5,%hi(.LC7)
+	addi	a5,a5,%lo(.LC7)
+	sd	a5,-392(s0)
+	li	a5,8
+	sd	a5,-384(s0)
+	ld	a1,-392(s0)
+	ld	a2,-384(s0)
 	mv	a0,a4
 	call	hash_table_get_string
 	mv	a5,a0
 	sd	a5,-72(s0)
 	ld	a5,-72(s0)
-	bne	a5,zero,.L31
-	ld	a5,-240(s0)
+	bne	a5,zero,.L56
+	ld	a5,-480(s0)
 	li	a4,3
 	sw	a4,0(a5)
-	j	.L17
-.L31:
-	ld	a5,-232(s0)
+	j	.L23
+.L56:
+	ld	a5,-472(s0)
 	ld	a5,0(a5)
 	mv	a0,a5
 	call	linked_list_create
@@ -386,44 +657,44 @@ interpret_binop:
 	ld	a1,-24(s0)
 	ld	a0,-80(s0)
 	call	linked_list_push
-	ld	a5,-232(s0)
+	ld	a5,-472(s0)
 	ld	a4,0(a5)
 	ld	a5,-72(s0)
-	ld	a2,-240(s0)
+	ld	a2,-480(s0)
 	ld	a1,-80(s0)
 	mv	a0,a4
 	jalr	a5
 	sd	a0,-88(s0)
-	ld	a5,-240(s0)
-	bne	a5,zero,.L39
-	ld	a5,-232(s0)
+	ld	a5,-480(s0)
+	bne	a5,zero,.L74
+	ld	a5,-472(s0)
 	ld	a5,16(a5)
 	ld	a1,-88(s0)
 	mv	a0,a5
 	call	stack_push
-	j	.L26
-.L18:
-	ld	a5,-232(s0)
+	j	.L39
+.L25:
+	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC4)
-	addi	a5,a5,%lo(.LC4)
-	sd	a5,-200(s0)
+	lui	a5,%hi(.LC8)
+	addi	a5,a5,%lo(.LC8)
+	sd	a5,-408(s0)
 	li	a5,9
-	sd	a5,-192(s0)
-	ld	a1,-200(s0)
-	ld	a2,-192(s0)
+	sd	a5,-400(s0)
+	ld	a1,-408(s0)
+	ld	a2,-400(s0)
 	mv	a0,a4
 	call	hash_table_get_string
 	mv	a5,a0
 	sd	a5,-48(s0)
 	ld	a5,-48(s0)
-	bne	a5,zero,.L34
-	ld	a5,-240(s0)
+	bne	a5,zero,.L59
+	ld	a5,-480(s0)
 	li	a4,3
 	sw	a4,0(a5)
-	j	.L17
-.L34:
-	ld	a5,-232(s0)
+	j	.L23
+.L59:
+	ld	a5,-472(s0)
 	ld	a5,0(a5)
 	mv	a0,a5
 	call	linked_list_create
@@ -434,49 +705,163 @@ interpret_binop:
 	ld	a1,-24(s0)
 	ld	a0,-56(s0)
 	call	linked_list_push
-	ld	a5,-232(s0)
+	ld	a5,-472(s0)
 	ld	a4,0(a5)
 	ld	a5,-48(s0)
-	ld	a2,-240(s0)
+	ld	a2,-480(s0)
 	ld	a1,-56(s0)
 	mv	a0,a4
 	jalr	a5
 	sd	a0,-64(s0)
-	ld	a5,-240(s0)
-	bne	a5,zero,.L40
-	ld	a5,-232(s0)
+	ld	a5,-480(s0)
+	bne	a5,zero,.L75
+	ld	a5,-472(s0)
 	ld	a5,16(a5)
 	ld	a1,-64(s0)
 	mv	a0,a5
 	call	stack_push
-	j	.L26
-.L19:
-	ld	a5,-240(s0)
+	j	.L39
+.L31:
+	ld	a5,-472(s0)
+	ld	a4,32(a5)
+	lui	a5,%hi(.LC9)
+	addi	a5,a5,%lo(.LC9)
+	sd	a5,-424(s0)
+	li	a5,8
+	sd	a5,-416(s0)
+	ld	a1,-424(s0)
+	ld	a2,-416(s0)
+	mv	a0,a4
+	call	hash_table_get_string
+	mv	a5,a0
+	sd	a5,-168(s0)
+	ld	a5,-168(s0)
+	bne	a5,zero,.L62
+	ld	a5,-480(s0)
+	li	a4,3
+	sw	a4,0(a5)
+	j	.L23
+.L62:
+	ld	a5,-472(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	linked_list_create
+	sd	a0,-176(s0)
+	ld	a1,-32(s0)
+	ld	a0,-176(s0)
+	call	linked_list_push
+	ld	a1,-24(s0)
+	ld	a0,-176(s0)
+	call	linked_list_push
+	ld	a5,-472(s0)
+	ld	a4,0(a5)
+	ld	a5,-168(s0)
+	ld	a2,-480(s0)
+	ld	a1,-176(s0)
+	mv	a0,a4
+	jalr	a5
+	sd	a0,-184(s0)
+	ld	a5,-480(s0)
+	bne	a5,zero,.L76
+	ld	a5,-472(s0)
+	ld	a5,16(a5)
+	ld	a1,-184(s0)
+	mv	a0,a5
+	call	stack_push
+	j	.L39
+.L30:
+	ld	a5,-472(s0)
+	ld	a4,32(a5)
+	lui	a5,%hi(.LC10)
+	addi	a5,a5,%lo(.LC10)
+	sd	a5,-440(s0)
+	li	a5,9
+	sd	a5,-432(s0)
+	ld	a1,-440(s0)
+	ld	a2,-432(s0)
+	mv	a0,a4
+	call	hash_table_get_string
+	mv	a5,a0
+	sd	a5,-144(s0)
+	ld	a5,-144(s0)
+	bne	a5,zero,.L65
+	ld	a5,-480(s0)
+	li	a4,3
+	sw	a4,0(a5)
+	j	.L23
+.L65:
+	ld	a5,-472(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	linked_list_create
+	sd	a0,-152(s0)
+	ld	a1,-32(s0)
+	ld	a0,-152(s0)
+	call	linked_list_push
+	ld	a1,-24(s0)
+	ld	a0,-152(s0)
+	call	linked_list_push
+	ld	a5,-472(s0)
+	ld	a4,0(a5)
+	ld	a5,-144(s0)
+	ld	a2,-480(s0)
+	ld	a1,-152(s0)
+	mv	a0,a4
+	jalr	a5
+	sd	a0,-160(s0)
+	ld	a5,-480(s0)
+	bne	a5,zero,.L77
+	ld	a5,-472(s0)
+	ld	a5,16(a5)
+	ld	a1,-160(s0)
+	mv	a0,a5
+	call	stack_push
+	j	.L39
+.L24:
+	ld	a5,-480(s0)
 	li	a4,2
 	sw	a4,0(a5)
-	j	.L17
-.L26:
-	ld	a5,-224(s0)
+	j	.L23
+.L39:
+	ld	a5,-464(s0)
 	ld	a5,0(a5)
 	ld	a4,8(a5)
-	ld	a5,-224(s0)
+	ld	a5,-464(s0)
 	sd	a4,0(a5)
-	j	.L17
-.L37:
+	j	.L23
+.L68:
 	nop
-	j	.L17
-.L38:
+	j	.L23
+.L69:
 	nop
-	j	.L17
-.L39:
+	j	.L23
+.L70:
 	nop
-	j	.L17
-.L40:
+	j	.L23
+.L71:
 	nop
-.L17:
-	ld	ra,232(sp)
-	ld	s0,224(sp)
-	addi	sp,sp,240
+	j	.L23
+.L72:
+	nop
+	j	.L23
+.L73:
+	nop
+	j	.L23
+.L74:
+	nop
+	j	.L23
+.L75:
+	nop
+	j	.L23
+.L76:
+	nop
+	j	.L23
+.L77:
+	nop
+.L23:
+	ld	ra,472(sp)
+	ld	s0,464(sp)
+	addi	sp,sp,480
 	jr	ra
 	.globl	perform_jump
 perform_jump:
@@ -488,10 +873,10 @@ perform_jump:
 	sw	a5,-44(s0)
 	lw	a5,-44(s0)
 	sext.w	a5,a5
-	bge	a5,zero,.L42
+	bge	a5,zero,.L79
 	sw	zero,-20(s0)
-	j	.L43
-.L45:
+	j	.L80
+.L82:
 	ld	a5,-40(s0)
 	ld	a5,0(a5)
 	ld	a4,16(a5)
@@ -500,21 +885,21 @@ perform_jump:
 	lw	a5,-20(s0)
 	addiw	a5,a5,1
 	sw	a5,-20(s0)
-.L43:
+.L80:
 	lw	a5,-44(s0)
 	negw	a5,a5
 	sext.w	a4,a5
 	lw	a5,-20(s0)
 	sext.w	a5,a5
-	bge	a5,a4,.L48
+	bge	a5,a4,.L85
 	ld	a5,-40(s0)
 	ld	a5,0(a5)
-	bne	a5,zero,.L45
-	j	.L48
-.L42:
+	bne	a5,zero,.L82
+	j	.L85
+.L79:
 	sw	zero,-24(s0)
-	j	.L46
-.L47:
+	j	.L83
+.L84:
 	ld	a5,-40(s0)
 	ld	a5,0(a5)
 	ld	a4,8(a5)
@@ -523,16 +908,16 @@ perform_jump:
 	lw	a5,-24(s0)
 	addiw	a5,a5,1
 	sw	a5,-24(s0)
-.L46:
+.L83:
 	lw	a5,-24(s0)
 	mv	a4,a5
 	lw	a5,-44(s0)
 	sext.w	a4,a4
 	sext.w	a5,a5
-	bge	a4,a5,.L48
+	bge	a4,a5,.L85
 	ld	a5,-40(s0)
-	bne	a5,zero,.L47
-.L48:
+	bne	a5,zero,.L84
+.L85:
 	nop
 	ld	s0,40(sp)
 	addi	sp,sp,48
@@ -548,7 +933,7 @@ interpret_jump_relative:
 	sd	a2,-56(s0)
 	sd	a3,-64(s0)
 	ld	a5,-40(s0)
-	lw	a5,4(a5)
+	lw	a5,8(a5)
 	sw	a5,-20(s0)
 	lw	a5,-20(s0)
 	mv	a1,a5
@@ -579,73 +964,73 @@ interpret_jump_relative_if_false:
 	mv	a0,a5
 	call	stack_pop
 	ld	a5,-32(s0)
-	bne	a5,zero,.L51
+	bne	a5,zero,.L88
 	ld	a5,-56(s0)
-	lw	a5,4(a5)
+	lw	a5,8(a5)
 	sw	a5,-44(s0)
 	lw	a5,-44(s0)
 	mv	a1,a5
 	ld	a0,-64(s0)
 	call	perform_jump
-	j	.L50
-.L51:
+	j	.L87
+.L88:
 	ld	a5,-32(s0)
 	lw	a5,0(a5)
 	mv	a4,a5
 	li	a5,1
-	bne	a4,a5,.L53
+	bne	a4,a5,.L90
 	ld	a5,-32(s0)
 	ld	a5,16(a5)
-	beq	a5,zero,.L53
+	beq	a5,zero,.L90
 	ld	a5,-64(s0)
 	ld	a5,0(a5)
 	ld	a4,8(a5)
 	ld	a5,-64(s0)
 	sd	a4,0(a5)
-	j	.L50
-.L53:
+	j	.L87
+.L90:
 	ld	a5,-32(s0)
 	lw	a5,0(a5)
 	mv	a4,a5
 	li	a5,1
-	bne	a4,a5,.L54
+	bne	a4,a5,.L91
 	ld	a5,-56(s0)
-	lw	a5,4(a5)
+	lw	a5,8(a5)
 	sw	a5,-40(s0)
 	lw	a5,-40(s0)
 	mv	a1,a5
 	ld	a0,-64(s0)
 	call	perform_jump
-	j	.L50
-.L54:
+	j	.L87
+.L91:
 	sb	zero,-17(s0)
 	ld	a5,-32(s0)
 	lw	a5,8(a5)
-	bne	a5,zero,.L55
+	bne	a5,zero,.L92
 	ld	a5,-32(s0)
 	lw	a5,12(a5)
 	seqz	a5,a5
 	sb	a5,-17(s0)
-	j	.L56
-.L55:
+	j	.L93
+.L92:
 	ld	a5,-32(s0)
 	lw	a5,8(a5)
 	mv	a4,a5
 	li	a5,1
-	bne	a4,a5,.L57
+	bne	a4,a5,.L94
 	ld	a5,-32(s0)
 	flw	fa5,12(a5)
 	fmv.s.x	fa4,zero
 	feq.s	a5,fa5,fa4
 	snez	a5,a5
 	sb	a5,-17(s0)
-	j	.L56
-.L57:
+	j	.L93
+.L94:
 	ld	a5,-32(s0)
 	lw	a5,8(a5)
 	mv	a4,a5
 	li	a5,2
-	bne	a4,a5,.L58
+	bne	a4,a5,.L95
 	ld	a5,-32(s0)
 	lbu	a5,12(a5)
 	sext.w	a5,a5
@@ -658,130 +1043,435 @@ interpret_jump_relative_if_false:
 	lbu	a5,-17(s0)
 	andi	a5,a5,1
 	sb	a5,-17(s0)
-	j	.L56
-.L58:
+	j	.L93
+.L95:
 	ld	a5,-80(s0)
 	sw	zero,0(a5)
-	j	.L50
-.L56:
+	j	.L87
+.L93:
 	lbu	a5,-17(s0)
 	andi	a5,a5,0xff
-	beq	a5,zero,.L59
+	beq	a5,zero,.L96
 	ld	a5,-56(s0)
-	lw	a5,4(a5)
+	lw	a5,8(a5)
 	sw	a5,-36(s0)
 	lw	a5,-36(s0)
 	mv	a1,a5
 	ld	a0,-64(s0)
 	call	perform_jump
-	j	.L50
-.L59:
+	j	.L87
+.L96:
 	ld	a5,-64(s0)
 	ld	a5,0(a5)
 	ld	a4,8(a5)
 	ld	a5,-64(s0)
 	sd	a4,0(a5)
-.L50:
+.L87:
 	ld	ra,72(sp)
 	ld	s0,64(sp)
 	addi	sp,sp,80
 	jr	ra
-	.section	.rodata
-.LC5:
-	.string	"started_interpreting\n"
-.LC6:
-	.string	"ended_interpreting\n"
-.LC7:
-	.string	"Interpretation Error: %d\n"
-.LC8:
-	.string	"Interpretation result: %d\n"
-.LC9:
-	.string	"Interpretation result: %f\n"
-.LC10:
-	.string	"Unsupported type: %d\n"
-.LC11:
-	.string	"Unsupported type\n"
-	.text
-.align 2
-	.globl	interpret
-interpret:
+	.globl	interpret_store
+interpret_store:
 	addi	sp,sp,-64
 	sd	ra,56(sp)
 	sd	s0,48(sp)
 	addi	s0,sp,64
-	sd	a0,-56(s0)
-	lui	a5,%hi(.LC5)
-	addi	a0,a5,%lo(.LC5)
-	call	my_printf
-	sd	zero,-24(s0)
-	ld	a5,-56(s0)
-	ld	a5,24(a5)
-	ld	a5,0(a5)
-	ld	a5,0(a5)
-	sd	a5,-32(s0)
-	ld	a2,-24(s0)
-	ld	a1,-56(s0)
-	ld	a0,-32(s0)
-	call	interpret_unit
-	lui	a5,%hi(.LC6)
-	addi	a0,a5,%lo(.LC6)
-	call	my_printf
-	ld	a5,-24(s0)
-	beq	a5,zero,.L61
-	ld	a5,-24(s0)
-	lw	a5,0(a5)
-	mv	a1,a5
-	lui	a5,%hi(.LC7)
-	addi	a0,a5,%lo(.LC7)
-	call	my_printf
-	j	.L60
-.L61:
+	sd	a0,-40(s0)
+	sd	a1,-48(s0)
+	sd	a2,-56(s0)
+	sd	a3,-64(s0)
 	ld	a5,-56(s0)
 	ld	a5,16(a5)
 	ld	a5,0(a5)
 	ld	a5,0(a5)
-	sd	a5,-40(s0)
+	sd	a5,-24(s0)
+	ld	a5,-56(s0)
+	ld	a5,16(a5)
+	mv	a0,a5
+	call	stack_pop
+	ld	a5,-56(s0)
+	ld	a4,8(a5)
 	ld	a5,-40(s0)
-	lw	a5,0(a5)
-	bne	a5,zero,.L63
-	ld	a5,-40(s0)
-	lw	a5,8(a5)
-	bne	a5,zero,.L64
-	ld	a5,-40(s0)
-	lw	a5,12(a5)
-	mv	a1,a5
-	lui	a5,%hi(.LC8)
-	addi	a0,a5,%lo(.LC8)
-	call	my_printf
-	j	.L60
-.L64:
-	ld	a5,-40(s0)
-	lw	a5,8(a5)
-	mv	a4,a5
-	li	a5,1
-	bne	a4,a5,.L65
-	ld	a5,-40(s0)
-	flw	fa5,12(a5)
-	fcvt.d.s	fa5,fa5
-	fmv.x.d	a1,fa5
-	lui	a5,%hi(.LC9)
-	addi	a0,a5,%lo(.LC9)
-	call	my_printf
-	j	.L60
-.L65:
-	ld	a5,-40(s0)
-	lw	a5,8(a5)
-	mv	a1,a5
-	lui	a5,%hi(.LC10)
-	addi	a0,a5,%lo(.LC10)
-	call	my_printf
-	j	.L60
-.L63:
-	lui	a5,%hi(.LC11)
-	addi	a0,a5,%lo(.LC11)
-	call	my_printf
-.L60:
+	ld	a3,-24(s0)
+	ld	a1,8(a5)
+	ld	a2,16(a5)
+	mv	a0,a4
+	call	env_store
+	ld	a5,-48(s0)
+	ld	a5,0(a5)
+	ld	a4,8(a5)
+	ld	a5,-48(s0)
+	sd	a4,0(a5)
+	nop
 	ld	ra,56(sp)
 	ld	s0,48(sp)
 	addi	sp,sp,64
+	jr	ra
+	.section	.rodata
+.LC11:
+	.string	"WARNING, env loaded NONE for %s\ns"
+	.text
+.align 2
+	.globl	interpret_load
+interpret_load:
+	addi	sp,sp,-64
+	sd	ra,56(sp)
+	sd	s0,48(sp)
+	addi	s0,sp,64
+	sd	a0,-40(s0)
+	sd	a1,-48(s0)
+	sd	a2,-56(s0)
+	sd	a3,-64(s0)
+	ld	a5,-56(s0)
+	ld	a4,8(a5)
+	ld	a5,-40(s0)
+	ld	a1,8(a5)
+	ld	a2,16(a5)
+	mv	a0,a4
+	call	env_load
+	sd	a0,-24(s0)
+	ld	a5,-24(s0)
+	bne	a5,zero,.L99
+	ld	a5,-40(s0)
+	ld	a1,8(a5)
+	ld	a2,16(a5)
+	lui	a5,%hi(.LC11)
+	addi	a0,a5,%lo(.LC11)
+	call	my_printf
+.L99:
+	ld	a5,-56(s0)
+	ld	a5,16(a5)
+	ld	a1,-24(s0)
+	mv	a0,a5
+	call	stack_push
+	ld	a5,-48(s0)
+	ld	a5,0(a5)
+	ld	a4,8(a5)
+	ld	a5,-48(s0)
+	sd	a4,0(a5)
+	nop
+	ld	ra,56(sp)
+	ld	s0,48(sp)
+	addi	sp,sp,64
+	jr	ra
+	.globl	interpret_anon_fun
+interpret_anon_fun:
+	addi	sp,sp,-112
+	sd	ra,104(sp)
+	sd	s0,96(sp)
+	sd	s1,88(sp)
+	addi	s0,sp,112
+	sd	a0,-56(s0)
+	sd	a1,-64(s0)
+	sd	a2,-72(s0)
+	sd	a3,-80(s0)
+	ld	a5,-72(s0)
+	ld	a5,0(a5)
+	li	a1,1
+	mv	a0,a5
+	call	create_pyobject
+	sd	a0,-40(s0)
+	ld	a5,-40(s0)
+	li	a4,3
+	sw	a4,8(a5)
+	ld	a5,-72(s0)
+	ld	a5,0(a5)
+	li	a1,16
+	mv	a0,a5
+	call	my_alloc
+	sd	a0,-48(s0)
+	ld	a5,-48(s0)
+	ld	a4,-56(s0)
+	ld	a3,8(a4)
+	sd	a3,0(a5)
+	ld	a4,16(a4)
+	sd	a4,8(a5)
+	ld	a5,-72(s0)
+	ld	a4,0(a5)
+	ld	s1,-40(s0)
+	addi	a5,s0,-112
+	ld	a2,-48(s0)
+	mv	a1,a4
+	mv	a0,a5
+	call	make_shared
+	ld	a2,-112(s0)
+	ld	a3,-104(s0)
+	ld	a4,-96(s0)
+	ld	a5,-88(s0)
+	sd	a2,16(s1)
+	sd	a3,24(s1)
+	sd	a4,32(s1)
+	sd	a5,40(s1)
+	ld	a5,-72(s0)
+	ld	a5,16(a5)
+	ld	a1,-40(s0)
+	mv	a0,a5
+	call	stack_push
+	ld	a5,-64(s0)
+	ld	a5,0(a5)
+	ld	a4,8(a5)
+	ld	a5,-64(s0)
+	sd	a4,0(a5)
+	nop
+	ld	ra,104(sp)
+	ld	s0,96(sp)
+	ld	s1,88(sp)
+	addi	sp,sp,112
+	jr	ra
+	.globl	interpret_return
+interpret_return:
+	addi	sp,sp,-48
+	sd	s0,40(sp)
+	addi	s0,sp,48
+	sd	a0,-24(s0)
+	sd	a1,-32(s0)
+	sd	a2,-40(s0)
+	sd	a3,-48(s0)
+	ld	a5,-32(s0)
+	sd	zero,0(a5)
+	nop
+	ld	s0,40(sp)
+	addi	sp,sp,48
+	jr	ra
+	.globl	interpret_load_none
+interpret_load_none:
+	addi	sp,sp,-48
+	sd	ra,40(sp)
+	sd	s0,32(sp)
+	addi	s0,sp,48
+	sd	a0,-24(s0)
+	sd	a1,-32(s0)
+	sd	a2,-40(s0)
+	sd	a3,-48(s0)
+	ld	a5,-40(s0)
+	ld	a5,16(a5)
+	li	a1,0
+	mv	a0,a5
+	call	stack_push
+	ld	a5,-32(s0)
+	ld	a5,0(a5)
+	ld	a4,8(a5)
+	ld	a5,-32(s0)
+	sd	a4,0(a5)
+	nop
+	ld	ra,40(sp)
+	ld	s0,32(sp)
+	addi	sp,sp,48
+	jr	ra
+	.section	.rodata
+.LC12:
+	.string	"not enough args\n"
+	.text
+.align 2
+	.globl	interpret_call
+interpret_call:
+	addi	sp,sp,-128
+	sd	ra,120(sp)
+	sd	s0,112(sp)
+	addi	s0,sp,128
+	sd	a0,-104(s0)
+	sd	a1,-112(s0)
+	sd	a2,-120(s0)
+	sd	a3,-128(s0)
+	ld	a5,-120(s0)
+	ld	a5,16(a5)
+	ld	a5,0(a5)
+	ld	a5,0(a5)
+	sd	a5,-56(s0)
+	ld	a5,-120(s0)
+	ld	a5,16(a5)
+	mv	a0,a5
+	call	stack_pop
+	ld	a5,-56(s0)
+	ld	a5,16(a5)
+	sd	a5,-64(s0)
+	ld	a5,-104(s0)
+	lw	a5,8(a5)
+	mv	a4,a5
+	ld	a5,-64(s0)
+	ld	a5,0(a5)
+	ld	a5,16(a5)
+	beq	a4,a5,.L104
+	lui	a5,%hi(.LC12)
+	addi	a0,a5,%lo(.LC12)
+	call	my_printf
+	ld	a5,-128(s0)
+	li	a4,4
+	sw	a4,0(a5)
+	j	.L103
+.L104:
+	ld	a5,-120(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	linked_list_create
+	sd	a0,-72(s0)
+	sw	zero,-20(s0)
+	j	.L106
+.L107:
+	ld	a5,-120(s0)
+	ld	a5,16(a5)
+	ld	a5,0(a5)
+	ld	a5,0(a5)
+	sd	a5,-96(s0)
+	ld	a5,-120(s0)
+	ld	a5,16(a5)
+	mv	a0,a5
+	call	stack_pop
+	ld	a1,-96(s0)
+	ld	a0,-72(s0)
+	call	linked_list_push
+	lw	a5,-20(s0)
+	addiw	a5,a5,1
+	sw	a5,-20(s0)
+.L106:
+	ld	a5,-104(s0)
+	lw	a4,8(a5)
+	lw	a5,-20(s0)
+	sext.w	a5,a5
+	blt	a5,a4,.L107
+	ld	a0,-72(s0)
+	call	linked_list_reverse
+	ld	a5,-120(s0)
+	ld	a5,0(a5)
+	li	a1,24
+	mv	a0,a5
+	call	my_alloc
+	sd	a0,-80(s0)
+	ld	a5,-120(s0)
+	ld	a4,0(a5)
+	ld	a5,-80(s0)
+	sd	a4,16(a5)
+	ld	a5,-120(s0)
+	ld	a4,8(a5)
+	ld	a5,-80(s0)
+	sd	a4,0(a5)
+	ld	a5,-120(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	hash_table_create
+	mv	a4,a0
+	ld	a5,-80(s0)
+	sd	a4,8(a5)
+	ld	a5,-72(s0)
+	ld	a5,0(a5)
+	sd	a5,-32(s0)
+	ld	a5,-64(s0)
+	ld	a5,0(a5)
+	ld	a5,0(a5)
+	sd	a5,-40(s0)
+	sw	zero,-44(s0)
+	j	.L108
+.L109:
+	ld	a5,-40(s0)
+	ld	a5,0(a5)
+	ld	a4,-32(s0)
+	ld	a4,0(a4)
+	mv	a3,a4
+	ld	a1,0(a5)
+	ld	a2,8(a5)
+	ld	a0,-80(s0)
+	call	env_store
+	ld	a5,-32(s0)
+	ld	a5,8(a5)
+	sd	a5,-32(s0)
+	ld	a5,-40(s0)
+	ld	a5,8(a5)
+	sd	a5,-40(s0)
+	lw	a5,-44(s0)
+	addiw	a5,a5,1
+	sw	a5,-44(s0)
+.L108:
+	lw	a4,-44(s0)
+	ld	a5,-72(s0)
+	ld	a5,16(a5)
+	bltu	a4,a5,.L109
+	ld	a5,-120(s0)
+	ld	a5,0(a5)
+	li	a1,40
+	mv	a0,a5
+	call	my_alloc
+	sd	a0,-88(s0)
+	ld	a5,-120(s0)
+	ld	a4,0(a5)
+	ld	a5,-88(s0)
+	sd	a4,0(a5)
+	ld	a5,-88(s0)
+	ld	a4,-80(s0)
+	sd	a4,8(a5)
+	ld	a5,-120(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	stack_create
+	mv	a4,a0
+	ld	a5,-88(s0)
+	sd	a4,16(a5)
+	ld	a5,-120(s0)
+	ld	a4,32(a5)
+	ld	a5,-88(s0)
+	sd	a4,32(a5)
+	ld	a5,-64(s0)
+	ld	a4,8(a5)
+	ld	a5,-88(s0)
+	sd	a4,24(a5)
+	ld	a0,-88(s0)
+	call	interpret
+	ld	a5,-120(s0)
+	ld	a4,16(a5)
+	ld	a5,-88(s0)
+	ld	a5,16(a5)
+	ld	a5,0(a5)
+	ld	a5,0(a5)
+	mv	a1,a5
+	mv	a0,a4
+	call	stack_push
+	ld	a5,-88(s0)
+	ld	a5,16(a5)
+	mv	a0,a5
+	call	stack_free
+	ld	a5,-80(s0)
+	ld	a5,8(a5)
+	mv	a0,a5
+	call	hash_table_free
+	ld	a5,-88(s0)
+	ld	a5,8(a5)
+	ld	a4,16(a5)
+	ld	a5,-88(s0)
+	ld	a5,8(a5)
+	mv	a1,a5
+	mv	a0,a4
+	call	my_free
+	ld	a5,-120(s0)
+	ld	a5,0(a5)
+	ld	a1,-88(s0)
+	mv	a0,a5
+	call	my_free
+	ld	a5,-112(s0)
+	ld	a5,0(a5)
+	ld	a4,8(a5)
+	ld	a5,-112(s0)
+	sd	a4,0(a5)
+.L103:
+	ld	ra,120(sp)
+	ld	s0,112(sp)
+	addi	sp,sp,128
+	jr	ra
+	.globl	interpret
+interpret:
+	addi	sp,sp,-48
+	sd	ra,40(sp)
+	sd	s0,32(sp)
+	addi	s0,sp,48
+	sd	a0,-40(s0)
+	sd	zero,-24(s0)
+	ld	a5,-40(s0)
+	ld	a5,24(a5)
+	ld	a2,-24(s0)
+	ld	a1,-40(s0)
+	mv	a0,a5
+	call	interpret_unit
+	nop
+	ld	ra,40(sp)
+	ld	s0,32(sp)
+	addi	sp,sp,48
 	jr	ra

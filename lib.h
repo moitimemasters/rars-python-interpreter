@@ -50,6 +50,8 @@ void hash_table_insert_string(hash_table *table, string_view_t string_key,
                               void *value);
 void *hash_table_get(hash_table *table, int key_hash);
 void *hash_table_get_string(hash_table *table, string_view_t string_key);
+void *hash_table_upsert(hash_table *table, int key_hash, void* value);
+void *hash_table_upsert_string(hash_table *table, string_view_t string_key, void* value);
 
 void stack_pop(stack_t *stack);
 void stack_push(stack_t *stack, void *item);
@@ -60,6 +62,8 @@ linked_list *linked_list_create(MemoryPool *pool);
 void linked_list_push(linked_list *list, void *item);
 void linked_list_free(linked_list *list);
 void *linked_list_at(linked_list *list, size_t item);
+void linked_list_reverse(linked_list *list);
+
 
 string_view_t string_view(const char *source, size_t len);
 string_view_t c_string_view(const char *c_str);

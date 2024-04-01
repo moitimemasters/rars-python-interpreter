@@ -3,11 +3,13 @@
 
 #include "allocator.h"
 #include "lib.h"
+#include "weak_ptr.h"
 
 typedef enum {
     PY_INT,
     PY_FLOAT,
     PY_BOOL,
+    PY_FUNC,
 } PyType;
 
 typedef enum {
@@ -27,7 +29,7 @@ typedef struct {
 
 typedef struct {
     PyType type;
-    void* data;
+    shared_ptr data;
 } Reference;  //< always pass by reference
 
 typedef struct {
@@ -43,5 +45,7 @@ PyObject* create_value(MemoryPool* pool, PyType pytype);
 PyObject* create_int(MemoryPool* pool, int value);
 PyObject* create_float(MemoryPool* pool, float value);
 PyObject* create_bool(MemoryPool* pool, bool value);
+void release_pyobject(MemoryPool* pool, PyObject* obj);
+PyObject* copy_pyobject(MemoryPool* pool, PyObject* obj);
 
 #endif  // PYOBJECT_H

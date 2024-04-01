@@ -3,8 +3,6 @@
 #ifndef SYSCALL_H
 #define SYSCALL_H
 
-#include <stddef.h>
-
 void printstr(const char *str);
 void printint(int val);
 void printchar(char val);
