@@ -167,7 +167,7 @@ void my_printf(const char *format, ...) {
 
     va_start(args, format);
     my_vsprintf(buf, format, args);
-    printstr(buf);
+    print_string(buf);
     va_end(args);
 }
 

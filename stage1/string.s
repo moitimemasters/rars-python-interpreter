@@ -102,4 +102,247 @@ my_strcmp:
 	addi	sp,sp,32
 	jr	ra
 	.size	my_strcmp, .-my_strcmp
+	.align	1
+	.globl	empty
+	.type	empty, @function
+empty:
+	addi	sp,sp,-48
+	sd	ra,40(sp)
+	sd	s0,32(sp)
+	addi	s0,sp,48
+	sd	a0,-40(s0)
+	li	a1,24
+	ld	a0,-40(s0)
+	call	my_alloc
+	sd	a0,-24(s0)
+	ld	a5,-24(s0)
+	sd	zero,0(a5)
+	ld	a5,-24(s0)
+	ld	a4,-40(s0)
+	sd	a4,16(a5)
+	ld	a5,-24(s0)
+	sw	zero,12(a5)
+	ld	a5,-24(s0)
+	sw	zero,8(a5)
+	nop
+	mv	a0,a5
+	ld	ra,40(sp)
+	ld	s0,32(sp)
+	addi	sp,sp,48
+	jr	ra
+	.size	empty, .-empty
+	.align	1
+	.globl	from_c_str
+	.type	from_c_str, @function
+from_c_str:
+	addi	sp,sp,-48
+	sd	ra,40(sp)
+	sd	s0,32(sp)
+	addi	s0,sp,48
+	sd	a0,-40(s0)
+	sd	a1,-48(s0)
+	li	a1,24
+	ld	a0,-40(s0)
+	call	my_alloc
+	sd	a0,-24(s0)
+	ld	a0,-48(s0)
+	call	my_strlen
+	mv	a5,a0
+	addiw	a5,a5,1
+	sext.w	a5,a5
+	mv	a1,a5
+	ld	a0,-40(s0)
+	call	my_alloc
+	mv	a4,a0
+	ld	a5,-24(s0)
+	sd	a4,0(a5)
+	ld	a0,-48(s0)
+	call	my_strlen
+	mv	a5,a0
+	mv	a4,a5
+	ld	a5,-24(s0)
+	sw	a4,8(a5)
+	ld	a5,-24(s0)
+	ld	a4,-40(s0)
+	sd	a4,16(a5)
+	ld	a5,-24(s0)
+	lw	a5,8(a5)
+	addiw	a5,a5,1
+	sext.w	a4,a5
+	ld	a5,-24(s0)
+	sw	a4,12(a5)
+	ld	a5,-24(s0)
+	mv	a0,a5
+	ld	ra,40(sp)
+	ld	s0,32(sp)
+	addi	sp,sp,48
+	jr	ra
+	.size	from_c_str, .-from_c_str
+	.align	1
+	.globl	from_string_view
+	.type	from_string_view, @function
+from_string_view:
+	addi	sp,sp,-64
+	sd	ra,56(sp)
+	sd	s0,48(sp)
+	addi	s0,sp,64
+	sd	a0,-40(s0)
+	sd	a1,-56(s0)
+	sd	a2,-48(s0)
+	li	a1,24
+	ld	a0,-40(s0)
+	call	my_alloc
+	sd	a0,-24(s0)
+	ld	a5,-48(s0)
+	mv	a1,a5
+	ld	a0,-40(s0)
+	call	my_alloc
+	mv	a4,a0
+	ld	a5,-24(s0)
+	sd	a4,0(a5)
+	ld	a5,-24(s0)
+	ld	a5,0(a5)
+	ld	a4,-56(s0)
+	ld	a3,-48(s0)
+	mv	a2,a3
+	mv	a1,a4
+	mv	a0,a5
+	call	my_memcpy
+	ld	a5,-24(s0)
+	ld	a4,-40(s0)
+	sd	a4,16(a5)
+	ld	a5,-48(s0)
+	sext.w	a4,a5
+	ld	a5,-24(s0)
+	sw	a4,8(a5)
+	ld	a5,-24(s0)
+	lw	a5,8(a5)
+	addiw	a5,a5,1
+	sext.w	a4,a5
+	ld	a5,-24(s0)
+	sw	a4,12(a5)
+	ld	a5,-24(s0)
+	mv	a0,a5
+	ld	ra,56(sp)
+	ld	s0,48(sp)
+	addi	sp,sp,64
+	jr	ra
+	.size	from_string_view, .-from_string_view
+	.align	1
+	.globl	append_string_view
+	.type	append_string_view, @function
+append_string_view:
+	addi	sp,sp,-48
+	sd	ra,40(sp)
+	sd	s0,32(sp)
+	addi	s0,sp,48
+	sd	a0,-24(s0)
+	sd	a1,-40(s0)
+	sd	a2,-32(s0)
+	ld	a5,-24(s0)
+	lw	a5,8(a5)
+	mv	a4,a5
+	ld	a5,-32(s0)
+	add	a5,a4,a5
+	ld	a4,-24(s0)
+	lw	a4,12(a4)
+	bltu	a5,a4,.L19
+	ld	a5,-24(s0)
+	lw	a5,8(a5)
+	sext.w	a4,a5
+	ld	a5,-32(s0)
+	sext.w	a5,a5
+	addw	a5,a4,a5
+	sext.w	a5,a5
+	addiw	a5,a5,1
+	sext.w	a5,a5
+	sext.w	a4,a5
+	ld	a5,-24(s0)
+	sw	a4,12(a5)
+	ld	a5,-24(s0)
+	ld	a5,0(a5)
+	bne	a5,zero,.L20
+	ld	a5,-24(s0)
+	ld	a5,16(a5)
+	ld	a4,-32(s0)
+	mv	a1,a4
+	mv	a0,a5
+	call	my_alloc
+	mv	a4,a0
+	ld	a5,-24(s0)
+	sd	a4,0(a5)
+	j	.L19
+.L20:
+	ld	a5,-24(s0)
+	ld	a5,0(a5)
+	beq	a5,zero,.L19
+	ld	a5,-24(s0)
+	ld	a4,16(a5)
+	ld	a5,-24(s0)
+	ld	a3,0(a5)
+	ld	a5,-24(s0)
+	lw	a5,12(a5)
+	mv	a2,a5
+	mv	a1,a3
+	mv	a0,a4
+	call	my_realloc
+	mv	a4,a0
+	ld	a5,-24(s0)
+	sd	a4,0(a5)
+.L19:
+	ld	a5,-24(s0)
+	ld	a5,0(a5)
+	ld	a4,-24(s0)
+	lw	a4,8(a4)
+	add	a5,a5,a4
+	ld	a4,-40(s0)
+	ld	a3,-32(s0)
+	mv	a2,a3
+	mv	a1,a4
+	mv	a0,a5
+	call	my_memcpy
+	ld	a5,-24(s0)
+	lw	a5,8(a5)
+	sext.w	a4,a5
+	ld	a5,-32(s0)
+	sext.w	a5,a5
+	addw	a5,a4,a5
+	sext.w	a5,a5
+	sext.w	a4,a5
+	ld	a5,-24(s0)
+	sw	a4,8(a5)
+	nop
+	ld	ra,40(sp)
+	ld	s0,32(sp)
+	addi	sp,sp,48
+	jr	ra
+	.size	append_string_view, .-append_string_view
+	.align	1
+	.globl	string_destroy
+	.type	string_destroy, @function
+string_destroy:
+	addi	sp,sp,-32
+	sd	ra,24(sp)
+	sd	s0,16(sp)
+	addi	s0,sp,32
+	sd	a0,-24(s0)
+	ld	a5,-24(s0)
+	ld	a4,16(a5)
+	ld	a5,-24(s0)
+	ld	a5,0(a5)
+	mv	a1,a5
+	mv	a0,a4
+	call	my_free
+	ld	a5,-24(s0)
+	sd	zero,0(a5)
+	ld	a5,-24(s0)
+	sw	zero,12(a5)
+	ld	a5,-24(s0)
+	sw	zero,8(a5)
+	nop
+	ld	ra,24(sp)
+	ld	s0,16(sp)
+	addi	sp,sp,32
+	jr	ra
+	.size	string_destroy, .-string_destroy
 	.ident	"GCC: () 13.2.0"

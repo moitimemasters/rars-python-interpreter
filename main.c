@@ -2,6 +2,7 @@
 #include "ast.h"
 #include "c_functions.h"
 #include "compiler.h"
+#include "file.h"
 #include "interpreter.h"
 #include "lexer.h"
 #include "lib.h"
@@ -29,15 +30,13 @@ int main() {
     pool.start = (void *)HEAP_START;
     pool.end = (void *)HEAP_END;
 
-    const char *program =
-        "def foo(n):\n"
-        "    return foo(n - 1) + foo(n - 2) if n >= 1 else 1\n"
-        "foo(6)";
+    String *program = read_whole_file(
+        &pool, "/home/ivanpesnya/rars-python-interpreter/test.py");
 
     Lexer lexer;
     lexer.pool = &pool;
-    lexer.source = program;
-    lexer.sourceLength = my_strlen(program);
+    lexer.source = program->data;
+    lexer.sourceLength = program->length;
     lexer.current = 0;
     lexer.line = 1;
     lexer.column = 0;

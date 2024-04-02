@@ -1,14 +1,14 @@
 	.text
 .align 2
-	.globl	printstr
-printstr:
+	.globl	print_string
+print_string:
 	addi	sp,sp,-32
 	sd	s0,24(sp)
 	addi	s0,sp,32
 	sd	a0,-24(s0)
 	ld	a5,-24(s0)
  #APP
-# 18 "syscall.c" 1
+# 23 "syscall.c" 1
 	mv a0, a5
 	li a7, 4
 	ecall
@@ -19,8 +19,8 @@ printstr:
 	ld	s0,24(sp)
 	addi	sp,sp,32
 	jr	ra
-	.globl	printchar
-printchar:
+	.globl	print_char
+print_char:
 	addi	sp,sp,-32
 	sd	s0,24(sp)
 	addi	s0,sp,32
@@ -28,7 +28,7 @@ printchar:
 	sb	a5,-17(s0)
 	lbu	a5,-17(s0)
  #APP
-# 28 "syscall.c" 1
+# 33 "syscall.c" 1
 	mv a0, a5
 	li a7, 11
 	ecall
@@ -39,8 +39,8 @@ printchar:
 	ld	s0,24(sp)
 	addi	sp,sp,32
 	jr	ra
-	.globl	printint
-printint:
+	.globl	print_int
+print_int:
 	addi	sp,sp,-32
 	sd	s0,24(sp)
 	addi	s0,sp,32
@@ -48,7 +48,7 @@ printint:
 	sw	a5,-20(s0)
 	lw	a5,-20(s0)
  #APP
-# 38 "syscall.c" 1
+# 43 "syscall.c" 1
 	mv a0, a5
 	li a7, 1
 	ecall
@@ -59,13 +59,13 @@ printint:
 	ld	s0,24(sp)
 	addi	sp,sp,32
 	jr	ra
-	.globl	readint
-readint:
+	.globl	read_int
+read_int:
 	addi	sp,sp,-32
 	sd	s0,24(sp)
 	addi	s0,sp,32
  #APP
-# 49 "syscall.c" 1
+# 54 "syscall.c" 1
 	li a7, 5
 	ecall
 	mv a5, a0
@@ -87,7 +87,7 @@ sbrk:
 	sw	a5,-36(s0)
 	lw	a5,-36(s0)
  #APP
-# 61 "syscall.c" 1
+# 66 "syscall.c" 1
 	mv a0, a5
 	li a7, 9
 	ecall
@@ -101,13 +101,13 @@ sbrk:
 	ld	s0,40(sp)
 	addi	sp,sp,48
 	jr	ra
-	.globl	readFloat
-readFloat:
+	.globl	read_float
+read_float:
 	addi	sp,sp,-32
 	sd	s0,24(sp)
 	addi	s0,sp,32
  #APP
-# 74 "syscall.c" 1
+# 79 "syscall.c" 1
 	li a7, 6
 	ecall
 	fmv.s fa5, fa0
@@ -120,13 +120,13 @@ readFloat:
 	ld	s0,24(sp)
 	addi	sp,sp,32
 	jr	ra
-	.globl	readDouble
-readDouble:
+	.globl	read_double
+read_double:
 	addi	sp,sp,-32
 	sd	s0,24(sp)
 	addi	s0,sp,32
  #APP
-# 86 "syscall.c" 1
+# 91 "syscall.c" 1
 	li a7, 7
 	ecall
 	fmv.d fa5, fa0
@@ -139,15 +139,15 @@ readDouble:
 	ld	s0,24(sp)
 	addi	sp,sp,32
 	jr	ra
-	.globl	printFloat
-printFloat:
+	.globl	print_float
+print_float:
 	addi	sp,sp,-32
 	sd	s0,24(sp)
 	addi	s0,sp,32
 	fsw	fa0,-20(s0)
 	flw	fa5,-20(s0)
  #APP
-# 97 "syscall.c" 1
+# 102 "syscall.c" 1
 	fmv.s fa0, fa5
 	li a7, 2
 	ecall
@@ -158,15 +158,15 @@ printFloat:
 	ld	s0,24(sp)
 	addi	sp,sp,32
 	jr	ra
-	.globl	printDouble
-printDouble:
+	.globl	print_double
+print_double:
 	addi	sp,sp,-32
 	sd	s0,24(sp)
 	addi	s0,sp,32
 	fsd	fa0,-24(s0)
 	fld	fa5,-24(s0)
  #APP
-# 107 "syscall.c" 1
+# 112 "syscall.c" 1
 	fmv.d fa0, fa5
 	li a7, 3
 	ecall
@@ -177,8 +177,8 @@ printDouble:
 	ld	s0,24(sp)
 	addi	sp,sp,32
 	jr	ra
-	.globl	readString
-readString:
+	.globl	read_string
+read_string:
 	addi	sp,sp,-32
 	sd	s0,24(sp)
 	addi	s0,sp,32
@@ -188,10 +188,88 @@ readString:
 	ld	a5,-24(s0)
 	lw	a4,-28(s0)
  #APP
-# 117 "syscall.c" 1
+# 122 "syscall.c" 1
 	mv a0, a5
 	mv a1, a4
 	li a7, 8
+	ecall
+	
+# 0 "" 2
+ #NO_APP
+	nop
+	ld	s0,24(sp)
+	addi	sp,sp,32
+	jr	ra
+	.globl	open_file
+open_file:
+	addi	sp,sp,-48
+	sd	s0,40(sp)
+	addi	s0,sp,48
+	sd	a0,-40(s0)
+	mv	a5,a1
+	sw	a5,-44(s0)
+	ld	a5,-40(s0)
+	lw	a4,-44(s0)
+ #APP
+# 134 "syscall.c" 1
+	mv a0, a5
+	mv a1, a4
+	li a7, 1024
+	ecall
+	mv a5, a0
+	
+# 0 "" 2
+ #NO_APP
+	sw	a5,-20(s0)
+	lw	a5,-20(s0)
+	mv	a0,a5
+	ld	s0,40(sp)
+	addi	sp,sp,48
+	jr	ra
+	.globl	read_file
+read_file:
+	addi	sp,sp,-48
+	sd	s0,40(sp)
+	addi	s0,sp,48
+	mv	a5,a0
+	sd	a1,-48(s0)
+	mv	a4,a2
+	sw	a5,-36(s0)
+	mv	a5,a4
+	sw	a5,-40(s0)
+	lw	a5,-36(s0)
+	mv	a4,a5
+	ld	a5,-48(s0)
+	lw	a3,-40(s0)
+ #APP
+# 148 "syscall.c" 1
+	mv a0, a4
+	mv a1, a5
+	mv a2, a3
+	li a7, 63
+	ecall
+	mv a5, a0
+	
+# 0 "" 2
+ #NO_APP
+	sw	a5,-20(s0)
+	lw	a5,-20(s0)
+	mv	a0,a5
+	ld	s0,40(sp)
+	addi	sp,sp,48
+	jr	ra
+	.globl	close
+close:
+	addi	sp,sp,-32
+	sd	s0,24(sp)
+	addi	s0,sp,32
+	mv	a5,a0
+	sw	a5,-20(s0)
+	lw	a5,-20(s0)
+ #APP
+# 162 "syscall.c" 1
+	mv a0, a5
+	li a7, 57
 	ecall
 	
 # 0 "" 2
@@ -206,7 +284,7 @@ Exit:
 	sd	s0,8(sp)
 	addi	s0,sp,16
  #APP
-# 128 "syscall.c" 1
+# 172 "syscall.c" 1
 	li a7, 10
 	ecall
 	

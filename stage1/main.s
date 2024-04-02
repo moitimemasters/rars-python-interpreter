@@ -184,7 +184,7 @@ populate_c_functions:
 	.section	.rodata
 	.align	3
 .LC10:
-	.string	"def foo(n):\n    return foo(n - 1) + foo(n - 2) if n >= 1 else 1\nfoo(6)"
+	.string	"/home/ivanpesnya/rars-python-interpreter/test.py"
 	.align	3
 .LC11:
 	.string	"started lexing\n"
@@ -243,16 +243,19 @@ main:
 	sd	a5,-104(s0)
 	li	a5,805306368
 	sd	a5,-96(s0)
+	addi	a4,s0,-104
 	lui	a5,%hi(.LC10)
-	addi	a5,a5,%lo(.LC10)
-	sd	a5,-32(s0)
+	addi	a1,a5,%lo(.LC10)
+	mv	a0,a4
+	call	read_whole_file
+	sd	a0,-32(s0)
 	addi	a5,s0,-104
 	sd	a5,-112(s0)
 	ld	a5,-32(s0)
+	ld	a5,0(a5)
 	sd	a5,-152(s0)
-	ld	a0,-32(s0)
-	call	my_strlen
-	mv	a5,a0
+	ld	a5,-32(s0)
+	lw	a5,8(a5)
 	sd	a5,-128(s0)
 	sw	zero,-144(s0)
 	li	a5,1

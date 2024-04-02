@@ -2478,14 +2478,12 @@ parse_logical:
 .LC19:
 	.string	"if tern expr is null\n"
 .LC20:
-	.string	"parsing ternary...\n"
-.LC21:
 	.string	"Expected expression after ternary if"
-.LC22:
+.LC21:
 	.string	"Unexpected end of input, expected \"else\" after ternary if"
-.LC23:
+.LC22:
 	.string	"Expected \"else\" after ternary if"
-.LC24:
+.LC23:
 	.string	"Expected expression after \"else\" in ternary if"
 	.text
 .align 2
@@ -2531,17 +2529,14 @@ parse_expression:
 	ld	a1,-88(s0)
 	mv	a0,a5
 	call	ast_consume
-	lui	a5,%hi(.LC20)
-	addi	a0,a5,%lo(.LC20)
-	call	my_printf
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_logical
 	sd	a0,-32(s0)
 	ld	a5,-32(s0)
 	bne	a5,zero,.L201
-	lui	a5,%hi(.LC21)
-	addi	a1,a5,%lo(.LC21)
+	lui	a5,%hi(.LC20)
+	addi	a1,a5,%lo(.LC20)
 	ld	a0,-96(s0)
 	call	report_parse_error
 	li	a5,0
@@ -2551,8 +2546,8 @@ parse_expression:
 	call	is_end
 	mv	a5,a0
 	beq	a5,zero,.L202
-	lui	a5,%hi(.LC22)
-	addi	a1,a5,%lo(.LC22)
+	lui	a5,%hi(.LC21)
+	addi	a1,a5,%lo(.LC21)
 	ld	a0,-96(s0)
 	call	report_parse_error
 	li	a5,0
@@ -2574,8 +2569,8 @@ parse_expression:
 	mv	a4,a5
 	li	a5,41
 	beq	a4,a5,.L203
-	lui	a5,%hi(.LC23)
-	addi	a1,a5,%lo(.LC23)
+	lui	a5,%hi(.LC22)
+	addi	a1,a5,%lo(.LC22)
 	ld	a0,-96(s0)
 	call	report_parse_error
 	li	a5,0
@@ -2591,8 +2586,8 @@ parse_expression:
 	sd	a0,-40(s0)
 	ld	a5,-40(s0)
 	bne	a5,zero,.L204
-	lui	a5,%hi(.LC24)
-	addi	a1,a5,%lo(.LC24)
+	lui	a5,%hi(.LC23)
+	addi	a1,a5,%lo(.LC23)
 	ld	a0,-96(s0)
 	call	report_parse_error
 	li	a5,0
@@ -2696,13 +2691,13 @@ retract_indentation:
 	addi	sp,sp,32
 	jr	ra
 	.section	.rodata
-.LC25:
+.LC24:
 	.string	"Expected \":\" after condition"
-.LC26:
+.LC25:
 	.string	"Unexpected indentation after \":\""
-.LC27:
+.LC26:
 	.string	"Expected statement after if"
-.LC28:
+.LC27:
 	.string	"Unexpected indentation"
 	.text
 .align 2
@@ -2798,8 +2793,8 @@ parse_condition_partial:
 	mv	a4,a5
 	li	a5,55
 	beq	a4,a5,.L219
-	lui	a5,%hi(.LC25)
-	addi	a1,a5,%lo(.LC25)
+	lui	a5,%hi(.LC24)
+	addi	a1,a5,%lo(.LC24)
 	ld	a0,-120(s0)
 	call	report_parse_error
 	lbu	a5,-109(s0)
@@ -2826,8 +2821,8 @@ parse_condition_partial:
 	addiw	a5,a5,1
 	sext.w	a5,a5
 	beq	a4,a5,.L221
-	lui	a5,%hi(.LC26)
-	addi	a1,a5,%lo(.LC26)
+	lui	a5,%hi(.LC25)
+	addi	a1,a5,%lo(.LC25)
 	ld	a0,-120(s0)
 	call	report_parse_error
 	lbu	a5,-109(s0)
@@ -2877,8 +2872,8 @@ parse_condition_partial:
 	mv	a0,a5
 	call	my_free
 .L226:
-	lui	a5,%hi(.LC27)
-	addi	a1,a5,%lo(.LC27)
+	lui	a5,%hi(.LC26)
+	addi	a1,a5,%lo(.LC26)
 	ld	a0,-120(s0)
 	call	report_parse_error
 	li	a5,0
@@ -2979,8 +2974,8 @@ parse_condition_partial:
 	ld	a5,16(a5)
 	mv	a0,a5
 	call	linked_list_free
-	lui	a5,%hi(.LC28)
-	addi	a1,a5,%lo(.LC28)
+	lui	a5,%hi(.LC27)
+	addi	a1,a5,%lo(.LC27)
 	ld	a0,-120(s0)
 	call	report_parse_error
 	li	a5,0
@@ -3103,8 +3098,8 @@ parse_if_statement:
 	lw	a5,-20(s0)
 	sext.w	a5,a5
 	bge	a5,a4,.L248
-	lui	a5,%hi(.LC28)
-	addi	a1,a5,%lo(.LC28)
+	lui	a5,%hi(.LC27)
+	addi	a1,a5,%lo(.LC27)
 	ld	a0,-80(s0)
 	call	report_parse_error
 	j	.L248
@@ -3155,19 +3150,19 @@ parse_if_statement:
 	addi	sp,sp,80
 	jr	ra
 	.section	.rodata
-.LC29:
+.LC28:
 	.string	"Expected identifier after for"
-.LC30:
+.LC29:
 	.string	"Expected \"in\" after for"
-.LC31:
+.LC30:
 	.string	"Expected expression after \"in\""
-.LC32:
+.LC31:
 	.string	"Expected \":\" after for"
-.LC33:
+.LC32:
 	.string	"Expected indentation after \":\""
-.LC34:
+.LC33:
 	.string	"Expected statement or \"pass\" after for"
-.LC35:
+.LC34:
 	.string	"Unexpected indentation after for loop"
 	.text
 .align 2
@@ -3214,8 +3209,8 @@ parse_for_loop:
 	sd	a0,-32(s0)
 	ld	a5,-32(s0)
 	bne	a5,zero,.L257
-	lui	a5,%hi(.LC29)
-	addi	a1,a5,%lo(.LC29)
+	lui	a5,%hi(.LC28)
+	addi	a1,a5,%lo(.LC28)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	li	a5,0
@@ -3248,8 +3243,8 @@ parse_for_loop:
 	mv	a4,a5
 	li	a5,38
 	beq	a4,a5,.L259
-	lui	a5,%hi(.LC30)
-	addi	a1,a5,%lo(.LC30)
+	lui	a5,%hi(.LC29)
+	addi	a1,a5,%lo(.LC29)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	ld	a5,-136(s0)
@@ -3270,8 +3265,8 @@ parse_for_loop:
 	sd	a0,-40(s0)
 	ld	a5,-40(s0)
 	bne	a5,zero,.L260
-	lui	a5,%hi(.LC31)
-	addi	a1,a5,%lo(.LC31)
+	lui	a5,%hi(.LC30)
+	addi	a1,a5,%lo(.LC30)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	li	a5,0
@@ -3296,8 +3291,8 @@ parse_for_loop:
 	mv	a4,a5
 	li	a5,55
 	beq	a4,a5,.L262
-	lui	a5,%hi(.LC32)
-	addi	a1,a5,%lo(.LC32)
+	lui	a5,%hi(.LC31)
+	addi	a1,a5,%lo(.LC31)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	ld	a5,-136(s0)
@@ -3325,8 +3320,8 @@ parse_for_loop:
 	addiw	a5,a5,1
 	sext.w	a5,a5
 	beq	a4,a5,.L263
-	lui	a5,%hi(.LC33)
-	addi	a1,a5,%lo(.LC33)
+	lui	a5,%hi(.LC32)
+	addi	a1,a5,%lo(.LC32)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	ld	a5,-136(s0)
@@ -3348,8 +3343,8 @@ parse_for_loop:
 	sd	a0,-48(s0)
 	ld	a5,-48(s0)
 	bne	a5,zero,.L264
-	lui	a5,%hi(.LC34)
-	addi	a1,a5,%lo(.LC34)
+	lui	a5,%hi(.LC33)
+	addi	a1,a5,%lo(.LC33)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	ld	a5,-136(s0)
@@ -3411,8 +3406,8 @@ parse_for_loop:
 	ld	a5,24(a5)
 	mv	a0,a5
 	call	linked_list_free
-	lui	a5,%hi(.LC34)
-	addi	a1,a5,%lo(.LC34)
+	lui	a5,%hi(.LC33)
+	addi	a1,a5,%lo(.LC33)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	li	a5,0
@@ -3464,8 +3459,8 @@ parse_for_loop:
 	ld	a5,24(a5)
 	mv	a0,a5
 	call	linked_list_free
-	lui	a5,%hi(.LC35)
-	addi	a1,a5,%lo(.LC35)
+	lui	a5,%hi(.LC34)
+	addi	a1,a5,%lo(.LC34)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	li	a5,0
@@ -3485,11 +3480,11 @@ parse_for_loop:
 	addi	sp,sp,176
 	jr	ra
 	.section	.rodata
-.LC36:
+.LC35:
 	.string	"Expected condition or \":\" after \"while\""
-.LC37:
+.LC36:
 	.string	"Expected statement or \"pass\" after while"
-.LC38:
+.LC37:
 	.string	"Unexpected indentation after while loop"
 	.text
 .align 2
@@ -3540,8 +3535,8 @@ parse_while:
 	mv	a4,a5
 	li	a5,55
 	beq	a4,a5,.L277
-	lui	a5,%hi(.LC36)
-	addi	a1,a5,%lo(.LC36)
+	lui	a5,%hi(.LC35)
+	addi	a1,a5,%lo(.LC35)
 	ld	a0,-176(s0)
 	call	report_parse_error
 	li	a5,0
@@ -3555,8 +3550,8 @@ parse_while:
 	mv	a4,a5
 	li	a5,55
 	beq	a4,a5,.L278
-	lui	a5,%hi(.LC25)
-	addi	a1,a5,%lo(.LC25)
+	lui	a5,%hi(.LC24)
+	addi	a1,a5,%lo(.LC24)
 	ld	a0,-176(s0)
 	call	report_parse_error
 	ld	a5,-168(s0)
@@ -3579,8 +3574,8 @@ parse_while:
 	addiw	a5,a5,1
 	sext.w	a5,a5
 	beq	a4,a5,.L279
-	lui	a5,%hi(.LC26)
-	addi	a1,a5,%lo(.LC26)
+	lui	a5,%hi(.LC25)
+	addi	a1,a5,%lo(.LC25)
 	ld	a0,-176(s0)
 	call	report_parse_error
 	ld	a5,-168(s0)
@@ -3597,8 +3592,8 @@ parse_while:
 	sd	a0,-40(s0)
 	ld	a5,-40(s0)
 	bne	a5,zero,.L280
-	lui	a5,%hi(.LC37)
-	addi	a1,a5,%lo(.LC37)
+	lui	a5,%hi(.LC36)
+	addi	a1,a5,%lo(.LC36)
 	ld	a0,-176(s0)
 	call	report_parse_error
 	ld	a5,-168(s0)
@@ -3696,8 +3691,8 @@ parse_while:
 	ld	a5,16(a5)
 	mv	a0,a5
 	call	linked_list_free
-	lui	a5,%hi(.LC38)
-	addi	a1,a5,%lo(.LC38)
+	lui	a5,%hi(.LC37)
+	addi	a1,a5,%lo(.LC37)
 	ld	a0,-176(s0)
 	call	report_parse_error
 	li	a5,0
@@ -3717,15 +3712,15 @@ parse_while:
 	addi	sp,sp,208
 	jr	ra
 	.section	.rodata
-.LC39:
+.LC38:
 	.string	"Expected function name after def"
-.LC40:
+.LC39:
 	.string	"Expected \"(\" after function name"
-.LC41:
+.LC40:
 	.string	"Expected \")\" after argument list"
-.LC42:
+.LC41:
 	.string	"Expected \":\" after function definition"
-.LC43:
+.LC42:
 	.string	"Unexpected indentation after function definition loop"
 	.text
 .align 2
@@ -3768,8 +3763,8 @@ parse_function_definition:
 	sd	a0,-32(s0)
 	ld	a5,-32(s0)
 	bne	a5,zero,.L293
-	lui	a5,%hi(.LC39)
-	addi	a1,a5,%lo(.LC39)
+	lui	a5,%hi(.LC38)
+	addi	a1,a5,%lo(.LC38)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	li	a5,0
@@ -3783,8 +3778,8 @@ parse_function_definition:
 	mv	a4,a5
 	li	a5,56
 	beq	a4,a5,.L294
-	lui	a5,%hi(.LC40)
-	addi	a1,a5,%lo(.LC40)
+	lui	a5,%hi(.LC39)
+	addi	a1,a5,%lo(.LC39)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	ld	a5,-216(s0)
@@ -3811,8 +3806,8 @@ parse_function_definition:
 	mv	a4,a5
 	li	a5,57
 	beq	a4,a5,.L295
-	lui	a5,%hi(.LC41)
-	addi	a1,a5,%lo(.LC41)
+	lui	a5,%hi(.LC40)
+	addi	a1,a5,%lo(.LC40)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	ld	a5,-216(s0)
@@ -3840,8 +3835,8 @@ parse_function_definition:
 	mv	a4,a5
 	li	a5,55
 	beq	a4,a5,.L296
-	lui	a5,%hi(.LC42)
-	addi	a1,a5,%lo(.LC42)
+	lui	a5,%hi(.LC41)
+	addi	a1,a5,%lo(.LC41)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	ld	a5,-216(s0)
@@ -3869,8 +3864,8 @@ parse_function_definition:
 	addiw	a5,a5,1
 	sext.w	a5,a5
 	beq	a4,a5,.L297
-	lui	a5,%hi(.LC26)
-	addi	a1,a5,%lo(.LC26)
+	lui	a5,%hi(.LC25)
+	addi	a1,a5,%lo(.LC25)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	ld	a5,-216(s0)
@@ -3892,8 +3887,8 @@ parse_function_definition:
 	sd	a0,-48(s0)
 	ld	a5,-48(s0)
 	bne	a5,zero,.L298
-	lui	a5,%hi(.LC37)
-	addi	a1,a5,%lo(.LC37)
+	lui	a5,%hi(.LC36)
+	addi	a1,a5,%lo(.LC36)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	ld	a5,-216(s0)
@@ -4016,8 +4011,8 @@ parse_function_definition:
 	ld	a5,8(a5)
 	mv	a0,a5
 	call	linked_list_free
-	lui	a5,%hi(.LC43)
-	addi	a1,a5,%lo(.LC43)
+	lui	a5,%hi(.LC42)
+	addi	a1,a5,%lo(.LC42)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	li	a5,0
@@ -4037,7 +4032,7 @@ parse_function_definition:
 	addi	sp,sp,256
 	jr	ra
 	.section	.rodata
-.LC44:
+.LC43:
 	.string	"Expected value after assignment"
 	.text
 .align 2
@@ -4119,8 +4114,8 @@ parse_assign:
 	sd	a0,-40(s0)
 	ld	a5,-40(s0)
 	bne	a5,zero,.L313
-	lui	a5,%hi(.LC44)
-	addi	a1,a5,%lo(.LC44)
+	lui	a5,%hi(.LC43)
+	addi	a1,a5,%lo(.LC43)
 	ld	a0,-96(s0)
 	call	report_parse_error
 	ld	a5,-88(s0)
@@ -4154,7 +4149,7 @@ parse_assign:
 	addi	sp,sp,128
 	jr	ra
 	.section	.rodata
-.LC45:
+.LC44:
 	.string	"Expected expression after unary operator"
 	.text
 .align 2
@@ -4212,8 +4207,8 @@ parse_unary_statement:
 	ld	a1,-24(s0)
 	mv	a0,a5
 	call	my_free
-	lui	a5,%hi(.LC45)
-	addi	a1,a5,%lo(.LC45)
+	lui	a5,%hi(.LC44)
+	addi	a1,a5,%lo(.LC44)
 	ld	a0,-88(s0)
 	call	report_parse_error
 	li	a5,0
@@ -4470,8 +4465,8 @@ parse:
 	lw	a5,24(a5)
 	beq	a5,zero,.L348
 	addi	a4,s0,-44
-	lui	a5,%hi(.LC28)
-	addi	a1,a5,%lo(.LC28)
+	lui	a5,%hi(.LC27)
+	addi	a1,a5,%lo(.LC27)
 	mv	a0,a4
 	call	report_parse_error
 	ld	a0,-24(s0)

@@ -1,6 +1,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "syscall.h"
+
 typedef struct MemoryPool {
     void *start;
     void *end;
@@ -20,6 +22,18 @@ MBlock *find_free_block(MemoryPool *pool, size_t size) {
         curr = curr->next;
     }
     return curr;
+}
+
+void my_free(MemoryPool *pool, void *ptr) {
+    if (!ptr) return;
+    MBlock *block = ptr - OVERHEAD;
+    block->free = true;
+}
+
+void my_memcpy(void *dst, const void *src, size_t size) {
+    for (size_t i = 0; i < size; i++) {
+        ((char *)dst)[i] = ((char *)src)[i];
+    }
 }
 
 void *my_alloc(MemoryPool *pool, size_t size) {
@@ -43,8 +57,26 @@ void *my_alloc(MemoryPool *pool, size_t size) {
     return (block + 1);
 }
 
-void my_free(MemoryPool *pool, void *ptr) {
-    if (!ptr) return;
+void *my_realloc(MemoryPool *pool, void *ptr, size_t size) {
     MBlock *block = ptr - OVERHEAD;
-    block->free = true;
+    if (block->size >= size) {
+        return ptr;
+    }
+    int size_can_stretch = block->size;
+    while (block->next != NULL && block->next->free) {
+        size_can_stretch += block->next->size;
+        if (size_can_stretch >= size) {
+            block->size = size_can_stretch;
+            block->next = block->next->next;
+            return ptr;
+        }
+        block = block->next;
+    }
+    if (block->next == NULL) {
+        return ptr;
+    }
+    void *new_ptr = my_alloc(pool, size);
+    my_memcpy(new_ptr, ptr, block->size);
+    my_free(pool, ptr);
+    return new_ptr;
 }

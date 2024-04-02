@@ -20,4 +20,6 @@ void *my_alloc(MemoryPool *pool, size_t size);
 void *my_realloc(MemoryPool *pool, void *ptr, size_t size);
 void my_free(MemoryPool *pool, void *ptr);
 
+void my_memcpy(void *dst, const void *src, size_t size);
+
 #endif

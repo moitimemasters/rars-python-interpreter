@@ -3,16 +3,32 @@
 #ifndef SYSCALL_H
 #define SYSCALL_H
 
-void printstr(const char *str);
-void printint(int val);
-void printchar(char val);
-int readint();
+void print_string(const char *str);
+
+void print_char(char val);
+
+void print_int(int val);
+
+int read_int();
+
 void *sbrk(int nbytes);
-float readFloat();
-double readDouble();
-void printFloat(float val);
-void printDouble(double val);
-void readString(char *str, int n);
+
+float read_float();
+
+double read_double();
+
+void print_float(float val);
+
+void print_double(double val);
+
+void read_string(char *str, int n);
+
+int open_file(const char *filename, int flag);
+
+int read_file(int fd, char *buf, int count);
+
+void close(int fd);
+
 void Exit();
 
 #endif  // SYSCALL_H

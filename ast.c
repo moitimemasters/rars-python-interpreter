@@ -743,7 +743,6 @@ ASTNode *parse_expression(ASTParser *parser, ParseErrorCode *error_code) {
         return if_body;
     }
     ast_consume(parser);
-    my_printf("parsing ternary...\n");
     ASTNode *if_expr = parse_logical(parser, error_code);
     if (!if_expr) {
         report_parse_error(error_code, "Expected expression after ternary if");

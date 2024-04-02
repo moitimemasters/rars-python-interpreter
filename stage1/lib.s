@@ -713,7 +713,7 @@ my_printf:
 	call	my_vsprintf
 	addi	a5,s0,-272
 	mv	a0,a5
-	call	printstr
+	call	print_string
 	nop
 	ld	ra,296(sp)
 	ld	s0,288(sp)
