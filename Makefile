@@ -27,7 +27,7 @@ cleanup:
 	$(PYTHON) $(CLEANUP_SCRIPT)
 
 rars: $(CLEANEDDIR)/main.s
-	$(RARS) nc sm p rv64 $<
+	$(RARS) nc sm p rv64 $< pa
 
 clean:
 	rm -rf $(OUTDIR)

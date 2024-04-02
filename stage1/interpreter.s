@@ -1155,7 +1155,7 @@ interpret_store:
 	.section	.rodata
 	.align	3
 .LC11:
-	.string	"WARNING, env loaded NONE for %s\ns"
+	.string	"ERROR: Variable not found\n"
 	.text
 	.align	1
 	.globl	interpret_load
@@ -1179,12 +1179,13 @@ interpret_load:
 	sd	a0,-24(s0)
 	ld	a5,-24(s0)
 	bne	a5,zero,.L99
-	ld	a5,-40(s0)
-	ld	a1,8(a5)
-	ld	a2,16(a5)
 	lui	a5,%hi(.LC11)
 	addi	a0,a5,%lo(.LC11)
 	call	my_printf
+	ld	a5,-64(s0)
+	li	a4,5
+	sw	a4,0(a5)
+	j	.L98
 .L99:
 	ld	a5,-56(s0)
 	ld	a5,16(a5)
@@ -1196,7 +1197,7 @@ interpret_load:
 	ld	a4,8(a5)
 	ld	a5,-48(s0)
 	sd	a4,0(a5)
-	nop
+.L98:
 	ld	ra,56(sp)
 	ld	s0,48(sp)
 	addi	sp,sp,64
@@ -1350,23 +1351,23 @@ interpret_call:
 	ld	a5,-64(s0)
 	ld	a5,0(a5)
 	ld	a5,16(a5)
-	beq	a4,a5,.L104
+	beq	a4,a5,.L105
 	lui	a5,%hi(.LC12)
 	addi	a0,a5,%lo(.LC12)
 	call	my_printf
 	ld	a5,-128(s0)
 	li	a4,4
 	sw	a4,0(a5)
-	j	.L103
-.L104:
+	j	.L104
+.L105:
 	ld	a5,-120(s0)
 	ld	a5,0(a5)
 	mv	a0,a5
 	call	linked_list_create
 	sd	a0,-72(s0)
 	sw	zero,-20(s0)
-	j	.L106
-.L107:
+	j	.L107
+.L108:
 	ld	a5,-120(s0)
 	ld	a5,16(a5)
 	ld	a5,0(a5)
@@ -1382,12 +1383,12 @@ interpret_call:
 	lw	a5,-20(s0)
 	addiw	a5,a5,1
 	sw	a5,-20(s0)
-.L106:
+.L107:
 	ld	a5,-104(s0)
 	lw	a4,8(a5)
 	lw	a5,-20(s0)
 	sext.w	a5,a5
-	blt	a5,a4,.L107
+	blt	a5,a4,.L108
 	ld	a0,-72(s0)
 	call	linked_list_reverse
 	ld	a5,-120(s0)
@@ -1419,8 +1420,8 @@ interpret_call:
 	ld	a5,0(a5)
 	sd	a5,-40(s0)
 	sw	zero,-44(s0)
-	j	.L108
-.L109:
+	j	.L109
+.L110:
 	ld	a5,-40(s0)
 	ld	a5,0(a5)
 	ld	a4,-32(s0)
@@ -1439,11 +1440,11 @@ interpret_call:
 	lw	a5,-44(s0)
 	addiw	a5,a5,1
 	sw	a5,-44(s0)
-.L108:
+.L109:
 	lw	a4,-44(s0)
 	ld	a5,-72(s0)
 	ld	a5,16(a5)
-	bltu	a4,a5,.L109
+	bltu	a4,a5,.L110
 	ld	a5,-120(s0)
 	ld	a5,0(a5)
 	li	a1,40
@@ -1509,7 +1510,7 @@ interpret_call:
 	ld	a4,8(a5)
 	ld	a5,-112(s0)
 	sd	a4,0(a5)
-.L103:
+.L104:
 	ld	ra,120(sp)
 	ld	s0,112(sp)
 	addi	sp,sp,128

@@ -630,7 +630,7 @@ ASTNode *parse_product(ASTParser *parser, ParseErrorCode *error_code) {
     while (ast_peeked.type == TOK_MUL || ast_peeked.type == TOK_DIV ||
            ast_peeked.type == TOK_FLOORDIV || ast_peeked.type == TOK_MOD) {
         ast_consume(parser);
-        ASTNode *right = parse_primary(parser, error_code);
+        ASTNode *right = parse_tail(parser, error_code);
         if (*error_code != PARSE_SUCCESS) {
             return NULL;
         }

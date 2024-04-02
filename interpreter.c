@@ -365,8 +365,9 @@ void interpret_store(common_args) {
 void interpret_load(common_args) {
     PyObject *value = env_load(interpreter->env, instruction->data.load.ident);
     if (value == NULL) {
-        my_printf("WARNING, env loaded NONE for %s\ns",
-                  instruction->data.load.ident);
+        my_printf("ERROR: Variable not found\n");
+        *error = VariableNotFoundError;
+        return;
     }
     stack_push(interpreter->stack, value);
     *current_node = (*current_node)->next;

@@ -6,14 +6,14 @@ String* read_whole_file(MemoryPool* pool, const char* filename) {
         my_printf("Error opening the file: %s\n", filename);
         return NULL;
     }
-    char buffer[128];
-    int bytes_read = read_file(fd, buffer, 128);
+    char buffer[256];
+    int bytes_read = read_file(fd, buffer, 256);
     String* result = from_string_view(
         pool, (string_view_t){.str = buffer, .len = bytes_read});
-    while (bytes_read == 128) {
+    while (bytes_read == 256) {
         append_string_view(result,
                            (string_view_t){.str = buffer, .len = bytes_read});
-        bytes_read = read_file(fd, buffer, 128);
+        bytes_read = read_file(fd, buffer, 256);
     }
     if (bytes_read == -1) {
         string_destroy(result);

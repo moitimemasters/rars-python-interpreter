@@ -184,68 +184,82 @@ populate_c_functions:
 	.section	.rodata
 	.align	3
 .LC10:
-	.string	"/home/ivanpesnya/rars-python-interpreter/test.py"
+	.string	"please specify path to .py file\n"
 	.align	3
 .LC11:
-	.string	"started lexing\n"
+	.string	"test.py"
 	.align	3
 .LC12:
-	.string	"ended lexing\n"
+	.string	"started lexing\n"
 	.align	3
 .LC13:
-	.string	"Invalid token at line %d, column %d\n"
+	.string	"ended lexing\n"
 	.align	3
 .LC14:
-	.string	"started parsing ast\n"
+	.string	"Invalid token at line %d, column %d\n"
 	.align	3
 .LC15:
-	.string	"ended parsing ast\n"
+	.string	"started parsing ast\n"
 	.align	3
 .LC16:
-	.string	"Error parsing\n"
+	.string	"ended parsing ast\n"
 	.align	3
 .LC17:
-	.string	"started compiling\n"
+	.string	"Error parsing\n"
 	.align	3
 .LC18:
-	.string	"Error compiling\n"
+	.string	"started compiling\n"
 	.align	3
 .LC19:
-	.string	"ended compiling\n"
+	.string	"Error compiling\n"
 	.align	3
 .LC20:
-	.string	"started interpreting\n"
+	.string	"ended compiling\n"
 	.align	3
 .LC21:
-	.string	"ended interpreting\n"
+	.string	"started interpreting\n"
 	.align	3
 .LC22:
-	.string	"Interpretation result: %d\n"
+	.string	"ended interpreting\n"
 	.align	3
 .LC23:
-	.string	"Interpretation result: %f\n"
+	.string	"Interpretation result: %d\n"
 	.align	3
 .LC24:
-	.string	"Unsupported type: %d\n"
+	.string	"Interpretation result: %f\n"
 	.align	3
 .LC25:
+	.string	"Unsupported type: %d\n"
+	.align	3
+.LC26:
 	.string	"Unsupported type\n"
 	.text
 	.align	1
 	.globl	main
 	.type	main, @function
 main:
-	addi	sp,sp,-224
-	sd	ra,216(sp)
-	sd	s0,208(sp)
-	addi	s0,sp,224
+	addi	sp,sp,-240
+	sd	ra,232(sp)
+	sd	s0,224(sp)
+	addi	s0,sp,240
+	mv	a5,a0
+	sd	a1,-240(s0)
+	sw	a5,-228(s0)
+	lw	a5,-228(s0)
+	sext.w	a4,a5
+	li	a5,2
+	beq	a4,a5,.L3
+	lui	a5,%hi(.LC10)
+	addi	a0,a5,%lo(.LC10)
+	call	my_printf
+.L3:
 	li	a5,268697600
 	sd	a5,-104(s0)
 	li	a5,805306368
 	sd	a5,-96(s0)
 	addi	a4,s0,-104
-	lui	a5,%hi(.LC10)
-	addi	a1,a5,%lo(.LC10)
+	lui	a5,%hi(.LC11)
+	addi	a1,a5,%lo(.LC11)
 	mv	a0,a4
 	call	read_whole_file
 	sd	a0,-32(s0)
@@ -266,16 +280,16 @@ main:
 	sb	zero,-120(s0)
 	addi	a4,s0,-104
 	li	a5,4096
-	addi	a1,a5,-96
+	addi	a1,a5,704
 	mv	a0,a4
 	call	my_alloc
 	sd	a0,-40(s0)
 	sw	zero,-20(s0)
-	lui	a5,%hi(.LC11)
-	addi	a0,a5,%lo(.LC11)
+	lui	a5,%hi(.LC12)
+	addi	a0,a5,%lo(.LC12)
 	call	my_printf
-	j	.L3
-.L5:
+	j	.L4
+.L6:
 	lw	a5,-20(s0)
 	addiw	a4,a5,1
 	sw	a4,-20(s0)
@@ -290,7 +304,7 @@ main:
 	sd	a2,8(a5)
 	sd	a3,16(a5)
 	sd	a4,24(a5)
-.L3:
+.L4:
 	addi	a5,s0,-184
 	addi	a4,s0,-152
 	mv	a1,a4
@@ -299,28 +313,28 @@ main:
 	lw	a5,-184(s0)
 	mv	a4,a5
 	li	a5,66
-	beq	a4,a5,.L4
-	lw	a5,-184(s0)
-	mv	a4,a5
-	li	a5,67
-	bne	a4,a5,.L5
-.L4:
-	lui	a5,%hi(.LC12)
-	addi	a0,a5,%lo(.LC12)
-	call	my_printf
+	beq	a4,a5,.L5
 	lw	a5,-184(s0)
 	mv	a4,a5
 	li	a5,67
 	bne	a4,a5,.L6
+.L5:
+	lui	a5,%hi(.LC13)
+	addi	a0,a5,%lo(.LC13)
+	call	my_printf
+	lw	a5,-184(s0)
+	mv	a4,a5
+	li	a5,67
+	bne	a4,a5,.L7
 	lw	a5,-164(s0)
 	lw	a4,-132(s0)
 	mv	a2,a4
 	mv	a1,a5
-	lui	a5,%hi(.LC13)
-	addi	a0,a5,%lo(.LC13)
+	lui	a5,%hi(.LC14)
+	addi	a0,a5,%lo(.LC14)
 	call	my_printf
 	call	Exit
-.L6:
+.L7:
 	sw	zero,-200(s0)
 	addi	a5,s0,-104
 	sd	a5,-216(s0)
@@ -329,25 +343,25 @@ main:
 	ld	a5,-40(s0)
 	sd	a5,-208(s0)
 	sw	zero,-192(s0)
-	lui	a5,%hi(.LC14)
-	addi	a0,a5,%lo(.LC14)
+	lui	a5,%hi(.LC15)
+	addi	a0,a5,%lo(.LC15)
 	call	my_printf
 	addi	a5,s0,-216
 	mv	a0,a5
 	call	parse
 	sd	a0,-48(s0)
-	lui	a5,%hi(.LC15)
-	addi	a0,a5,%lo(.LC15)
-	call	my_printf
-	ld	a5,-48(s0)
-	bne	a5,zero,.L7
 	lui	a5,%hi(.LC16)
 	addi	a0,a5,%lo(.LC16)
 	call	my_printf
-	call	Exit
-.L7:
+	ld	a5,-48(s0)
+	bne	a5,zero,.L8
 	lui	a5,%hi(.LC17)
 	addi	a0,a5,%lo(.LC17)
+	call	my_printf
+	call	Exit
+.L8:
+	lui	a5,%hi(.LC18)
+	addi	a0,a5,%lo(.LC18)
 	call	my_printf
 	addi	a5,s0,-104
 	li	a1,16
@@ -364,14 +378,14 @@ main:
 	call	compile
 	sd	a0,-64(s0)
 	ld	a5,-64(s0)
-	bne	a5,zero,.L8
-	lui	a5,%hi(.LC18)
-	addi	a0,a5,%lo(.LC18)
-	call	my_printf
-	call	Exit
-.L8:
+	bne	a5,zero,.L9
 	lui	a5,%hi(.LC19)
 	addi	a0,a5,%lo(.LC19)
+	call	my_printf
+	call	Exit
+.L9:
+	lui	a5,%hi(.LC20)
+	addi	a0,a5,%lo(.LC20)
 	call	my_printf
 	addi	a5,s0,-104
 	li	a1,24
@@ -419,13 +433,13 @@ main:
 	ld	a5,32(a5)
 	mv	a0,a5
 	call	populate_c_functions
-	lui	a5,%hi(.LC20)
-	addi	a0,a5,%lo(.LC20)
+	lui	a5,%hi(.LC21)
+	addi	a0,a5,%lo(.LC21)
 	call	my_printf
 	ld	a0,-80(s0)
 	call	interpret
-	lui	a5,%hi(.LC21)
-	addi	a0,a5,%lo(.LC21)
+	lui	a5,%hi(.LC22)
+	addi	a0,a5,%lo(.LC22)
 	call	my_printf
 	ld	a5,-80(s0)
 	ld	a5,16(a5)
@@ -434,50 +448,50 @@ main:
 	sd	a5,-88(s0)
 	ld	a5,-88(s0)
 	lw	a5,0(a5)
-	bne	a5,zero,.L9
+	bne	a5,zero,.L10
 	ld	a5,-88(s0)
 	lw	a5,8(a5)
-	bne	a5,zero,.L10
+	bne	a5,zero,.L11
 	ld	a5,-88(s0)
 	lw	a5,12(a5)
 	mv	a1,a5
-	lui	a5,%hi(.LC22)
-	addi	a0,a5,%lo(.LC22)
+	lui	a5,%hi(.LC23)
+	addi	a0,a5,%lo(.LC23)
 	call	my_printf
-	j	.L11
-.L10:
+	j	.L12
+.L11:
 	ld	a5,-88(s0)
 	lw	a5,8(a5)
 	mv	a4,a5
 	li	a5,1
-	bne	a4,a5,.L12
+	bne	a4,a5,.L13
 	ld	a5,-88(s0)
 	flw	fa5,12(a5)
 	fcvt.d.s	fa5,fa5
 	fmv.x.d	a1,fa5
-	lui	a5,%hi(.LC23)
-	addi	a0,a5,%lo(.LC23)
-	call	my_printf
-	j	.L11
-.L12:
-	ld	a5,-88(s0)
-	lw	a5,8(a5)
-	mv	a1,a5
 	lui	a5,%hi(.LC24)
 	addi	a0,a5,%lo(.LC24)
 	call	my_printf
-	j	.L11
-.L9:
+	j	.L12
+.L13:
+	ld	a5,-88(s0)
+	lw	a5,8(a5)
+	mv	a1,a5
 	lui	a5,%hi(.LC25)
 	addi	a0,a5,%lo(.LC25)
 	call	my_printf
-.L11:
+	j	.L12
+.L10:
+	lui	a5,%hi(.LC26)
+	addi	a0,a5,%lo(.LC26)
+	call	my_printf
+.L12:
 	call	Exit
 	li	a5,0
 	mv	a0,a5
-	ld	ra,216(sp)
-	ld	s0,208(sp)
-	addi	sp,sp,224
+	ld	ra,232(sp)
+	ld	s0,224(sp)
+	addi	sp,sp,240
 	jr	ra
 	.size	main, .-main
 	.ident	"GCC: () 13.2.0"

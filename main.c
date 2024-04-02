@@ -25,13 +25,16 @@ void populate_c_functions(hash_table *ht) {
     hash_table_insert_string(ht, const_string_view("neq_binop"), &neq_binop);
 }
 
-int main() {
+int main(int argc, char** argv) {
+    if (argc != 2)
+    {
+        my_printf("please specify path to .py file\n");
+    }
     MemoryPool pool;
     pool.start = (void *)HEAP_START;
     pool.end = (void *)HEAP_END;
-
     String *program = read_whole_file(
-        &pool, "/home/ivanpesnya/rars-python-interpreter/test.py");
+        &pool, "test.py");
 
     Lexer lexer;
     lexer.pool = &pool;
@@ -43,7 +46,7 @@ int main() {
     lexer.indentation = 4;
     lexer.indenting = false;
 
-    Token *tokens = my_alloc(&pool, sizeof(Token *) * 500);
+    Token *tokens = my_alloc(&pool, sizeof(Token *) * 600);
     Token token;
     int i = 0;
     my_printf("started lexing\n");

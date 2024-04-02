@@ -2209,7 +2209,7 @@ parse_product:
 	call	ast_consume
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
-	call	parse_primary
+	call	parse_tail
 	sd	a0,-32(s0)
 	ld	a5,-96(s0)
 	lw	a5,0(a5)
