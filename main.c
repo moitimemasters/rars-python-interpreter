@@ -26,15 +26,19 @@ void populate_c_functions(hash_table *ht) {
 }
 
 int main(int argc, char** argv) {
+    char* filename;
     if (argc != 2)
     {
         my_printf("please specify path to .py file\n");
+        filename = "test.py";
+    } else {
+        filename = argv[1];
     }
     MemoryPool pool;
     pool.start = (void *)HEAP_START;
     pool.end = (void *)HEAP_END;
     String *program = read_whole_file(
-        &pool, "test.py");
+        &pool, filename);
 
     Lexer lexer;
     lexer.pool = &pool;

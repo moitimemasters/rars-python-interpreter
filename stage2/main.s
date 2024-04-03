@@ -217,240 +217,247 @@ main:
 	lui	a5,%hi(.LC10)
 	addi	a0,a5,%lo(.LC10)
 	call	my_printf
-.L3:
-	li	a5,268697600
-	sd	a5,-104(s0)
-	li	a5,805306368
-	sd	a5,-96(s0)
-	addi	a4,s0,-104
 	lui	a5,%hi(.LC11)
-	addi	a1,a5,%lo(.LC11)
-	mv	a0,a4
-	call	read_whole_file
-	sd	a0,-32(s0)
-	addi	a5,s0,-104
+	addi	a5,a5,%lo(.LC11)
+	sd	a5,-24(s0)
+	j	.L4
+.L3:
+	ld	a5,-240(s0)
+	ld	a5,8(a5)
+	sd	a5,-24(s0)
+.L4:
+	li	a5,268697600
 	sd	a5,-112(s0)
-	ld	a5,-32(s0)
+	li	a5,805306368
+	sd	a5,-104(s0)
+	addi	a5,s0,-112
+	ld	a1,-24(s0)
+	mv	a0,a5
+	call	read_whole_file
+	sd	a0,-40(s0)
+	addi	a5,s0,-112
+	sd	a5,-120(s0)
+	ld	a5,-40(s0)
 	ld	a5,0(a5)
-	sd	a5,-152(s0)
-	ld	a5,-32(s0)
+	sd	a5,-160(s0)
+	ld	a5,-40(s0)
 	lw	a5,8(a5)
-	sd	a5,-128(s0)
-	sw	zero,-144(s0)
+	sd	a5,-136(s0)
+	sw	zero,-152(s0)
 	li	a5,1
-	sw	a5,-140(s0)
-	sw	zero,-132(s0)
+	sw	a5,-148(s0)
+	sw	zero,-140(s0)
 	li	a5,4
-	sw	a5,-136(s0)
-	sb	zero,-120(s0)
-	addi	a4,s0,-104
+	sw	a5,-144(s0)
+	sb	zero,-128(s0)
+	addi	a4,s0,-112
 	li	a5,4096
 	addi	a1,a5,704
 	mv	a0,a4
 	call	my_alloc
-	sd	a0,-40(s0)
-	sw	zero,-20(s0)
+	sd	a0,-48(s0)
+	sw	zero,-28(s0)
 	lui	a5,%hi(.LC12)
 	addi	a0,a5,%lo(.LC12)
 	call	my_printf
-	j	.L4
-.L6:
-	lw	a5,-20(s0)
+	j	.L5
+.L7:
+	lw	a5,-28(s0)
 	addiw	a4,a5,1
-	sw	a4,-20(s0)
+	sw	a4,-28(s0)
 	slli	a5,a5,5
-	ld	a4,-40(s0)
+	ld	a4,-48(s0)
 	add	a5,a4,a5
-	ld	a1,-184(s0)
-	ld	a2,-176(s0)
-	ld	a3,-168(s0)
-	ld	a4,-160(s0)
+	ld	a1,-192(s0)
+	ld	a2,-184(s0)
+	ld	a3,-176(s0)
+	ld	a4,-168(s0)
 	sd	a1,0(a5)
 	sd	a2,8(a5)
 	sd	a3,16(a5)
 	sd	a4,24(a5)
-.L4:
-	addi	a5,s0,-184
-	addi	a4,s0,-152
+.L5:
+	addi	a5,s0,-192
+	addi	a4,s0,-160
 	mv	a1,a4
 	mv	a0,a5
 	call	next_token
-	lw	a5,-184(s0)
+	lw	a5,-192(s0)
 	mv	a4,a5
 	li	a5,66
-	beq	a4,a5,.L5
-	lw	a5,-184(s0)
-	mv	a4,a5
-	li	a5,67
-	bne	a4,a5,.L6
-.L5:
-	lui	a5,%hi(.LC13)
-	addi	a0,a5,%lo(.LC13)
-	call	my_printf
-	lw	a5,-184(s0)
+	beq	a4,a5,.L6
+	lw	a5,-192(s0)
 	mv	a4,a5
 	li	a5,67
 	bne	a4,a5,.L7
-	lw	a5,-164(s0)
-	lw	a4,-132(s0)
+.L6:
+	lui	a5,%hi(.LC13)
+	addi	a0,a5,%lo(.LC13)
+	call	my_printf
+	lw	a5,-192(s0)
+	mv	a4,a5
+	li	a5,67
+	bne	a4,a5,.L8
+	lw	a5,-172(s0)
+	lw	a4,-140(s0)
 	mv	a2,a4
 	mv	a1,a5
 	lui	a5,%hi(.LC14)
 	addi	a0,a5,%lo(.LC14)
 	call	my_printf
 	call	Exit
-.L7:
-	sw	zero,-200(s0)
-	addi	a5,s0,-104
+.L8:
+	sw	zero,-208(s0)
+	addi	a5,s0,-112
+	sd	a5,-224(s0)
+	lw	a5,-28(s0)
+	sw	a5,-204(s0)
+	ld	a5,-48(s0)
 	sd	a5,-216(s0)
-	lw	a5,-20(s0)
-	sw	a5,-196(s0)
-	ld	a5,-40(s0)
-	sd	a5,-208(s0)
-	sw	zero,-192(s0)
+	sw	zero,-200(s0)
 	lui	a5,%hi(.LC15)
 	addi	a0,a5,%lo(.LC15)
 	call	my_printf
-	addi	a5,s0,-216
+	addi	a5,s0,-224
 	mv	a0,a5
 	call	parse
-	sd	a0,-48(s0)
+	sd	a0,-56(s0)
 	lui	a5,%hi(.LC16)
 	addi	a0,a5,%lo(.LC16)
 	call	my_printf
-	ld	a5,-48(s0)
-	bne	a5,zero,.L8
+	ld	a5,-56(s0)
+	bne	a5,zero,.L9
 	lui	a5,%hi(.LC17)
 	addi	a0,a5,%lo(.LC17)
 	call	my_printf
 	call	Exit
-.L8:
+.L9:
 	lui	a5,%hi(.LC18)
 	addi	a0,a5,%lo(.LC18)
 	call	my_printf
-	addi	a5,s0,-104
+	addi	a5,s0,-112
 	li	a1,16
 	mv	a0,a5
 	call	my_alloc
-	sd	a0,-56(s0)
-	ld	a5,-56(s0)
-	addi	a4,s0,-104
-	sd	a4,0(a5)
-	ld	a5,-56(s0)
-	ld	a4,-48(s0)
-	sd	a4,8(a5)
-	ld	a0,-56(s0)
-	call	compile
 	sd	a0,-64(s0)
 	ld	a5,-64(s0)
-	bne	a5,zero,.L9
+	addi	a4,s0,-112
+	sd	a4,0(a5)
+	ld	a5,-64(s0)
+	ld	a4,-56(s0)
+	sd	a4,8(a5)
+	ld	a0,-64(s0)
+	call	compile
+	sd	a0,-72(s0)
+	ld	a5,-72(s0)
+	bne	a5,zero,.L10
 	lui	a5,%hi(.LC19)
 	addi	a0,a5,%lo(.LC19)
 	call	my_printf
 	call	Exit
-.L9:
+.L10:
 	lui	a5,%hi(.LC20)
 	addi	a0,a5,%lo(.LC20)
 	call	my_printf
-	addi	a5,s0,-104
+	addi	a5,s0,-112
 	li	a1,24
 	mv	a0,a5
 	call	my_alloc
-	sd	a0,-72(s0)
-	addi	a5,s0,-104
+	sd	a0,-80(s0)
+	addi	a5,s0,-112
 	mv	a0,a5
 	call	hash_table_create
 	mv	a4,a0
-	ld	a5,-72(s0)
+	ld	a5,-80(s0)
 	sd	a4,8(a5)
-	ld	a5,-72(s0)
+	ld	a5,-80(s0)
 	sd	zero,0(a5)
-	ld	a5,-72(s0)
-	addi	a4,s0,-104
+	ld	a5,-80(s0)
+	addi	a4,s0,-112
 	sd	a4,16(a5)
-	addi	a5,s0,-104
+	addi	a5,s0,-112
 	li	a1,40
 	mv	a0,a5
 	call	my_alloc
-	sd	a0,-80(s0)
-	ld	a5,-80(s0)
-	ld	a4,-64(s0)
-	sd	a4,24(a5)
-	ld	a5,-80(s0)
-	addi	a4,s0,-104
-	sd	a4,0(a5)
-	ld	a5,-80(s0)
+	sd	a0,-88(s0)
+	ld	a5,-88(s0)
 	ld	a4,-72(s0)
+	sd	a4,24(a5)
+	ld	a5,-88(s0)
+	addi	a4,s0,-112
+	sd	a4,0(a5)
+	ld	a5,-88(s0)
+	ld	a4,-80(s0)
 	sd	a4,8(a5)
-	addi	a5,s0,-104
+	addi	a5,s0,-112
 	mv	a0,a5
 	call	stack_create
 	mv	a4,a0
-	ld	a5,-80(s0)
+	ld	a5,-88(s0)
 	sd	a4,16(a5)
-	addi	a5,s0,-104
+	addi	a5,s0,-112
 	mv	a0,a5
 	call	hash_table_create
 	mv	a4,a0
-	ld	a5,-80(s0)
+	ld	a5,-88(s0)
 	sd	a4,32(a5)
-	ld	a5,-80(s0)
+	ld	a5,-88(s0)
 	ld	a5,32(a5)
 	mv	a0,a5
 	call	populate_c_functions
 	lui	a5,%hi(.LC21)
 	addi	a0,a5,%lo(.LC21)
 	call	my_printf
-	ld	a0,-80(s0)
+	ld	a0,-88(s0)
 	call	interpret
 	lui	a5,%hi(.LC22)
 	addi	a0,a5,%lo(.LC22)
 	call	my_printf
-	ld	a5,-80(s0)
+	ld	a5,-88(s0)
 	ld	a5,16(a5)
 	ld	a5,0(a5)
 	ld	a5,0(a5)
-	sd	a5,-88(s0)
-	ld	a5,-88(s0)
+	sd	a5,-96(s0)
+	ld	a5,-96(s0)
 	lw	a5,0(a5)
-	bne	a5,zero,.L10
-	ld	a5,-88(s0)
-	lw	a5,8(a5)
 	bne	a5,zero,.L11
-	ld	a5,-88(s0)
+	ld	a5,-96(s0)
+	lw	a5,8(a5)
+	bne	a5,zero,.L12
+	ld	a5,-96(s0)
 	lw	a5,12(a5)
 	mv	a1,a5
 	lui	a5,%hi(.LC23)
 	addi	a0,a5,%lo(.LC23)
 	call	my_printf
-	j	.L12
-.L11:
-	ld	a5,-88(s0)
+	j	.L13
+.L12:
+	ld	a5,-96(s0)
 	lw	a5,8(a5)
 	mv	a4,a5
 	li	a5,1
-	bne	a4,a5,.L13
-	ld	a5,-88(s0)
+	bne	a4,a5,.L14
+	ld	a5,-96(s0)
 	flw	fa5,12(a5)
 	fcvt.d.s	fa5,fa5
 	fmv.x.d	a1,fa5
 	lui	a5,%hi(.LC24)
 	addi	a0,a5,%lo(.LC24)
 	call	my_printf
-	j	.L12
-.L13:
-	ld	a5,-88(s0)
+	j	.L13
+.L14:
+	ld	a5,-96(s0)
 	lw	a5,8(a5)
 	mv	a1,a5
 	lui	a5,%hi(.LC25)
 	addi	a0,a5,%lo(.LC25)
 	call	my_printf
-	j	.L12
-.L10:
+	j	.L13
+.L11:
 	lui	a5,%hi(.LC26)
 	addi	a0,a5,%lo(.LC26)
 	call	my_printf
-.L12:
+.L13:
 	call	Exit
 	li	a5,0
 	mv	a0,a5
