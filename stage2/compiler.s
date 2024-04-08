@@ -860,11 +860,291 @@ compile_function_call:
 	ld	s0,80(sp)
 	addi	sp,sp,96
 	jr	ra
+	.globl	compile_while_loop
+compile_while_loop:
+	addi	sp,sp,-96
+	sd	ra,88(sp)
+	sd	s0,80(sp)
+	addi	s0,sp,96
+	sd	a0,-72(s0)
+	sd	a1,-80(s0)
+	sd	a2,-88(s0)
+	ld	a5,-88(s0)
+	ld	a5,16(a5)
+	sw	a5,-28(s0)
+	ld	a5,-80(s0)
+	ld	a5,8(a5)
+	ld	a2,-88(s0)
+	mv	a1,a5
+	ld	a0,-72(s0)
+	call	compile_node
+	ld	a5,-88(s0)
+	ld	a5,16(a5)
+	sw	a5,-32(s0)
+	ld	a5,-72(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	create_jump_relative_if_false_instruction
+	sd	a0,-40(s0)
+	ld	a1,-40(s0)
+	ld	a0,-88(s0)
+	call	linked_list_push
+	ld	a5,-80(s0)
+	ld	a5,16(a5)
+	ld	a5,0(a5)
+	sd	a5,-24(s0)
+	j	.L47
+.L48:
+	ld	a5,-24(s0)
+	ld	a5,0(a5)
+	ld	a2,-88(s0)
+	mv	a1,a5
+	ld	a0,-72(s0)
+	call	compile_node
+	ld	a5,-24(s0)
+	ld	a5,8(a5)
+	sd	a5,-24(s0)
+.L47:
+	ld	a5,-24(s0)
+	bne	a5,zero,.L48
+	ld	a5,-72(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	create_jump_relative_instruction
+	sd	a0,-48(s0)
+	lw	a4,-28(s0)
+	ld	a5,-88(s0)
+	ld	a5,16(a5)
+	sext.w	a5,a5
+	subw	a5,a4,a5
+	sext.w	a5,a5
+	sext.w	a4,a5
+	ld	a5,-48(s0)
+	sw	a4,8(a5)
+	ld	a1,-48(s0)
+	ld	a0,-88(s0)
+	call	linked_list_push
+	ld	a5,-72(s0)
+	ld	a5,0(a5)
+	li	a1,13
+	mv	a0,a5
+	call	create_instruction
+	sd	a0,-56(s0)
+	ld	a1,-56(s0)
+	ld	a0,-88(s0)
+	call	linked_list_push
+	ld	a5,-88(s0)
+	ld	a5,16(a5)
+	sext.w	a4,a5
+	lw	a5,-32(s0)
+	subw	a5,a4,a5
+	sext.w	a5,a5
+	sext.w	a4,a5
+	ld	a5,-40(s0)
+	sw	a4,8(a5)
+	nop
+	ld	ra,88(sp)
+	ld	s0,80(sp)
+	addi	sp,sp,96
+	jr	ra
+	.globl	compile_many_nodes
+compile_many_nodes:
+	addi	sp,sp,-64
+	sd	ra,56(sp)
+	sd	s0,48(sp)
+	addi	s0,sp,64
+	sd	a0,-40(s0)
+	sd	a1,-48(s0)
+	sd	a2,-56(s0)
+	sd	a3,-64(s0)
+	ld	a5,-40(s0)
+	ld	a5,0(a5)
+	sd	a5,-24(s0)
+	j	.L50
+.L51:
+	ld	a5,-24(s0)
+	ld	a5,0(a5)
+	ld	a2,-64(s0)
+	mv	a1,a5
+	ld	a0,-48(s0)
+	call	compile_node
+	ld	a5,-24(s0)
+	ld	a5,8(a5)
+	sd	a5,-24(s0)
+.L50:
+	ld	a5,-24(s0)
+	bne	a5,zero,.L51
+	nop
+	nop
+	ld	ra,56(sp)
+	ld	s0,48(sp)
+	addi	sp,sp,64
+	jr	ra
+	.globl	compile_if_statement
+compile_if_statement:
+	addi	sp,sp,-112
+	sd	ra,104(sp)
+	sd	s0,96(sp)
+	addi	s0,sp,112
+	sd	a0,-88(s0)
+	sd	a1,-96(s0)
+	sd	a2,-104(s0)
+	ld	a5,-96(s0)
+	ld	a5,8(a5)
+	sd	a5,-40(s0)
+	ld	a5,-88(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	create_jump_relative_instruction
+	sd	a0,-48(s0)
+	ld	a5,-88(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	create_jump_relative_if_false_instruction
+	sd	a0,-24(s0)
+	ld	a5,-40(s0)
+	ld	a5,8(a5)
+	ld	a2,-104(s0)
+	mv	a1,a5
+	ld	a0,-88(s0)
+	call	compile_node
+	ld	a5,-104(s0)
+	ld	a5,16(a5)
+	sw	a5,-28(s0)
+	ld	a1,-24(s0)
+	ld	a0,-104(s0)
+	call	linked_list_push
+	ld	a5,-40(s0)
+	ld	a5,16(a5)
+	ld	a3,-104(s0)
+	ld	a2,-96(s0)
+	ld	a1,-88(s0)
+	mv	a0,a5
+	call	compile_many_nodes
+	ld	a1,-48(s0)
+	ld	a0,-104(s0)
+	call	linked_list_push
+	ld	a5,-96(s0)
+	ld	a5,16(a5)
+	ld	a5,0(a5)
+	sd	a5,-56(s0)
+	j	.L53
+.L54:
+	ld	a5,-104(s0)
+	ld	a5,16(a5)
+	sext.w	a4,a5
+	lw	a5,-28(s0)
+	subw	a5,a4,a5
+	sext.w	a5,a5
+	sext.w	a4,a5
+	ld	a5,-24(s0)
+	sw	a4,8(a5)
+	ld	a5,-56(s0)
+	ld	a5,0(a5)
+	sd	a5,-72(s0)
+	ld	a5,-88(s0)
+	ld	a5,0(a5)
+	mv	a0,a5
+	call	create_jump_relative_instruction
+	sd	a0,-24(s0)
+	ld	a5,-72(s0)
+	ld	a5,8(a5)
+	ld	a2,-104(s0)
+	mv	a1,a5
+	ld	a0,-88(s0)
+	call	compile_node
+	ld	a5,-104(s0)
+	ld	a5,16(a5)
+	sw	a5,-28(s0)
+	ld	a1,-24(s0)
+	ld	a0,-104(s0)
+	call	linked_list_push
+	ld	a5,-72(s0)
+	ld	a5,16(a5)
+	ld	a3,-104(s0)
+	ld	a2,-96(s0)
+	ld	a1,-88(s0)
+	mv	a0,a5
+	call	compile_many_nodes
+	ld	a1,-48(s0)
+	ld	a0,-104(s0)
+	call	linked_list_push
+.L53:
+	ld	a5,-56(s0)
+	bne	a5,zero,.L54
+	ld	a5,-96(s0)
+	ld	a5,24(a5)
+	sd	a5,-64(s0)
+	ld	a5,-64(s0)
+	beq	a5,zero,.L55
+	ld	a5,-104(s0)
+	ld	a5,16(a5)
+	sext.w	a4,a5
+	lw	a5,-28(s0)
+	subw	a5,a4,a5
+	sext.w	a5,a5
+	sext.w	a4,a5
+	ld	a5,-24(s0)
+	sw	a4,8(a5)
+	ld	a5,-64(s0)
+	ld	a5,16(a5)
+	ld	a3,-104(s0)
+	ld	a2,-96(s0)
+	ld	a1,-88(s0)
+	mv	a0,a5
+	call	compile_many_nodes
+	j	.L56
+.L55:
+	ld	a5,-104(s0)
+	ld	a5,16(a5)
+	sext.w	a4,a5
+	lw	a5,-28(s0)
+	subw	a5,a4,a5
+	sext.w	a5,a5
+	sext.w	a4,a5
+	ld	a5,-24(s0)
+	sw	a4,8(a5)
+.L56:
+	ld	a5,-104(s0)
+	ld	a5,16(a5)
+	sext.w	a4,a5
+	ld	a5,-48(s0)
+	sw	a4,8(a5)
+	nop
+	ld	ra,104(sp)
+	ld	s0,96(sp)
+	addi	sp,sp,112
+	jr	ra
+	.globl	compile_break
+compile_break:
+	addi	sp,sp,-64
+	sd	ra,56(sp)
+	sd	s0,48(sp)
+	addi	s0,sp,64
+	sd	a0,-40(s0)
+	sd	a1,-48(s0)
+	sd	a2,-56(s0)
+	ld	a5,-40(s0)
+	ld	a5,0(a5)
+	li	a1,14
+	mv	a0,a5
+	call	create_instruction
+	sd	a0,-24(s0)
+	ld	a1,-24(s0)
+	ld	a0,-56(s0)
+	call	linked_list_push
+	nop
+	ld	ra,56(sp)
+	ld	s0,48(sp)
+	addi	sp,sp,64
+	jr	ra
 	.section	.rodata
 .LC1:
 	.string	"unrecognized node!\n"
 .LC2:
 	.string	"node type: %d\n"
+.LC3:
+	.string	"compiled node %d\n"
 	.text
 .align 2
 	.globl	compile_node
@@ -880,109 +1160,127 @@ compile_node:
 	lw	a5,0(a5)
 	mv	a3,a5
 	li	a4,31
-	bgtu	a3,a4,.L47
+	bgtu	a3,a4,.L59
 	slli	a4,a5,2
-	lui	a5,%hi(.L49)
-	addi	a5,a5,%lo(.L49)
+	lui	a5,%hi(.L61)
+	addi	a5,a5,%lo(.L61)
 	add	a5,a4,a5
 	lw	a5,0(a5)
 	jr	a5
 	.section	.rodata
-.L49:
-	.word	.L58
-	.word	.L57
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L56
-	.word	.L55
-	.word	.L47
-	.word	.L54
-	.word	.L53
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L52
-	.word	.L51
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L47
-	.word	.L50
-	.word	.L47
-	.word	.L47
-	.word	.L48
+.L61:
+	.word	.L73
+	.word	.L72
+	.word	.L59
+	.word	.L59
+	.word	.L59
+	.word	.L71
+	.word	.L70
+	.word	.L59
+	.word	.L69
+	.word	.L68
+	.word	.L59
+	.word	.L59
+	.word	.L59
+	.word	.L67
+	.word	.L66
+	.word	.L59
+	.word	.L59
+	.word	.L59
+	.word	.L59
+	.word	.L59
+	.word	.L59
+	.word	.L59
+	.word	.L59
+	.word	.L59
+	.word	.L59
+	.word	.L65
+	.word	.L59
+	.word	.L64
+	.word	.L63
+	.word	.L59
+	.word	.L62
+	.word	.L60
 	.text
-.L56:
+.L71:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_ident
-	j	.L59
-.L58:
+	j	.L74
+.L73:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_int
-	j	.L59
-.L57:
+	j	.L74
+.L72:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_float
-	j	.L59
-.L55:
+	j	.L74
+.L70:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_binop
-	j	.L59
-.L53:
+	j	.L74
+.L68:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_ternary_if
-	j	.L59
-.L54:
+	j	.L74
+.L69:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_assign
-	j	.L59
-.L50:
+	j	.L74
+.L63:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_function_def
-	j	.L59
-.L52:
+	j	.L74
+.L67:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_lambda_def
-	j	.L59
-.L51:
+	j	.L74
+.L66:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_function_call
-	j	.L59
-.L48:
+	j	.L74
+.L60:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_return
-	j	.L59
-.L47:
+	j	.L74
+.L62:
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
+	call	compile_break
+	j	.L74
+.L64:
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
+	call	compile_while_loop
+	j	.L74
+.L65:
+	ld	a2,-40(s0)
+	ld	a1,-32(s0)
+	ld	a0,-24(s0)
+	call	compile_if_statement
+	j	.L74
+.L59:
 	lui	a5,%hi(.LC1)
 	addi	a0,a5,%lo(.LC1)
 	call	my_printf
@@ -993,7 +1291,13 @@ compile_node:
 	addi	a0,a5,%lo(.LC2)
 	call	my_printf
 	nop
-.L59:
+.L74:
+	ld	a5,-32(s0)
+	lw	a5,0(a5)
+	mv	a1,a5
+	lui	a5,%hi(.LC3)
+	addi	a0,a5,%lo(.LC3)
+	call	my_printf
 	nop
 	ld	ra,40(sp)
 	ld	s0,32(sp)
@@ -1011,7 +1315,7 @@ compile:
 	lw	a5,0(a5)
 	mv	a4,a5
 	li	a5,32
-	bne	a4,a5,.L61
+	bne	a4,a5,.L76
 	ld	a5,-56(s0)
 	ld	a5,0(a5)
 	li	a1,16
@@ -1034,8 +1338,8 @@ compile:
 	ld	a5,8(a5)
 	ld	a5,0(a5)
 	sd	a5,-24(s0)
-	j	.L62
-.L63:
+	j	.L77
+.L78:
 	ld	a5,-24(s0)
 	ld	a4,0(a5)
 	ld	a5,-40(s0)
@@ -1047,12 +1351,12 @@ compile:
 	ld	a5,-24(s0)
 	ld	a5,8(a5)
 	sd	a5,-24(s0)
-.L62:
+.L77:
 	ld	a5,-24(s0)
-	bne	a5,zero,.L63
+	bne	a5,zero,.L78
 	ld	a5,-40(s0)
-	j	.L64
-.L61:
+	j	.L79
+.L76:
 	ld	a5,-56(s0)
 	ld	a5,0(a5)
 	li	a1,16
@@ -1079,7 +1383,7 @@ compile:
 	ld	a0,-56(s0)
 	call	compile_node
 	ld	a5,-32(s0)
-.L64:
+.L79:
 	mv	a0,a5
 	ld	ra,56(sp)
 	ld	s0,48(sp)

@@ -1,5 +1,6 @@
 #include "compiler.h"
 
+#include "allocator.h"
 #include "ast.h"
 
 #define comp_f_args Compiler *compiler, ASTNode *node, linked_list *instructions
@@ -220,6 +221,77 @@ void compile_function_call(comp_f_args) {
     linked_list_push(instructions, instr);
 }
 
+void compile_while_loop(comp_f_args) {
+    int start = instructions->size;
+    compile_node(compiler, node->data.while_loop.condition, instructions);
+    int jump_if_false_save = instructions->size;
+    Instruction *jump_if_false =
+        create_jump_relative_if_false_instruction(compiler->pool);
+    linked_list_push(instructions, jump_if_false);
+    linked_list_node *current_node = node->data.while_loop.body->head;
+    while (current_node != NULL) {
+        compile_node(compiler, current_node->item, instructions);
+        current_node = current_node->next;
+    }
+    Instruction *jump = create_jump_relative_instruction(compiler->pool);
+    jump->data.jump_relative.target = start - instructions->size;
+    linked_list_push(instructions, jump);
+    Instruction *mark = create_instruction(compiler->pool, COMP_MARK);
+    linked_list_push(instructions, mark);
+    jump_if_false->data.jump_relative.target =
+        instructions->size - jump_if_false_save;
+}
+
+void compile_many_nodes(linked_list *body, comp_f_args) {
+    linked_list_node *current_node = body->head;
+    while (current_node != NULL) {
+        compile_node(compiler, current_node->item, instructions);
+        current_node = current_node->next;
+    }
+}
+
+void compile_if_statement(comp_f_args) {
+    ASTNode *if_partial = node->data.if_statement.if_part;
+    Instruction *end_jump = create_jump_relative_instruction(compiler->pool);
+    Instruction *if_partial_else_jump =
+        create_jump_relative_if_false_instruction(compiler->pool);
+    compile_node(compiler, if_partial->data.if_partial.condition, instructions);
+    int current_save = instructions->size;
+    add_instruction(if_partial_else_jump);
+    compile_many_nodes(if_partial->data.if_partial.body, compiler, node,
+                       instructions);
+    add_instruction(end_jump);
+    linked_list_node *current_node = node->data.if_statement.elifs->head;
+    while (current_node != NULL) {
+        if_partial_else_jump->data.jump_relative.target =
+            instructions->size - current_save;
+        ASTNode *elif = current_node->item;
+        if_partial_else_jump = create_jump_relative_instruction(compiler->pool);
+        compile_node(compiler, elif->data.if_partial.condition, instructions);
+        current_save = instructions->size;
+        add_instruction(if_partial_else_jump);
+        compile_many_nodes(elif->data.if_partial.body, compiler, node,
+                           instructions);
+        add_instruction(end_jump);
+    }
+    ASTNode *else_part = node->data.if_statement.else_part;
+    if (else_part != NULL) {
+        if_partial_else_jump->data.jump_relative.target =
+            instructions->size - current_save;
+        compile_many_nodes(else_part->data.if_partial.body, compiler, node,
+                           instructions);
+    } else {
+        if_partial_else_jump->data.jump_relative.target =
+            instructions->size - current_save;
+    }
+    end_jump->data.jump_relative.target = instructions->size;
+}
+
+void compile_break(comp_f_args) {
+    Instruction *instr = create_instruction(compiler->pool, COMP_BREAK);
+    linked_list_push(instructions, instr);
+}
+
 void compile_node(comp_f_args) {
     switch (node->type) {
         case AST_IDENT: {
@@ -262,11 +334,24 @@ void compile_node(comp_f_args) {
             compile_return(compiler, node, instructions);
             break;
         }
+        case AST_BREAK: {
+            compile_break(compiler, node, instructions);
+            break;
+        }
+        case AST_WHILE_LOOP: {
+            compile_while_loop(compiler, node, instructions);
+            break;
+        }
+        case AST_IF_STATEMENT: {
+            compile_if_statement(compiler, node, instructions);
+            break;
+        }
         default:
             my_printf("unrecognized node!\n");
             my_printf("node type: %d\n", node->type);
             break;
     }
+    my_printf("compiled node %d\n", node->type);
 }
 
 CompilationUnit *compile(Compiler *compiler) {

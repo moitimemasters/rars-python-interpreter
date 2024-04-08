@@ -23,6 +23,8 @@ void interpret_return(common_args);
 void interpret_load_none(common_args);
 void interpret_return(common_args);
 void interpret_call(common_args);
+void interpret_break(common_args);
+void interpret_mark(common_args);
 
 void interpret_unit(CompilationUnit *unit, Interpreter *interpreter,
                     InterpreterError *error) {
@@ -83,6 +85,13 @@ void interpret_instruction(common_args) {
         case COMP_CALL: {
             interpret_call(instruction, current_node, interpreter, error);
             return;
+        }
+        case COMP_BREAK: {
+            interpret_break(instruction, current_node, interpreter, error);
+            return;
+        }
+        case COMP_MARK: {
+            interpret_mark(instruction, current_node, interpreter, error);
         }
         default: {
             *error = UnrecognizedOperationError;
@@ -295,6 +304,7 @@ void interpret_binop(common_args) {
         }
         default: {
             *error = UnrecognizedOperationError;
+            my_printf("Unknown binary operation: %d\n", op);
             return;
         }
     }
@@ -384,6 +394,15 @@ void interpret_anon_fun(common_args) {
 }
 
 void interpret_return(common_args) { *current_node = NULL; }
+void interpret_mark(common_args) {
+    *current_node = (*current_node)->next;
+}
+void interpret_break(common_args) {
+    while ((*current_node) &&
+           ((Instruction *)(*current_node)->item)->type != COMP_MARK) {
+        *current_node = (*current_node)->next;
+    }
+}
 
 void interpret_load_none(common_args) {
     stack_push(interpreter->stack, NULL);

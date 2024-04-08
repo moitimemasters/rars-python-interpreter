@@ -25,10 +25,9 @@ void populate_c_functions(hash_table *ht) {
     hash_table_insert_string(ht, const_string_view("neq_binop"), &neq_binop);
 }
 
-int main(int argc, char** argv) {
-    char* filename;
-    if (argc != 2)
-    {
+int main(int argc, char **argv) {
+    char *filename;
+    if (argc != 2) {
         my_printf("please specify path to .py file\n");
         filename = "test.py";
     } else {
@@ -37,8 +36,7 @@ int main(int argc, char** argv) {
     MemoryPool pool;
     pool.start = (void *)HEAP_START;
     pool.end = (void *)HEAP_END;
-    String *program = read_whole_file(
-        &pool, filename);
+    String *program = read_whole_file(&pool, filename);
 
     Lexer lexer;
     lexer.pool = &pool;
@@ -87,6 +85,13 @@ int main(int argc, char** argv) {
         Exit();
     }
     my_printf("ended compiling\n");
+    my_printf("compiled instructions:\n");
+    linked_list_node *current_node = compilation_result->instructions->head;
+    while (current_node != NULL) {
+        my_printf("\t Instruction: %d\n",
+                  ((Instruction *)current_node->item)->type);
+        current_node = current_node->next;
+    }
     Env *env = my_alloc(&pool, sizeof(Env));
     env->context = hash_table_create(&pool);
     env->parent = NULL;

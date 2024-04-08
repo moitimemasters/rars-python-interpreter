@@ -18,6 +18,8 @@ typedef enum {
     COMP_FUNCTION_ANON,
     COMP_RETURN,
     COMP_CALL,
+    COMP_MARK,
+    COMP_BREAK,
 } InstructionType;
 
 typedef struct CompilationUnit {

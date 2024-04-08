@@ -1,9 +1,8 @@
-def helper(x, a, b):
-    return x if x + a > b else helper(x + a, a, b)
+a = 1
+b = 1
+while a < 56:
+    c = a + b
+    a = b
+    b = c
 
-
-def mod(a, b):
-    return a - helper(0, b, a)
-
-
-mod(51, 2)
+a
