@@ -790,7 +790,6 @@ ASTNode *parse_condition_partial(ASTParser *parser, TokenType conditional_type,
                                  bool needs_condition,
                                  ParseErrorCode *error_code) {
     if (is_end(parser)) {
-        report_parse_error(error_code, "Unexpected end of input");
         return NULL;
     }
 
@@ -802,8 +801,12 @@ ASTNode *parse_condition_partial(ASTParser *parser, TokenType conditional_type,
     ast_consume(parser);
     ASTNode *condition = NULL;
     if (needs_condition) {
-        ASTNode *condition = parse_expression(parser, error_code);
+        condition = parse_expression(parser, error_code);
         if (*error_code != PARSE_SUCCESS) {
+            return NULL;
+        }
+        if (condition == NULL) {
+            report_parse_error(error_code, "Expected condition after \"if\"");
             return NULL;
         }
     }
@@ -890,6 +893,8 @@ ASTNode *parse_if_statement(ASTParser *parser, ParseErrorCode *error_code) {
     if (!if_part) {
         return NULL;
     }
+    my_printf("address of if condition: %d\n",
+              if_part->data.if_partial.condition);
     ASTNode *node = create_ast_node(parser, AST_IF_STATEMENT);
     node->data.if_statement.if_part = if_part;
     node->data.if_statement.else_part = NULL;

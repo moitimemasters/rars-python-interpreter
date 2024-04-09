@@ -252,27 +252,37 @@ void compile_many_nodes(linked_list *body, comp_f_args) {
 
 void compile_if_statement(comp_f_args) {
     ASTNode *if_partial = node->data.if_statement.if_part;
+    linked_list *end_jumps = linked_list_create(compiler->pool);
     Instruction *end_jump = create_jump_relative_instruction(compiler->pool);
+    linked_list_push(end_jumps, end_jump);
     Instruction *if_partial_else_jump =
         create_jump_relative_if_false_instruction(compiler->pool);
+    ASTNode *if_condition = if_partial->data.if_partial.condition;
     compile_node(compiler, if_partial->data.if_partial.condition, instructions);
     int current_save = instructions->size;
     add_instruction(if_partial_else_jump);
     compile_many_nodes(if_partial->data.if_partial.body, compiler, node,
                        instructions);
+    end_jump->data.jump_relative.target = instructions->size;
     add_instruction(end_jump);
     linked_list_node *current_node = node->data.if_statement.elifs->head;
     while (current_node != NULL) {
         if_partial_else_jump->data.jump_relative.target =
             instructions->size - current_save;
         ASTNode *elif = current_node->item;
-        if_partial_else_jump = create_jump_relative_instruction(compiler->pool);
+        if_partial_else_jump =
+            create_jump_relative_if_false_instruction(compiler->pool);
         compile_node(compiler, elif->data.if_partial.condition, instructions);
         current_save = instructions->size;
         add_instruction(if_partial_else_jump);
         compile_many_nodes(elif->data.if_partial.body, compiler, node,
                            instructions);
+        Instruction *end_jump =
+            create_jump_relative_instruction(compiler->pool);
+        linked_list_push(end_jumps, end_jump);
+        end_jump->data.jump_relative.target = instructions->size;
         add_instruction(end_jump);
+        current_node = current_node->next;
     }
     ASTNode *else_part = node->data.if_statement.else_part;
     if (else_part != NULL) {
@@ -284,7 +294,13 @@ void compile_if_statement(comp_f_args) {
         if_partial_else_jump->data.jump_relative.target =
             instructions->size - current_save;
     }
-    end_jump->data.jump_relative.target = instructions->size;
+    current_node = end_jumps->head;
+    while (current_node != NULL) {
+        Instruction *end_jump = current_node->item;
+        end_jump->data.jump_relative.target =
+            instructions->size - end_jump->data.jump_relative.target;
+        current_node = current_node->next;
+    }
 }
 
 void compile_break(comp_f_args) {
@@ -293,6 +309,9 @@ void compile_break(comp_f_args) {
 }
 
 void compile_node(comp_f_args) {
+    if (node == NULL) {
+        return;
+    }
     switch (node->type) {
         case AST_IDENT: {
             compile_ident(compiler, node, instructions);

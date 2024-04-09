@@ -2692,12 +2692,14 @@ retract_indentation:
 	jr	ra
 	.section	.rodata
 .LC24:
-	.string	"Expected \":\" after condition"
+	.string	"Expected condition after \"if\""
 .LC25:
-	.string	"Unexpected indentation after \":\""
+	.string	"Expected \":\" after condition"
 .LC26:
-	.string	"Expected statement after if"
+	.string	"Unexpected indentation after \":\""
 .LC27:
+	.string	"Expected statement after if"
+.LC28:
 	.string	"Unexpected indentation"
 	.text
 .align 2
@@ -2718,65 +2720,70 @@ parse_condition_partial:
 	call	is_end
 	mv	a5,a0
 	beq	a5,zero,.L213
-	lui	a5,%hi(.LC1)
-	addi	a1,a5,%lo(.LC1)
-	ld	a0,-120(s0)
-	call	report_parse_error
 	li	a5,0
-	j	.L236
+	j	.L237
 .L213:
-	addi	a5,s0,-96
+	addi	a5,s0,-88
 	ld	a1,-104(s0)
 	mv	a0,a5
 	call	ast_peek
-	lw	a4,-96(s0)
+	lw	a4,-88(s0)
 	lw	a5,-108(s0)
 	sext.w	a5,a5
 	beq	a5,a4,.L215
 	li	a5,0
-	j	.L236
+	j	.L237
 .L215:
 	ld	a5,-104(s0)
 	lw	a5,24(a5)
-	sw	a5,-20(s0)
+	sw	a5,-28(s0)
 	addi	a5,s0,-160
 	ld	a1,-104(s0)
 	mv	a0,a5
 	call	ast_consume
-	sd	zero,-32(s0)
+	sd	zero,-24(s0)
 	lbu	a5,-109(s0)
 	andi	a5,a5,0xff
 	beq	a5,zero,.L216
 	ld	a1,-120(s0)
 	ld	a0,-104(s0)
 	call	parse_expression
-	sd	a0,-40(s0)
+	sd	a0,-24(s0)
 	ld	a5,-120(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L216
+	beq	a5,zero,.L217
 	li	a5,0
-	j	.L236
+	j	.L237
+.L217:
+	ld	a5,-24(s0)
+	bne	a5,zero,.L216
+	lui	a5,%hi(.LC24)
+	addi	a1,a5,%lo(.LC24)
+	ld	a0,-120(s0)
+	call	report_parse_error
+	li	a5,0
+	j	.L237
 .L216:
 	ld	a0,-104(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L217
+	beq	a5,zero,.L218
 	lui	a5,%hi(.LC1)
 	addi	a1,a5,%lo(.LC1)
 	ld	a0,-120(s0)
 	call	report_parse_error
 	lbu	a5,-109(s0)
 	andi	a5,a5,0xff
-	beq	a5,zero,.L218
+	beq	a5,zero,.L219
 	ld	a5,-104(s0)
 	ld	a5,0(a5)
-	ld	a1,-32(s0)
+	ld	a1,-24(s0)
 	mv	a0,a5
 	call	my_free
-.L218:
+.L219:
 	li	a5,0
-	j	.L236
-.L217:
+	j	.L237
+.L218:
 	addi	a5,s0,-160
 	ld	a1,-104(s0)
 	mv	a0,a5
@@ -2785,30 +2792,30 @@ parse_condition_partial:
 	ld	a3,-152(s0)
 	ld	a4,-144(s0)
 	ld	a5,-136(s0)
-	sd	a2,-96(s0)
-	sd	a3,-88(s0)
-	sd	a4,-80(s0)
-	sd	a5,-72(s0)
-	lw	a5,-96(s0)
+	sd	a2,-88(s0)
+	sd	a3,-80(s0)
+	sd	a4,-72(s0)
+	sd	a5,-64(s0)
+	lw	a5,-88(s0)
 	mv	a4,a5
 	li	a5,55
-	beq	a4,a5,.L219
-	lui	a5,%hi(.LC24)
-	addi	a1,a5,%lo(.LC24)
+	beq	a4,a5,.L220
+	lui	a5,%hi(.LC25)
+	addi	a1,a5,%lo(.LC25)
 	ld	a0,-120(s0)
 	call	report_parse_error
 	lbu	a5,-109(s0)
 	andi	a5,a5,0xff
-	beq	a5,zero,.L220
+	beq	a5,zero,.L221
 	ld	a5,-104(s0)
 	ld	a5,0(a5)
-	ld	a1,-32(s0)
+	ld	a1,-24(s0)
 	mv	a0,a5
 	call	my_free
-.L220:
+.L221:
 	li	a5,0
-	j	.L236
-.L219:
+	j	.L237
+.L220:
 	addi	a5,s0,-160
 	ld	a1,-104(s0)
 	mv	a0,a5
@@ -2817,183 +2824,188 @@ parse_condition_partial:
 	call	ast_skip_indentation
 	ld	a5,-104(s0)
 	lw	a4,24(a5)
-	lw	a5,-20(s0)
+	lw	a5,-28(s0)
 	addiw	a5,a5,1
 	sext.w	a5,a5
-	beq	a4,a5,.L221
-	lui	a5,%hi(.LC25)
-	addi	a1,a5,%lo(.LC25)
+	beq	a4,a5,.L222
+	lui	a5,%hi(.LC26)
+	addi	a1,a5,%lo(.LC26)
 	ld	a0,-120(s0)
 	call	report_parse_error
 	lbu	a5,-109(s0)
 	andi	a5,a5,0xff
-	beq	a5,zero,.L222
+	beq	a5,zero,.L223
 	ld	a5,-104(s0)
 	ld	a5,0(a5)
-	ld	a1,-32(s0)
+	ld	a1,-24(s0)
 	mv	a0,a5
 	call	my_free
-.L222:
+.L223:
 	li	a5,0
-	j	.L236
-.L221:
+	j	.L237
+.L222:
 	ld	a0,-104(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L223
+	beq	a5,zero,.L224
 	lui	a5,%hi(.LC1)
 	addi	a1,a5,%lo(.LC1)
 	ld	a0,-120(s0)
 	call	report_parse_error
 	lbu	a5,-109(s0)
 	andi	a5,a5,0xff
-	beq	a5,zero,.L224
+	beq	a5,zero,.L225
 	ld	a5,-104(s0)
 	ld	a5,0(a5)
-	ld	a1,-32(s0)
+	ld	a1,-24(s0)
 	mv	a0,a5
 	call	my_free
-.L224:
+.L225:
 	li	a5,0
-	j	.L236
-.L223:
+	j	.L237
+.L224:
 	ld	a1,-120(s0)
 	ld	a0,-104(s0)
 	call	parse_statement
-	sd	a0,-48(s0)
-	ld	a5,-48(s0)
-	bne	a5,zero,.L225
+	sd	a0,-40(s0)
+	ld	a5,-40(s0)
+	bne	a5,zero,.L226
 	lbu	a5,-109(s0)
 	andi	a5,a5,0xff
-	beq	a5,zero,.L226
+	beq	a5,zero,.L227
 	ld	a5,-104(s0)
 	ld	a5,0(a5)
-	ld	a1,-32(s0)
+	ld	a1,-24(s0)
 	mv	a0,a5
 	call	my_free
-.L226:
-	lui	a5,%hi(.LC26)
-	addi	a1,a5,%lo(.LC26)
+.L227:
+	lui	a5,%hi(.LC27)
+	addi	a1,a5,%lo(.LC27)
 	ld	a0,-120(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L236
-.L225:
+	j	.L237
+.L226:
 	li	a1,24
 	ld	a0,-104(s0)
 	call	create_ast_node
-	sd	a0,-56(s0)
-	ld	a5,-56(s0)
-	ld	a4,-32(s0)
+	sd	a0,-48(s0)
+	ld	a5,-48(s0)
+	ld	a4,-24(s0)
 	sd	a4,8(a5)
 	ld	a5,-104(s0)
 	ld	a5,0(a5)
 	mv	a0,a5
 	call	linked_list_create
 	mv	a4,a0
-	ld	a5,-56(s0)
+	ld	a5,-48(s0)
 	sd	a4,16(a5)
-	ld	a5,-56(s0)
+	ld	a5,-48(s0)
 	ld	a5,16(a5)
-	ld	a1,-48(s0)
+	ld	a1,-40(s0)
 	mv	a0,a5
 	call	linked_list_push
 	ld	a0,-104(s0)
 	call	ast_skip_indentation
-	j	.L227
-.L231:
+	j	.L228
+.L232:
 	ld	a1,-120(s0)
 	ld	a0,-104(s0)
 	call	parse_statement
-	sd	a0,-64(s0)
-	ld	a5,-64(s0)
-	bne	a5,zero,.L228
+	sd	a0,-56(s0)
+	ld	a5,-56(s0)
+	bne	a5,zero,.L229
 	ld	a5,-104(s0)
 	ld	a5,0(a5)
-	ld	a1,-56(s0)
+	ld	a1,-48(s0)
 	mv	a0,a5
 	call	my_free
 	lbu	a5,-109(s0)
 	andi	a5,a5,0xff
-	beq	a5,zero,.L229
+	beq	a5,zero,.L230
 	ld	a5,-104(s0)
 	ld	a5,0(a5)
-	ld	a1,-32(s0)
+	ld	a1,-24(s0)
 	mv	a0,a5
 	call	my_free
-.L229:
-	ld	a5,-56(s0)
+.L230:
+	ld	a5,-48(s0)
 	ld	a5,16(a5)
 	mv	a0,a5
 	call	linked_list_free
 	li	a5,0
-	j	.L236
-.L228:
-	ld	a5,-56(s0)
+	j	.L237
+.L229:
+	ld	a5,-48(s0)
 	ld	a5,16(a5)
-	ld	a1,-64(s0)
+	ld	a1,-56(s0)
 	mv	a0,a5
 	call	linked_list_push
 	ld	a0,-104(s0)
 	call	ast_skip_indentation
-.L227:
+.L228:
 	ld	a0,-104(s0)
 	call	is_end
 	mv	a5,a0
 	xori	a5,a5,1
 	andi	a5,a5,0xff
-	beq	a5,zero,.L230
+	beq	a5,zero,.L231
 	ld	a5,-104(s0)
 	lw	a4,24(a5)
-	lw	a5,-20(s0)
+	lw	a5,-28(s0)
 	addiw	a5,a5,1
 	sext.w	a5,a5
-	beq	a4,a5,.L231
-.L230:
+	beq	a4,a5,.L232
+.L231:
 	ld	a5,-104(s0)
 	lw	a4,24(a5)
-	lw	a5,-20(s0)
+	lw	a5,-28(s0)
 	addiw	a5,a5,1
 	sext.w	a5,a5
-	ble	a4,a5,.L234
+	ble	a4,a5,.L235
 	ld	a5,-104(s0)
 	ld	a5,0(a5)
-	ld	a1,-56(s0)
+	ld	a1,-48(s0)
 	mv	a0,a5
 	call	my_free
 	lbu	a5,-109(s0)
 	andi	a5,a5,0xff
-	beq	a5,zero,.L233
+	beq	a5,zero,.L234
 	ld	a5,-104(s0)
 	ld	a5,0(a5)
-	ld	a1,-32(s0)
+	ld	a1,-24(s0)
 	mv	a0,a5
 	call	my_free
-.L233:
-	ld	a5,-56(s0)
+.L234:
+	ld	a5,-48(s0)
 	ld	a5,16(a5)
 	mv	a0,a5
 	call	linked_list_free
-	lui	a5,%hi(.LC27)
-	addi	a1,a5,%lo(.LC27)
+	lui	a5,%hi(.LC28)
+	addi	a1,a5,%lo(.LC28)
 	ld	a0,-120(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L236
-.L235:
+	j	.L237
+.L236:
 	ld	a0,-104(s0)
 	call	retract_indentation
-.L234:
+.L235:
 	ld	a5,-104(s0)
 	lw	a5,24(a5)
-	bne	a5,zero,.L235
-	ld	a5,-56(s0)
-.L236:
+	bne	a5,zero,.L236
+	ld	a5,-48(s0)
+.L237:
 	mv	a0,a5
 	ld	ra,152(sp)
 	ld	s0,144(sp)
 	addi	sp,sp,160
 	jr	ra
+	.section	.rodata
+.LC29:
+	.string	"address of if condition: %d\n"
+	.text
+.align 2
 	.globl	parse_if_statement
 parse_if_statement:
 	addi	sp,sp,-80
@@ -3012,10 +3024,16 @@ parse_if_statement:
 	call	parse_condition_partial
 	sd	a0,-32(s0)
 	ld	a5,-32(s0)
-	bne	a5,zero,.L238
+	bne	a5,zero,.L239
 	li	a5,0
-	j	.L239
-.L238:
+	j	.L240
+.L239:
+	ld	a5,-32(s0)
+	ld	a5,8(a5)
+	mv	a1,a5
+	lui	a5,%hi(.LC29)
+	addi	a0,a5,%lo(.LC29)
+	call	my_printf
 	li	a1,25
 	ld	a0,-72(s0)
 	call	create_ast_node
@@ -3032,15 +3050,15 @@ parse_if_statement:
 	mv	a4,a0
 	ld	a5,-40(s0)
 	sd	a4,16(a5)
-	j	.L240
-.L245:
+	j	.L241
+.L246:
 	ld	a0,-72(s0)
 	call	ast_skip_indentation
 	ld	a5,-72(s0)
 	lw	a4,24(a5)
 	lw	a5,-20(s0)
 	sext.w	a5,a5
-	bne	a5,a4,.L251
+	bne	a5,a4,.L252
 	ld	a3,-80(s0)
 	li	a2,1
 	li	a1,40
@@ -3049,7 +3067,7 @@ parse_if_statement:
 	sd	a0,-48(s0)
 	ld	a5,-80(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L243
+	beq	a5,zero,.L244
 	ld	a5,-40(s0)
 	ld	a5,16(a5)
 	mv	a0,a5
@@ -3065,54 +3083,54 @@ parse_if_statement:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L239
-.L243:
+	j	.L240
+.L244:
 	ld	a5,-48(s0)
-	beq	a5,zero,.L252
+	beq	a5,zero,.L253
 	ld	a5,-40(s0)
 	ld	a5,16(a5)
 	ld	a1,-48(s0)
 	mv	a0,a5
 	call	linked_list_push
-.L240:
+.L241:
 	ld	a0,-72(s0)
 	call	is_end
 	mv	a5,a0
 	xori	a5,a5,1
 	andi	a5,a5,0xff
-	bne	a5,zero,.L245
-	j	.L242
-.L251:
-	nop
-	j	.L242
+	bne	a5,zero,.L246
+	j	.L243
 .L252:
 	nop
-.L242:
+	j	.L243
+.L253:
+	nop
+.L243:
 	ld	a5,-72(s0)
 	lw	a4,24(a5)
 	lw	a5,-20(s0)
 	sext.w	a5,a5
-	beq	a5,a4,.L246
+	beq	a5,a4,.L247
 	ld	a5,-72(s0)
 	lw	a4,24(a5)
 	lw	a5,-20(s0)
 	sext.w	a5,a5
-	bge	a5,a4,.L248
-	lui	a5,%hi(.LC27)
-	addi	a1,a5,%lo(.LC27)
+	bge	a5,a4,.L249
+	lui	a5,%hi(.LC28)
+	addi	a1,a5,%lo(.LC28)
 	ld	a0,-80(s0)
 	call	report_parse_error
-	j	.L248
-.L249:
+	j	.L249
+.L250:
 	ld	a0,-72(s0)
 	call	retract_indentation
-.L248:
+.L249:
 	ld	a5,-72(s0)
 	lw	a5,24(a5)
-	bne	a5,zero,.L249
+	bne	a5,zero,.L250
 	ld	a5,-40(s0)
-	j	.L239
-.L246:
+	j	.L240
+.L247:
 	ld	a3,-80(s0)
 	li	a2,0
 	li	a1,41
@@ -3121,7 +3139,7 @@ parse_if_statement:
 	sd	a0,-56(s0)
 	ld	a5,-80(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L250
+	beq	a5,zero,.L251
 	ld	a5,-40(s0)
 	ld	a5,16(a5)
 	mv	a0,a5
@@ -3137,32 +3155,32 @@ parse_if_statement:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L239
-.L250:
+	j	.L240
+.L251:
 	ld	a5,-40(s0)
 	ld	a4,-56(s0)
 	sd	a4,24(a5)
 	ld	a5,-40(s0)
-.L239:
+.L240:
 	mv	a0,a5
 	ld	ra,72(sp)
 	ld	s0,64(sp)
 	addi	sp,sp,80
 	jr	ra
 	.section	.rodata
-.LC28:
-	.string	"Expected identifier after for"
-.LC29:
-	.string	"Expected \"in\" after for"
 .LC30:
-	.string	"Expected expression after \"in\""
+	.string	"Expected identifier after for"
 .LC31:
-	.string	"Expected \":\" after for"
+	.string	"Expected \"in\" after for"
 .LC32:
-	.string	"Expected indentation after \":\""
+	.string	"Expected expression after \"in\""
 .LC33:
-	.string	"Expected statement or \"pass\" after for"
+	.string	"Expected \":\" after for"
 .LC34:
+	.string	"Expected indentation after \":\""
+.LC35:
+	.string	"Expected statement or \"pass\" after for"
+.LC36:
 	.string	"Unexpected indentation after for loop"
 	.text
 .align 2
@@ -3177,14 +3195,14 @@ parse_for_loop:
 	ld	a0,-136(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L254
+	beq	a5,zero,.L255
 	lui	a5,%hi(.LC1)
 	addi	a1,a5,%lo(.LC1)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L272
-.L254:
+	j	.L273
+.L255:
 	addi	a5,s0,-128
 	ld	a1,-136(s0)
 	mv	a0,a5
@@ -3192,10 +3210,10 @@ parse_for_loop:
 	lw	a5,-128(s0)
 	mv	a4,a5
 	li	a5,44
-	beq	a4,a5,.L256
+	beq	a4,a5,.L257
 	li	a5,0
-	j	.L272
-.L256:
+	j	.L273
+.L257:
 	ld	a5,-136(s0)
 	lw	a5,24(a5)
 	sw	a5,-20(s0)
@@ -3208,25 +3226,25 @@ parse_for_loop:
 	call	parse_ident
 	sd	a0,-32(s0)
 	ld	a5,-32(s0)
-	bne	a5,zero,.L257
-	lui	a5,%hi(.LC28)
-	addi	a1,a5,%lo(.LC28)
+	bne	a5,zero,.L258
+	lui	a5,%hi(.LC30)
+	addi	a1,a5,%lo(.LC30)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L272
-.L257:
+	j	.L273
+.L258:
 	ld	a0,-136(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L258
+	beq	a5,zero,.L259
 	lui	a5,%hi(.LC1)
 	addi	a1,a5,%lo(.LC1)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L272
-.L258:
+	j	.L273
+.L259:
 	addi	a5,s0,-176
 	ld	a1,-136(s0)
 	mv	a0,a5
@@ -3242,55 +3260,7 @@ parse_for_loop:
 	lw	a5,-128(s0)
 	mv	a4,a5
 	li	a5,38
-	beq	a4,a5,.L259
-	lui	a5,%hi(.LC29)
-	addi	a1,a5,%lo(.LC29)
-	ld	a0,-144(s0)
-	call	report_parse_error
-	ld	a5,-136(s0)
-	ld	a5,0(a5)
-	ld	a1,-32(s0)
-	mv	a0,a5
-	call	my_free
-	li	a5,0
-	j	.L272
-.L259:
-	addi	a5,s0,-176
-	ld	a1,-136(s0)
-	mv	a0,a5
-	call	ast_consume
-	ld	a1,-144(s0)
-	ld	a0,-136(s0)
-	call	parse_expression
-	sd	a0,-40(s0)
-	ld	a5,-40(s0)
-	bne	a5,zero,.L260
-	lui	a5,%hi(.LC30)
-	addi	a1,a5,%lo(.LC30)
-	ld	a0,-144(s0)
-	call	report_parse_error
-	li	a5,0
-	j	.L272
-.L260:
-	ld	a0,-136(s0)
-	call	is_end
-	mv	a5,a0
-	beq	a5,zero,.L261
-	lui	a5,%hi(.LC1)
-	addi	a1,a5,%lo(.LC1)
-	ld	a0,-144(s0)
-	call	report_parse_error
-	li	a5,0
-	j	.L272
-.L261:
-	addi	a5,s0,-96
-	ld	a1,-136(s0)
-	mv	a0,a5
-	call	ast_peek
-	lw	a5,-96(s0)
-	mv	a4,a5
-	li	a5,55
-	beq	a4,a5,.L262
+	beq	a4,a5,.L260
 	lui	a5,%hi(.LC31)
 	addi	a1,a5,%lo(.LC31)
 	ld	a0,-144(s0)
@@ -3300,49 +3270,45 @@ parse_for_loop:
 	ld	a1,-32(s0)
 	mv	a0,a5
 	call	my_free
-	ld	a5,-136(s0)
-	ld	a5,0(a5)
-	ld	a1,-40(s0)
-	mv	a0,a5
-	call	my_free
 	li	a5,0
-	j	.L272
-.L262:
+	j	.L273
+.L260:
 	addi	a5,s0,-176
 	ld	a1,-136(s0)
 	mv	a0,a5
 	call	ast_consume
+	ld	a1,-144(s0)
 	ld	a0,-136(s0)
-	call	ast_skip_indentation
-	ld	a5,-136(s0)
-	lw	a4,24(a5)
-	lw	a5,-20(s0)
-	addiw	a5,a5,1
-	sext.w	a5,a5
-	beq	a4,a5,.L263
+	call	parse_expression
+	sd	a0,-40(s0)
+	ld	a5,-40(s0)
+	bne	a5,zero,.L261
 	lui	a5,%hi(.LC32)
 	addi	a1,a5,%lo(.LC32)
 	ld	a0,-144(s0)
 	call	report_parse_error
-	ld	a5,-136(s0)
-	ld	a5,0(a5)
-	ld	a1,-32(s0)
-	mv	a0,a5
-	call	my_free
-	ld	a5,-136(s0)
-	ld	a5,0(a5)
-	ld	a1,-40(s0)
-	mv	a0,a5
-	call	my_free
 	li	a5,0
-	j	.L272
-.L263:
-	ld	a1,-144(s0)
+	j	.L273
+.L261:
 	ld	a0,-136(s0)
-	call	parse_statement
-	sd	a0,-48(s0)
-	ld	a5,-48(s0)
-	bne	a5,zero,.L264
+	call	is_end
+	mv	a5,a0
+	beq	a5,zero,.L262
+	lui	a5,%hi(.LC1)
+	addi	a1,a5,%lo(.LC1)
+	ld	a0,-144(s0)
+	call	report_parse_error
+	li	a5,0
+	j	.L273
+.L262:
+	addi	a5,s0,-96
+	ld	a1,-136(s0)
+	mv	a0,a5
+	call	ast_peek
+	lw	a5,-96(s0)
+	mv	a4,a5
+	li	a5,55
+	beq	a4,a5,.L263
 	lui	a5,%hi(.LC33)
 	addi	a1,a5,%lo(.LC33)
 	ld	a0,-144(s0)
@@ -3358,8 +3324,60 @@ parse_for_loop:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L272
+	j	.L273
+.L263:
+	addi	a5,s0,-176
+	ld	a1,-136(s0)
+	mv	a0,a5
+	call	ast_consume
+	ld	a0,-136(s0)
+	call	ast_skip_indentation
+	ld	a5,-136(s0)
+	lw	a4,24(a5)
+	lw	a5,-20(s0)
+	addiw	a5,a5,1
+	sext.w	a5,a5
+	beq	a4,a5,.L264
+	lui	a5,%hi(.LC34)
+	addi	a1,a5,%lo(.LC34)
+	ld	a0,-144(s0)
+	call	report_parse_error
+	ld	a5,-136(s0)
+	ld	a5,0(a5)
+	ld	a1,-32(s0)
+	mv	a0,a5
+	call	my_free
+	ld	a5,-136(s0)
+	ld	a5,0(a5)
+	ld	a1,-40(s0)
+	mv	a0,a5
+	call	my_free
+	li	a5,0
+	j	.L273
 .L264:
+	ld	a1,-144(s0)
+	ld	a0,-136(s0)
+	call	parse_statement
+	sd	a0,-48(s0)
+	ld	a5,-48(s0)
+	bne	a5,zero,.L265
+	lui	a5,%hi(.LC35)
+	addi	a1,a5,%lo(.LC35)
+	ld	a0,-144(s0)
+	call	report_parse_error
+	ld	a5,-136(s0)
+	ld	a5,0(a5)
+	ld	a1,-32(s0)
+	mv	a0,a5
+	call	my_free
+	ld	a5,-136(s0)
+	ld	a5,0(a5)
+	ld	a1,-40(s0)
+	mv	a0,a5
+	call	my_free
+	li	a5,0
+	j	.L273
+.L265:
 	li	a1,26
 	ld	a0,-136(s0)
 	call	create_ast_node
@@ -3379,14 +3397,14 @@ parse_for_loop:
 	sd	a4,24(a5)
 	ld	a0,-136(s0)
 	call	ast_skip_indentation
-	j	.L265
-.L268:
+	j	.L266
+.L269:
 	ld	a1,-144(s0)
 	ld	a0,-136(s0)
 	call	parse_statement
 	sd	a0,-64(s0)
 	ld	a5,-64(s0)
-	bne	a5,zero,.L266
+	bne	a5,zero,.L267
 	ld	a5,-136(s0)
 	ld	a5,0(a5)
 	ld	a1,-56(s0)
@@ -3406,13 +3424,13 @@ parse_for_loop:
 	ld	a5,24(a5)
 	mv	a0,a5
 	call	linked_list_free
-	lui	a5,%hi(.LC33)
-	addi	a1,a5,%lo(.LC33)
+	lui	a5,%hi(.LC35)
+	addi	a1,a5,%lo(.LC35)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L272
-.L266:
+	j	.L273
+.L267:
 	ld	a5,-56(s0)
 	ld	a5,24(a5)
 	ld	a1,-64(s0)
@@ -3420,26 +3438,26 @@ parse_for_loop:
 	call	linked_list_push
 	ld	a0,-136(s0)
 	call	ast_skip_indentation
-.L265:
+.L266:
 	ld	a0,-136(s0)
 	call	is_end
 	mv	a5,a0
 	xori	a5,a5,1
 	andi	a5,a5,0xff
-	beq	a5,zero,.L267
+	beq	a5,zero,.L268
 	lw	a5,-20(s0)
 	addiw	a5,a5,1
 	sext.w	a4,a5
 	ld	a5,-136(s0)
 	lw	a5,24(a5)
-	beq	a4,a5,.L268
-.L267:
+	beq	a4,a5,.L269
+.L268:
 	ld	a5,-136(s0)
 	lw	a4,24(a5)
 	lw	a5,-20(s0)
 	addiw	a5,a5,1
 	sext.w	a5,a5
-	ble	a4,a5,.L270
+	ble	a4,a5,.L271
 	ld	a5,-136(s0)
 	ld	a5,0(a5)
 	ld	a1,-56(s0)
@@ -3459,32 +3477,32 @@ parse_for_loop:
 	ld	a5,24(a5)
 	mv	a0,a5
 	call	linked_list_free
-	lui	a5,%hi(.LC34)
-	addi	a1,a5,%lo(.LC34)
+	lui	a5,%hi(.LC36)
+	addi	a1,a5,%lo(.LC36)
 	ld	a0,-144(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L272
-.L271:
+	j	.L273
+.L272:
 	ld	a0,-136(s0)
 	call	retract_indentation
-.L270:
+.L271:
 	ld	a5,-136(s0)
 	lw	a5,24(a5)
-	bne	a5,zero,.L271
+	bne	a5,zero,.L272
 	ld	a5,-56(s0)
-.L272:
+.L273:
 	mv	a0,a5
 	ld	ra,168(sp)
 	ld	s0,160(sp)
 	addi	sp,sp,176
 	jr	ra
 	.section	.rodata
-.LC35:
-	.string	"Expected condition or \":\" after \"while\""
-.LC36:
-	.string	"Expected statement or \"pass\" after while"
 .LC37:
+	.string	"Expected condition or \":\" after \"while\""
+.LC38:
+	.string	"Expected statement or \"pass\" after while"
+.LC39:
 	.string	"Unexpected indentation after while loop"
 	.text
 .align 2
@@ -3499,10 +3517,10 @@ parse_while:
 	ld	a0,-168(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L274
+	beq	a5,zero,.L275
 	li	a5,0
-	j	.L275
-.L274:
+	j	.L276
+.L275:
 	ld	a5,-168(s0)
 	lw	a5,24(a5)
 	sw	a5,-20(s0)
@@ -3513,10 +3531,10 @@ parse_while:
 	lw	a5,-152(s0)
 	mv	a4,a5
 	li	a5,42
-	beq	a4,a5,.L276
+	beq	a4,a5,.L277
 	li	a5,0
-	j	.L275
-.L276:
+	j	.L276
+.L277:
 	addi	a5,s0,-208
 	ld	a1,-168(s0)
 	mv	a0,a5
@@ -3526,7 +3544,7 @@ parse_while:
 	call	parse_expression
 	sd	a0,-32(s0)
 	ld	a5,-32(s0)
-	bne	a5,zero,.L277
+	bne	a5,zero,.L278
 	addi	a5,s0,-120
 	ld	a1,-168(s0)
 	mv	a0,a5
@@ -3534,14 +3552,14 @@ parse_while:
 	lw	a5,-120(s0)
 	mv	a4,a5
 	li	a5,55
-	beq	a4,a5,.L277
-	lui	a5,%hi(.LC35)
-	addi	a1,a5,%lo(.LC35)
+	beq	a4,a5,.L278
+	lui	a5,%hi(.LC37)
+	addi	a1,a5,%lo(.LC37)
 	ld	a0,-176(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L275
-.L277:
+	j	.L276
+.L278:
 	addi	a5,s0,-88
 	ld	a1,-168(s0)
 	mv	a0,a5
@@ -3549,30 +3567,6 @@ parse_while:
 	lw	a5,-88(s0)
 	mv	a4,a5
 	li	a5,55
-	beq	a4,a5,.L278
-	lui	a5,%hi(.LC24)
-	addi	a1,a5,%lo(.LC24)
-	ld	a0,-176(s0)
-	call	report_parse_error
-	ld	a5,-168(s0)
-	ld	a5,0(a5)
-	ld	a1,-32(s0)
-	mv	a0,a5
-	call	my_free
-	li	a5,0
-	j	.L275
-.L278:
-	addi	a5,s0,-208
-	ld	a1,-168(s0)
-	mv	a0,a5
-	call	ast_consume
-	ld	a0,-168(s0)
-	call	ast_skip_indentation
-	ld	a5,-168(s0)
-	lw	a4,24(a5)
-	lw	a5,-20(s0)
-	addiw	a5,a5,1
-	sext.w	a5,a5
 	beq	a4,a5,.L279
 	lui	a5,%hi(.LC25)
 	addi	a1,a5,%lo(.LC25)
@@ -3584,16 +3578,22 @@ parse_while:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L275
+	j	.L276
 .L279:
-	ld	a1,-176(s0)
+	addi	a5,s0,-208
+	ld	a1,-168(s0)
+	mv	a0,a5
+	call	ast_consume
 	ld	a0,-168(s0)
-	call	parse_statement
-	sd	a0,-40(s0)
-	ld	a5,-40(s0)
-	bne	a5,zero,.L280
-	lui	a5,%hi(.LC36)
-	addi	a1,a5,%lo(.LC36)
+	call	ast_skip_indentation
+	ld	a5,-168(s0)
+	lw	a4,24(a5)
+	lw	a5,-20(s0)
+	addiw	a5,a5,1
+	sext.w	a5,a5
+	beq	a4,a5,.L280
+	lui	a5,%hi(.LC26)
+	addi	a1,a5,%lo(.LC26)
 	ld	a0,-176(s0)
 	call	report_parse_error
 	ld	a5,-168(s0)
@@ -3602,8 +3602,26 @@ parse_while:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L275
+	j	.L276
 .L280:
+	ld	a1,-176(s0)
+	ld	a0,-168(s0)
+	call	parse_statement
+	sd	a0,-40(s0)
+	ld	a5,-40(s0)
+	bne	a5,zero,.L281
+	lui	a5,%hi(.LC38)
+	addi	a1,a5,%lo(.LC38)
+	ld	a0,-176(s0)
+	call	report_parse_error
+	ld	a5,-168(s0)
+	ld	a5,0(a5)
+	ld	a1,-32(s0)
+	mv	a0,a5
+	call	my_free
+	li	a5,0
+	j	.L276
+.L281:
 	li	a1,27
 	ld	a0,-168(s0)
 	call	create_ast_node
@@ -3623,28 +3641,28 @@ parse_while:
 	ld	a1,-40(s0)
 	mv	a0,a5
 	call	linked_list_push
-.L284:
+.L285:
 	ld	a0,-168(s0)
 	call	ast_skip_indentation
 	ld	a0,-168(s0)
 	call	is_end
 	mv	a5,a0
-	bne	a5,zero,.L281
+	bne	a5,zero,.L282
 	ld	a5,-168(s0)
 	lw	a4,24(a5)
 	lw	a5,-20(s0)
 	addiw	a5,a5,1
 	sext.w	a5,a5
-	bne	a4,a5,.L281
+	bne	a4,a5,.L282
 	ld	a1,-176(s0)
 	ld	a0,-168(s0)
 	call	parse_statement
 	sd	a0,-56(s0)
 	ld	a5,-56(s0)
-	bne	a5,zero,.L282
+	bne	a5,zero,.L283
 	ld	a5,-176(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L288
+	beq	a5,zero,.L289
 	ld	a5,-168(s0)
 	ld	a5,0(a5)
 	ld	a1,-48(s0)
@@ -3660,23 +3678,23 @@ parse_while:
 	mv	a0,a5
 	call	linked_list_free
 	li	a5,0
-	j	.L275
-.L282:
+	j	.L276
+.L283:
 	ld	a5,-48(s0)
 	ld	a5,16(a5)
 	ld	a1,-56(s0)
 	mv	a0,a5
 	call	linked_list_push
-	j	.L284
-.L288:
+	j	.L285
+.L289:
 	nop
-.L281:
+.L282:
 	ld	a5,-168(s0)
 	lw	a4,24(a5)
 	lw	a5,-20(s0)
 	addiw	a5,a5,1
 	sext.w	a5,a5
-	ble	a4,a5,.L286
+	ble	a4,a5,.L287
 	ld	a5,-168(s0)
 	ld	a5,0(a5)
 	ld	a1,-48(s0)
@@ -3691,36 +3709,36 @@ parse_while:
 	ld	a5,16(a5)
 	mv	a0,a5
 	call	linked_list_free
-	lui	a5,%hi(.LC37)
-	addi	a1,a5,%lo(.LC37)
+	lui	a5,%hi(.LC39)
+	addi	a1,a5,%lo(.LC39)
 	ld	a0,-176(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L275
-.L287:
+	j	.L276
+.L288:
 	ld	a0,-168(s0)
 	call	retract_indentation
-.L286:
+.L287:
 	ld	a5,-168(s0)
 	lw	a5,24(a5)
-	bne	a5,zero,.L287
+	bne	a5,zero,.L288
 	ld	a5,-48(s0)
-.L275:
+.L276:
 	mv	a0,a5
 	ld	ra,200(sp)
 	ld	s0,192(sp)
 	addi	sp,sp,208
 	jr	ra
 	.section	.rodata
-.LC38:
-	.string	"Expected function name after def"
-.LC39:
-	.string	"Expected \"(\" after function name"
 .LC40:
-	.string	"Expected \")\" after argument list"
+	.string	"Expected function name after def"
 .LC41:
-	.string	"Expected \":\" after function definition"
+	.string	"Expected \"(\" after function name"
 .LC42:
+	.string	"Expected \")\" after argument list"
+.LC43:
+	.string	"Expected \":\" after function definition"
+.LC44:
 	.string	"Unexpected indentation after function definition loop"
 	.text
 .align 2
@@ -3735,10 +3753,10 @@ parse_function_definition:
 	ld	a0,-216(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L290
+	beq	a5,zero,.L291
 	li	a5,0
-	j	.L291
-.L290:
+	j	.L292
+.L291:
 	addi	a5,s0,-200
 	ld	a1,-216(s0)
 	mv	a0,a5
@@ -3746,10 +3764,10 @@ parse_function_definition:
 	lw	a5,-200(s0)
 	mv	a4,a5
 	li	a5,48
-	beq	a4,a5,.L292
+	beq	a4,a5,.L293
 	li	a5,0
-	j	.L291
-.L292:
+	j	.L292
+.L293:
 	ld	a5,-216(s0)
 	lw	a5,24(a5)
 	sw	a5,-20(s0)
@@ -3762,14 +3780,14 @@ parse_function_definition:
 	call	parse_ident
 	sd	a0,-32(s0)
 	ld	a5,-32(s0)
-	bne	a5,zero,.L293
-	lui	a5,%hi(.LC38)
-	addi	a1,a5,%lo(.LC38)
+	bne	a5,zero,.L294
+	lui	a5,%hi(.LC40)
+	addi	a1,a5,%lo(.LC40)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L291
-.L293:
+	j	.L292
+.L294:
 	addi	a5,s0,-168
 	ld	a1,-216(s0)
 	mv	a0,a5
@@ -3777,9 +3795,9 @@ parse_function_definition:
 	lw	a5,-168(s0)
 	mv	a4,a5
 	li	a5,56
-	beq	a4,a5,.L294
-	lui	a5,%hi(.LC39)
-	addi	a1,a5,%lo(.LC39)
+	beq	a4,a5,.L295
+	lui	a5,%hi(.LC41)
+	addi	a1,a5,%lo(.LC41)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	ld	a5,-216(s0)
@@ -3788,8 +3806,8 @@ parse_function_definition:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L291
-.L294:
+	j	.L292
+.L295:
 	addi	a5,s0,-256
 	ld	a1,-216(s0)
 	mv	a0,a5
@@ -3805,9 +3823,9 @@ parse_function_definition:
 	lw	a5,-136(s0)
 	mv	a4,a5
 	li	a5,57
-	beq	a4,a5,.L295
-	lui	a5,%hi(.LC40)
-	addi	a1,a5,%lo(.LC40)
+	beq	a4,a5,.L296
+	lui	a5,%hi(.LC42)
+	addi	a1,a5,%lo(.LC42)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	ld	a5,-216(s0)
@@ -3821,8 +3839,8 @@ parse_function_definition:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L291
-.L295:
+	j	.L292
+.L296:
 	addi	a5,s0,-256
 	ld	a1,-216(s0)
 	mv	a0,a5
@@ -3834,9 +3852,9 @@ parse_function_definition:
 	lw	a5,-104(s0)
 	mv	a4,a5
 	li	a5,55
-	beq	a4,a5,.L296
-	lui	a5,%hi(.LC41)
-	addi	a1,a5,%lo(.LC41)
+	beq	a4,a5,.L297
+	lui	a5,%hi(.LC43)
+	addi	a1,a5,%lo(.LC43)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	ld	a5,-216(s0)
@@ -3850,8 +3868,8 @@ parse_function_definition:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L291
-.L296:
+	j	.L292
+.L297:
 	addi	a5,s0,-256
 	ld	a1,-216(s0)
 	mv	a0,a5
@@ -3863,9 +3881,9 @@ parse_function_definition:
 	lw	a5,-20(s0)
 	addiw	a5,a5,1
 	sext.w	a5,a5
-	beq	a4,a5,.L297
-	lui	a5,%hi(.LC25)
-	addi	a1,a5,%lo(.LC25)
+	beq	a4,a5,.L298
+	lui	a5,%hi(.LC26)
+	addi	a1,a5,%lo(.LC26)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	ld	a5,-216(s0)
@@ -3879,16 +3897,16 @@ parse_function_definition:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L291
-.L297:
+	j	.L292
+.L298:
 	ld	a1,-224(s0)
 	ld	a0,-216(s0)
 	call	parse_statement
 	sd	a0,-48(s0)
 	ld	a5,-48(s0)
-	bne	a5,zero,.L298
-	lui	a5,%hi(.LC36)
-	addi	a1,a5,%lo(.LC36)
+	bne	a5,zero,.L299
+	lui	a5,%hi(.LC38)
+	addi	a1,a5,%lo(.LC38)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	ld	a5,-216(s0)
@@ -3902,8 +3920,8 @@ parse_function_definition:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L291
-.L298:
+	j	.L292
+.L299:
 	li	a1,28
 	ld	a0,-216(s0)
 	call	create_ast_node
@@ -3933,28 +3951,28 @@ parse_function_definition:
 	ld	a1,-48(s0)
 	mv	a0,a5
 	call	linked_list_push
-.L302:
+.L303:
 	ld	a0,-216(s0)
 	call	ast_skip_indentation
 	ld	a0,-216(s0)
 	call	is_end
 	mv	a5,a0
-	bne	a5,zero,.L299
+	bne	a5,zero,.L300
 	ld	a5,-216(s0)
 	lw	a4,24(a5)
 	lw	a5,-20(s0)
 	addiw	a5,a5,1
 	sext.w	a5,a5
-	bne	a4,a5,.L299
+	bne	a4,a5,.L300
 	ld	a1,-224(s0)
 	ld	a0,-216(s0)
 	call	parse_statement
 	sd	a0,-72(s0)
 	ld	a5,-72(s0)
-	bne	a5,zero,.L300
+	bne	a5,zero,.L301
 	ld	a5,-224(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L306
+	beq	a5,zero,.L307
 	ld	a5,-216(s0)
 	ld	a5,0(a5)
 	ld	a1,-56(s0)
@@ -3975,23 +3993,23 @@ parse_function_definition:
 	mv	a0,a5
 	call	linked_list_free
 	li	a5,0
-	j	.L291
-.L300:
+	j	.L292
+.L301:
 	ld	a5,-64(s0)
 	ld	a5,8(a5)
 	ld	a1,-72(s0)
 	mv	a0,a5
 	call	linked_list_push
-	j	.L302
-.L306:
+	j	.L303
+.L307:
 	nop
-.L299:
+.L300:
 	ld	a5,-216(s0)
 	lw	a4,24(a5)
 	lw	a5,-20(s0)
 	addiw	a5,a5,1
 	sext.w	a5,a5
-	ble	a4,a5,.L304
+	ble	a4,a5,.L305
 	ld	a5,-216(s0)
 	ld	a5,0(a5)
 	ld	a1,-56(s0)
@@ -4011,28 +4029,28 @@ parse_function_definition:
 	ld	a5,8(a5)
 	mv	a0,a5
 	call	linked_list_free
-	lui	a5,%hi(.LC42)
-	addi	a1,a5,%lo(.LC42)
+	lui	a5,%hi(.LC44)
+	addi	a1,a5,%lo(.LC44)
 	ld	a0,-224(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L291
-.L305:
+	j	.L292
+.L306:
 	ld	a0,-216(s0)
 	call	retract_indentation
-.L304:
+.L305:
 	ld	a5,-216(s0)
 	lw	a5,24(a5)
-	bne	a5,zero,.L305
+	bne	a5,zero,.L306
 	ld	a5,-56(s0)
-.L291:
+.L292:
 	mv	a0,a5
 	ld	ra,248(sp)
 	ld	s0,240(sp)
 	addi	sp,sp,256
 	jr	ra
 	.section	.rodata
-.LC43:
+.LC45:
 	.string	"Expected value after assignment"
 	.text
 .align 2
@@ -4047,26 +4065,26 @@ parse_assign:
 	ld	a0,-88(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L308
+	beq	a5,zero,.L309
 	li	a5,0
-	j	.L309
-.L308:
+	j	.L310
+.L309:
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_expression
 	sd	a0,-24(s0)
 	ld	a5,-24(s0)
-	bne	a5,zero,.L310
+	bne	a5,zero,.L311
 	li	a5,0
-	j	.L309
-.L310:
+	j	.L310
+.L311:
 	ld	a0,-88(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L311
+	beq	a5,zero,.L312
 	ld	a5,-24(s0)
-	j	.L309
-.L311:
+	j	.L310
+.L312:
 	addi	a5,s0,-80
 	ld	a1,-88(s0)
 	mv	a0,a5
@@ -4076,34 +4094,34 @@ parse_assign:
 	lw	a5,-28(s0)
 	sext.w	a4,a5
 	li	a5,7
-	beq	a4,a5,.L312
+	beq	a4,a5,.L313
 	lw	a5,-28(s0)
 	sext.w	a4,a5
 	li	a5,11
-	beq	a4,a5,.L312
+	beq	a4,a5,.L313
 	lw	a5,-28(s0)
 	sext.w	a4,a5
 	li	a5,14
-	beq	a4,a5,.L312
+	beq	a4,a5,.L313
 	lw	a5,-28(s0)
 	sext.w	a4,a5
 	li	a5,16
-	beq	a4,a5,.L312
+	beq	a4,a5,.L313
 	lw	a5,-28(s0)
 	sext.w	a4,a5
 	li	a5,18
-	beq	a4,a5,.L312
+	beq	a4,a5,.L313
 	lw	a5,-28(s0)
 	sext.w	a4,a5
 	li	a5,22
-	beq	a4,a5,.L312
+	beq	a4,a5,.L313
 	lw	a5,-28(s0)
 	sext.w	a4,a5
 	li	a5,24
-	beq	a4,a5,.L312
+	beq	a4,a5,.L313
 	ld	a5,-24(s0)
-	j	.L309
-.L312:
+	j	.L310
+.L313:
 	addi	a5,s0,-128
 	ld	a1,-88(s0)
 	mv	a0,a5
@@ -4113,9 +4131,9 @@ parse_assign:
 	call	parse_expression
 	sd	a0,-40(s0)
 	ld	a5,-40(s0)
-	bne	a5,zero,.L313
-	lui	a5,%hi(.LC43)
-	addi	a1,a5,%lo(.LC43)
+	bne	a5,zero,.L314
+	lui	a5,%hi(.LC45)
+	addi	a1,a5,%lo(.LC45)
 	ld	a0,-96(s0)
 	call	report_parse_error
 	ld	a5,-88(s0)
@@ -4124,8 +4142,8 @@ parse_assign:
 	mv	a0,a5
 	call	my_free
 	li	a5,0
-	j	.L309
-.L313:
+	j	.L310
+.L314:
 	li	a1,8
 	ld	a0,-88(s0)
 	call	create_ast_node
@@ -4141,15 +4159,15 @@ parse_assign:
 	sw	a4,24(a5)
 	ld	a5,-48(s0)
 	sd	a5,-24(s0)
-	j	.L310
-.L309:
+	j	.L311
+.L310:
 	mv	a0,a5
 	ld	ra,120(sp)
 	ld	s0,112(sp)
 	addi	sp,sp,128
 	jr	ra
 	.section	.rodata
-.LC44:
+.LC46:
 	.string	"Expected expression after unary operator"
 	.text
 .align 2
@@ -4169,10 +4187,10 @@ parse_unary_statement:
 	ld	a0,-72(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L315
+	beq	a5,zero,.L316
 	li	a5,0
-	j	.L316
-.L315:
+	j	.L317
+.L316:
 	addi	a5,s0,-56
 	ld	a1,-72(s0)
 	mv	a0,a5
@@ -4180,10 +4198,10 @@ parse_unary_statement:
 	lw	a4,-56(s0)
 	lw	a5,-76(s0)
 	sext.w	a5,a5
-	beq	a5,a4,.L317
+	beq	a5,a4,.L318
 	li	a5,0
-	j	.L316
-.L317:
+	j	.L317
+.L318:
 	addi	a5,s0,-128
 	ld	a1,-72(s0)
 	mv	a0,a5
@@ -4201,21 +4219,21 @@ parse_unary_statement:
 	sd	a4,8(a5)
 	ld	a5,-24(s0)
 	ld	a5,8(a5)
-	bne	a5,zero,.L318
+	bne	a5,zero,.L319
 	ld	a5,-72(s0)
 	ld	a5,0(a5)
 	ld	a1,-24(s0)
 	mv	a0,a5
 	call	my_free
-	lui	a5,%hi(.LC44)
-	addi	a1,a5,%lo(.LC44)
+	lui	a5,%hi(.LC46)
+	addi	a1,a5,%lo(.LC46)
 	ld	a0,-88(s0)
 	call	report_parse_error
 	li	a5,0
-	j	.L316
-.L318:
+	j	.L317
+.L319:
 	ld	a5,-24(s0)
-.L316:
+.L317:
 	mv	a0,a5
 	ld	ra,120(sp)
 	ld	s0,112(sp)
@@ -4270,10 +4288,10 @@ parse_break:
 	ld	a0,-56(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L324
+	beq	a5,zero,.L325
 	li	a5,0
-	j	.L325
-.L324:
+	j	.L326
+.L325:
 	addi	a5,s0,-48
 	ld	a1,-56(s0)
 	mv	a0,a5
@@ -4281,7 +4299,7 @@ parse_break:
 	lw	a5,-48(s0)
 	mv	a4,a5
 	li	a5,46
-	bne	a4,a5,.L326
+	bne	a4,a5,.L327
 	addi	a5,s0,-96
 	ld	a1,-56(s0)
 	mv	a0,a5
@@ -4290,10 +4308,10 @@ parse_break:
 	ld	a0,-56(s0)
 	call	create_ast_node
 	mv	a5,a0
-	j	.L325
-.L326:
+	j	.L326
+.L327:
 	li	a5,0
-.L325:
+.L326:
 	mv	a0,a5
 	ld	ra,88(sp)
 	ld	s0,80(sp)
@@ -4310,135 +4328,135 @@ parse_statement:
 	ld	a0,-88(s0)
 	call	is_end
 	mv	a5,a0
-	beq	a5,zero,.L328
+	beq	a5,zero,.L329
 	li	a5,0
-	j	.L329
-.L328:
+	j	.L330
+.L329:
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_if_statement
 	sd	a0,-24(s0)
 	ld	a5,-24(s0)
-	beq	a5,zero,.L330
+	beq	a5,zero,.L331
 	ld	a5,-24(s0)
-	j	.L329
-.L330:
+	j	.L330
+.L331:
 	ld	a5,-96(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L331
+	beq	a5,zero,.L332
 	li	a5,0
-	j	.L329
-.L331:
+	j	.L330
+.L332:
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_for_loop
 	sd	a0,-32(s0)
 	ld	a5,-32(s0)
-	beq	a5,zero,.L332
+	beq	a5,zero,.L333
 	ld	a5,-32(s0)
-	j	.L329
-.L332:
+	j	.L330
+.L333:
 	ld	a5,-96(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L333
+	beq	a5,zero,.L334
 	li	a5,0
-	j	.L329
-.L333:
+	j	.L330
+.L334:
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_while
 	sd	a0,-40(s0)
 	ld	a5,-40(s0)
-	beq	a5,zero,.L334
+	beq	a5,zero,.L335
 	ld	a5,-40(s0)
-	j	.L329
-.L334:
+	j	.L330
+.L335:
 	ld	a5,-96(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L335
+	beq	a5,zero,.L336
 	li	a5,0
-	j	.L329
-.L335:
+	j	.L330
+.L336:
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_function_definition
 	sd	a0,-48(s0)
 	ld	a5,-48(s0)
-	beq	a5,zero,.L336
+	beq	a5,zero,.L337
 	ld	a5,-48(s0)
-	j	.L329
-.L336:
+	j	.L330
+.L337:
 	ld	a5,-96(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L337
+	beq	a5,zero,.L338
 	li	a5,0
-	j	.L329
-.L337:
+	j	.L330
+.L338:
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_delete
 	sd	a0,-56(s0)
 	ld	a5,-56(s0)
-	beq	a5,zero,.L338
+	beq	a5,zero,.L339
 	ld	a5,-56(s0)
-	j	.L329
-.L338:
+	j	.L330
+.L339:
 	ld	a5,-96(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L339
+	beq	a5,zero,.L340
 	li	a5,0
-	j	.L329
-.L339:
+	j	.L330
+.L340:
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_return
 	sd	a0,-64(s0)
 	ld	a5,-64(s0)
-	beq	a5,zero,.L340
+	beq	a5,zero,.L341
 	ld	a5,-64(s0)
-	j	.L329
-.L340:
+	j	.L330
+.L341:
 	ld	a5,-96(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L341
+	beq	a5,zero,.L342
 	li	a5,0
-	j	.L329
-.L341:
+	j	.L330
+.L342:
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_break
 	sd	a0,-72(s0)
 	ld	a5,-72(s0)
-	beq	a5,zero,.L342
+	beq	a5,zero,.L343
 	ld	a5,-72(s0)
-	j	.L329
-.L342:
+	j	.L330
+.L343:
 	ld	a5,-96(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L343
+	beq	a5,zero,.L344
 	li	a5,0
-	j	.L329
-.L343:
+	j	.L330
+.L344:
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_assign
 	sd	a0,-80(s0)
 	ld	a5,-80(s0)
-	beq	a5,zero,.L344
+	beq	a5,zero,.L345
 	ld	a5,-80(s0)
-	j	.L329
-.L344:
+	j	.L330
+.L345:
 	ld	a5,-96(s0)
 	lw	a5,0(a5)
-	beq	a5,zero,.L345
+	beq	a5,zero,.L346
 	li	a5,0
-	j	.L329
-.L345:
+	j	.L330
+.L346:
 	ld	a1,-96(s0)
 	ld	a0,-88(s0)
 	call	parse_expression
 	mv	a5,a0
-.L329:
+.L330:
 	mv	a0,a5
 	ld	ra,88(sp)
 	ld	s0,80(sp)
@@ -4459,41 +4477,41 @@ parse:
 	sd	a0,-24(s0)
 	ld	a5,-56(s0)
 	sw	zero,24(a5)
-	j	.L347
-.L351:
+	j	.L348
+.L352:
 	ld	a5,-56(s0)
 	lw	a5,24(a5)
-	beq	a5,zero,.L348
+	beq	a5,zero,.L349
 	addi	a4,s0,-44
-	lui	a5,%hi(.LC27)
-	addi	a1,a5,%lo(.LC27)
+	lui	a5,%hi(.LC28)
+	addi	a1,a5,%lo(.LC28)
 	mv	a0,a4
 	call	report_parse_error
 	ld	a0,-24(s0)
 	call	linked_list_free
 	li	a5,0
-	j	.L352
-.L348:
+	j	.L353
+.L349:
 	lw	a5,-44(s0)
-	beq	a5,zero,.L350
+	beq	a5,zero,.L351
 	ld	a0,-24(s0)
 	call	linked_list_free
 	li	a5,0
-	j	.L352
-.L350:
+	j	.L353
+.L351:
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	linked_list_push
 	ld	a0,-56(s0)
 	call	ast_skip_indentation
-.L347:
+.L348:
 	addi	a5,s0,-44
 	mv	a1,a5
 	ld	a0,-56(s0)
 	call	parse_statement
 	sd	a0,-32(s0)
 	ld	a5,-32(s0)
-	bne	a5,zero,.L351
+	bne	a5,zero,.L352
 	li	a1,32
 	ld	a0,-56(s0)
 	call	create_ast_node
@@ -4502,7 +4520,7 @@ parse:
 	ld	a4,-24(s0)
 	sd	a4,8(a5)
 	ld	a5,-40(s0)
-.L352:
+.L353:
 	mv	a0,a5
 	ld	ra,56(sp)
 	ld	s0,48(sp)

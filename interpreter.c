@@ -394,9 +394,7 @@ void interpret_anon_fun(common_args) {
 }
 
 void interpret_return(common_args) { *current_node = NULL; }
-void interpret_mark(common_args) {
-    *current_node = (*current_node)->next;
-}
+void interpret_mark(common_args) { *current_node = (*current_node)->next; }
 void interpret_break(common_args) {
     while ((*current_node) &&
            ((Instruction *)(*current_node)->item)->type != COMP_MARK) {

@@ -255,8 +255,8 @@ main:
 	sw	a5,-152(s0)
 	sb	zero,-136(s0)
 	addi	a4,s0,-120
-	li	a5,4096
-	addi	a1,a5,704
+	li	a5,8192
+	addi	a1,a5,-192
 	mv	a0,a4
 	call	my_alloc
 	sd	a0,-56(s0)

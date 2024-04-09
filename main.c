@@ -37,7 +37,6 @@ int main(int argc, char **argv) {
     pool.start = (void *)HEAP_START;
     pool.end = (void *)HEAP_END;
     String *program = read_whole_file(&pool, filename);
-
     Lexer lexer;
     lexer.pool = &pool;
     lexer.source = program->data;
@@ -48,7 +47,7 @@ int main(int argc, char **argv) {
     lexer.indentation = 4;
     lexer.indenting = false;
 
-    Token *tokens = my_alloc(&pool, sizeof(Token *) * 600);
+    Token *tokens = my_alloc(&pool, sizeof(Token *) * 1000);
     Token token;
     int i = 0;
     my_printf("started lexing\n");
