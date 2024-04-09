@@ -1,0 +1,36 @@
+file: tests/recursive_fibonacci.py
+started lexing
+ended lexing
+started parsing ast
+address of if condition: 268767832
+ended parsing ast
+started compiling
+ended compiling
+compiled instructions:
+	 Instruction: 10
+	 Instruction: 8
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 0
+	 Instruction: 12
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 0
+	 Instruction: 12
+	 Instruction: 7
+	 Instruction: 11
+	 Instruction: 10
+	 Instruction: 8
+	 Instruction: 10
+	 Instruction: 8
+	 Instruction: 2
+	 Instruction: 0
+	 Instruction: 12
+	 Instruction: 2
+	 Instruction: 0
+	 Instruction: 12
+	 Instruction: 7
+started interpreting
+ERROR: Variable not found

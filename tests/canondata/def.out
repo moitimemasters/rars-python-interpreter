@@ -1,0 +1,8 @@
+file: tests/def.py
+started lexing
+ended lexing
+started parsing ast
+Error: Expected ":" after lambda arguments
+if tern expr is null
+ended parsing ast
+started compiling

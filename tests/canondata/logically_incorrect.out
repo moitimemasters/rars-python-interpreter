@@ -1,0 +1,24 @@
+file: tests/logically_incorrect.py
+started lexing
+ended lexing
+started parsing ast
+address of if condition: 268763992
+ended parsing ast
+started compiling
+ended compiling
+compiled instructions:
+	 Instruction: 2
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 6
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 8
+	 Instruction: 5
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 8
+started interpreting
+ERROR: Variable not found

@@ -166,9 +166,9 @@ populate_c_functions:
 	jr	ra
 	.section	.rodata
 .LC10:
-	.string	"please specify path to .py file\n"
+	.string	"Usage: ... main.s pa <filename>\n"
 .LC11:
-	.string	"test.py"
+	.string	"file: %s\n"
 .LC12:
 	.string	"started lexing\n"
 .LC13:
@@ -215,27 +215,26 @@ main:
 	sd	a1,-256(s0)
 	sw	a5,-244(s0)
 	lw	a5,-244(s0)
-	sext.w	a4,a5
-	li	a5,2
-	beq	a4,a5,.L3
+	sext.w	a5,a5
+	bgt	a5,zero,.L3
 	lui	a5,%hi(.LC10)
 	addi	a0,a5,%lo(.LC10)
 	call	my_printf
-	lui	a5,%hi(.LC11)
-	addi	a5,a5,%lo(.LC11)
-	sd	a5,-24(s0)
-	j	.L4
+	call	Exit
 .L3:
 	ld	a5,-256(s0)
-	ld	a5,8(a5)
-	sd	a5,-24(s0)
-.L4:
+	ld	a5,0(a5)
+	sd	a5,-40(s0)
+	ld	a1,-40(s0)
+	lui	a5,%hi(.LC11)
+	addi	a0,a5,%lo(.LC11)
+	call	my_printf
 	li	a5,268697600
 	sd	a5,-120(s0)
 	li	a5,805306368
 	sd	a5,-112(s0)
 	addi	a5,s0,-120
-	ld	a1,-24(s0)
+	ld	a1,-40(s0)
 	mv	a0,a5
 	call	read_whole_file
 	sd	a0,-48(s0)
@@ -260,15 +259,15 @@ main:
 	mv	a0,a4
 	call	my_alloc
 	sd	a0,-56(s0)
-	sw	zero,-28(s0)
+	sw	zero,-20(s0)
 	lui	a5,%hi(.LC12)
 	addi	a0,a5,%lo(.LC12)
 	call	my_printf
-	j	.L5
-.L7:
-	lw	a5,-28(s0)
+	j	.L4
+.L6:
+	lw	a5,-20(s0)
 	addiw	a4,a5,1
-	sw	a4,-28(s0)
+	sw	a4,-20(s0)
 	slli	a5,a5,5
 	ld	a4,-56(s0)
 	add	a5,a4,a5
@@ -280,7 +279,7 @@ main:
 	sd	a2,8(a5)
 	sd	a3,16(a5)
 	sd	a4,24(a5)
-.L5:
+.L4:
 	addi	a5,s0,-200
 	addi	a4,s0,-168
 	mv	a1,a4
@@ -289,19 +288,19 @@ main:
 	lw	a5,-200(s0)
 	mv	a4,a5
 	li	a5,66
-	beq	a4,a5,.L6
+	beq	a4,a5,.L5
 	lw	a5,-200(s0)
 	mv	a4,a5
 	li	a5,67
-	bne	a4,a5,.L7
-.L6:
+	bne	a4,a5,.L6
+.L5:
 	lui	a5,%hi(.LC13)
 	addi	a0,a5,%lo(.LC13)
 	call	my_printf
 	lw	a5,-200(s0)
 	mv	a4,a5
 	li	a5,67
-	bne	a4,a5,.L8
+	bne	a4,a5,.L7
 	lw	a5,-180(s0)
 	lw	a4,-148(s0)
 	mv	a2,a4
@@ -310,11 +309,11 @@ main:
 	addi	a0,a5,%lo(.LC14)
 	call	my_printf
 	call	Exit
-.L8:
+.L7:
 	sw	zero,-216(s0)
 	addi	a5,s0,-120
 	sd	a5,-232(s0)
-	lw	a5,-28(s0)
+	lw	a5,-20(s0)
 	sw	a5,-212(s0)
 	ld	a5,-56(s0)
 	sd	a5,-224(s0)
@@ -330,12 +329,12 @@ main:
 	addi	a0,a5,%lo(.LC16)
 	call	my_printf
 	ld	a5,-64(s0)
-	bne	a5,zero,.L9
+	bne	a5,zero,.L8
 	lui	a5,%hi(.LC17)
 	addi	a0,a5,%lo(.LC17)
 	call	my_printf
 	call	Exit
-.L9:
+.L8:
 	lui	a5,%hi(.LC18)
 	addi	a0,a5,%lo(.LC18)
 	call	my_printf
@@ -354,12 +353,12 @@ main:
 	call	compile
 	sd	a0,-80(s0)
 	ld	a5,-80(s0)
-	bne	a5,zero,.L10
+	bne	a5,zero,.L9
 	lui	a5,%hi(.LC19)
 	addi	a0,a5,%lo(.LC19)
 	call	my_printf
 	call	Exit
-.L10:
+.L9:
 	lui	a5,%hi(.LC20)
 	addi	a0,a5,%lo(.LC20)
 	call	my_printf
@@ -369,22 +368,22 @@ main:
 	ld	a5,-80(s0)
 	ld	a5,8(a5)
 	ld	a5,0(a5)
-	sd	a5,-40(s0)
-	j	.L11
-.L12:
-	ld	a5,-40(s0)
+	sd	a5,-32(s0)
+	j	.L10
+.L11:
+	ld	a5,-32(s0)
 	ld	a5,0(a5)
 	lw	a5,0(a5)
 	mv	a1,a5
 	lui	a5,%hi(.LC22)
 	addi	a0,a5,%lo(.LC22)
 	call	my_printf
-	ld	a5,-40(s0)
+	ld	a5,-32(s0)
 	ld	a5,8(a5)
-	sd	a5,-40(s0)
-.L11:
-	ld	a5,-40(s0)
-	bne	a5,zero,.L12
+	sd	a5,-32(s0)
+.L10:
+	ld	a5,-32(s0)
+	bne	a5,zero,.L11
 	addi	a5,s0,-120
 	li	a1,24
 	mv	a0,a5
@@ -446,23 +445,23 @@ main:
 	sd	a5,-104(s0)
 	ld	a5,-104(s0)
 	lw	a5,0(a5)
-	bne	a5,zero,.L13
+	bne	a5,zero,.L12
 	ld	a5,-104(s0)
 	lw	a5,8(a5)
-	bne	a5,zero,.L14
+	bne	a5,zero,.L13
 	ld	a5,-104(s0)
 	lw	a5,12(a5)
 	mv	a1,a5
 	lui	a5,%hi(.LC25)
 	addi	a0,a5,%lo(.LC25)
 	call	my_printf
-	j	.L15
-.L14:
+	j	.L14
+.L13:
 	ld	a5,-104(s0)
 	lw	a5,8(a5)
 	mv	a4,a5
 	li	a5,1
-	bne	a4,a5,.L16
+	bne	a4,a5,.L15
 	ld	a5,-104(s0)
 	flw	fa5,12(a5)
 	fcvt.d.s	fa5,fa5
@@ -470,20 +469,20 @@ main:
 	lui	a5,%hi(.LC26)
 	addi	a0,a5,%lo(.LC26)
 	call	my_printf
-	j	.L15
-.L16:
+	j	.L14
+.L15:
 	ld	a5,-104(s0)
 	lw	a5,8(a5)
 	mv	a1,a5
 	lui	a5,%hi(.LC27)
 	addi	a0,a5,%lo(.LC27)
 	call	my_printf
-	j	.L15
-.L13:
+	j	.L14
+.L12:
 	lui	a5,%hi(.LC28)
 	addi	a0,a5,%lo(.LC28)
 	call	my_printf
-.L15:
+.L14:
 	call	Exit
 	li	a5,0
 	mv	a0,a5

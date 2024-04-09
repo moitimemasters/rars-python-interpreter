@@ -1,0 +1,70 @@
+file: tests/if_statement.py
+started lexing
+ended lexing
+started parsing ast
+address of if condition: 268766744
+address of if condition: 268783000
+address of if condition: 268788120
+ended parsing ast
+started compiling
+ended compiling
+compiled instructions:
+	 Instruction: 2
+	 Instruction: 8
+	 Instruction: 2
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 6
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 8
+	 Instruction: 5
+	 Instruction: 2
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 6
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 8
+	 Instruction: 5
+	 Instruction: 2
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 6
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 8
+	 Instruction: 5
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 8
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 6
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 8
+	 Instruction: 5
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 6
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 8
+	 Instruction: 5
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 8
+	 Instruction: 0
+started interpreting
+ended interpreting
+Interpretation result: 203

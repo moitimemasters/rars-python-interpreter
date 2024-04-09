@@ -1,0 +1,23 @@
+file: tests/ternary_if.py
+started lexing
+ended lexing
+started parsing ast
+Error: Expected ":" after condition
+ended parsing ast
+started compiling
+ended compiling
+compiled instructions:
+	 Instruction: 2
+	 Instruction: 8
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 6
+	 Instruction: 2
+	 Instruction: 5
+	 Instruction: 2
+started interpreting
+ended interpreting
+Interpretation result: 0

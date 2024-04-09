@@ -25,14 +25,13 @@ void populate_c_functions(hash_table *ht) {
     hash_table_insert_string(ht, const_string_view("neq_binop"), &neq_binop);
 }
 
-int main(int argc, char **argv) {
-    char *filename;
-    if (argc != 2) {
-        my_printf("please specify path to .py file\n");
-        filename = "test.py";
-    } else {
-        filename = argv[1];
+int main(int argc, char** argv) {
+    if (argc < 1) {
+        my_printf("Usage: ... main.s pa <filename>\n");
+        Exit();
     }
+    char* filename = argv[0];
+    my_printf("file: %s\n", filename);
     MemoryPool pool;
     pool.start = (void *)HEAP_START;
     pool.end = (void *)HEAP_END;

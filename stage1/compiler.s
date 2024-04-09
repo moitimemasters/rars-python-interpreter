@@ -1270,9 +1270,6 @@ compile_break:
 	.align	3
 .LC2:
 	.string	"node type: %d\n"
-	.align	3
-.LC3:
-	.string	"compiled node %d\n"
 	.text
 	.align	1
 	.globl	compile_node
@@ -1286,7 +1283,7 @@ compile_node:
 	sd	a1,-32(s0)
 	sd	a2,-40(s0)
 	ld	a5,-32(s0)
-	beq	a5,zero,.L79
+	beq	a5,zero,.L78
 	ld	a5,-32(s0)
 	lw	a5,0(a5)
 	mv	a3,a5
@@ -1340,79 +1337,79 @@ compile_node:
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_ident
-	j	.L78
+	j	.L60
 .L77:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_int
-	j	.L78
+	j	.L60
 .L76:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_float
-	j	.L78
+	j	.L60
 .L74:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_binop
-	j	.L78
+	j	.L60
 .L72:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_ternary_if
-	j	.L78
+	j	.L60
 .L73:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_assign
-	j	.L78
+	j	.L60
 .L67:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_function_def
-	j	.L78
+	j	.L60
 .L71:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_lambda_def
-	j	.L78
+	j	.L60
 .L70:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_function_call
-	j	.L78
+	j	.L60
 .L64:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_return
-	j	.L78
+	j	.L60
 .L66:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_break
-	j	.L78
+	j	.L60
 .L68:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_while_loop
-	j	.L78
+	j	.L60
 .L69:
 	ld	a2,-40(s0)
 	ld	a1,-32(s0)
 	ld	a0,-24(s0)
 	call	compile_if_statement
-	j	.L78
+	j	.L60
 .L63:
 	lui	a5,%hi(.LC1)
 	addi	a0,a5,%lo(.LC1)
@@ -1423,16 +1420,8 @@ compile_node:
 	lui	a5,%hi(.LC2)
 	addi	a0,a5,%lo(.LC2)
 	call	my_printf
-	nop
-.L78:
-	ld	a5,-32(s0)
-	lw	a5,0(a5)
-	mv	a1,a5
-	lui	a5,%hi(.LC3)
-	addi	a0,a5,%lo(.LC3)
-	call	my_printf
 	j	.L60
-.L79:
+.L78:
 	nop
 .L60:
 	ld	ra,40(sp)
@@ -1454,7 +1443,7 @@ compile:
 	lw	a5,0(a5)
 	mv	a4,a5
 	li	a5,32
-	bne	a4,a5,.L81
+	bne	a4,a5,.L80
 	ld	a5,-56(s0)
 	ld	a5,0(a5)
 	li	a1,16
@@ -1477,8 +1466,8 @@ compile:
 	ld	a5,8(a5)
 	ld	a5,0(a5)
 	sd	a5,-24(s0)
-	j	.L82
-.L83:
+	j	.L81
+.L82:
 	ld	a5,-24(s0)
 	ld	a4,0(a5)
 	ld	a5,-40(s0)
@@ -1490,12 +1479,12 @@ compile:
 	ld	a5,-24(s0)
 	ld	a5,8(a5)
 	sd	a5,-24(s0)
-.L82:
-	ld	a5,-24(s0)
-	bne	a5,zero,.L83
-	ld	a5,-40(s0)
-	j	.L84
 .L81:
+	ld	a5,-24(s0)
+	bne	a5,zero,.L82
+	ld	a5,-40(s0)
+	j	.L83
+.L80:
 	ld	a5,-56(s0)
 	ld	a5,0(a5)
 	li	a1,16
@@ -1522,7 +1511,7 @@ compile:
 	ld	a0,-56(s0)
 	call	compile_node
 	ld	a5,-32(s0)
-.L84:
+.L83:
 	mv	a0,a5
 	ld	ra,56(sp)
 	ld	s0,48(sp)

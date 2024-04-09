@@ -39,8 +39,6 @@ interpret_unit:
 	jr	ra
 	.section	.rodata
 .LC0:
-	.string	"interpreting instr %d\n"
-.LC1:
 	.string	"Unknown instruction type: %d\n"
 	.text
 .align 2
@@ -54,12 +52,6 @@ interpret_instruction:
 	sd	a1,-32(s0)
 	sd	a2,-40(s0)
 	sd	a3,-48(s0)
-	ld	a5,-24(s0)
-	lw	a5,0(a5)
-	mv	a1,a5
-	lui	a5,%hi(.LC0)
-	addi	a0,a5,%lo(.LC0)
-	call	my_printf
 	ld	a5,-24(s0)
 	lw	a5,0(a5)
 	mv	a3,a5
@@ -186,8 +178,8 @@ interpret_instruction:
 	ld	a5,-24(s0)
 	lw	a5,0(a5)
 	mv	a1,a5
-	lui	a5,%hi(.LC1)
-	addi	a0,a5,%lo(.LC1)
+	lui	a5,%hi(.LC0)
+	addi	a0,a5,%lo(.LC0)
 	call	my_printf
 	nop
 .L6:
@@ -266,27 +258,27 @@ interpret_load_int:
 	addi	sp,sp,64
 	jr	ra
 	.section	.rodata
-.LC2:
+.LC1:
 	.string	"add_binop"
-.LC3:
+.LC2:
 	.string	"sub_binop"
-.LC4:
+.LC3:
 	.string	"mul_binop"
-.LC5:
+.LC4:
 	.string	"div_binop"
-.LC6:
+.LC5:
 	.string	"lt_binop"
-.LC7:
+.LC6:
 	.string	"leq_binop"
-.LC8:
+.LC7:
 	.string	"gt_binop"
-.LC9:
+.LC8:
 	.string	"geq_binop"
-.LC10:
+.LC9:
 	.string	"eq_binop"
-.LC11:
+.LC10:
 	.string	"neq_binop"
-.LC12:
+.LC11:
 	.string	"Unknown binary operation: %d\n"
 	.text
 .align 2
@@ -365,8 +357,8 @@ interpret_binop:
 .L37:
 	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC2)
-	addi	a5,a5,%lo(.LC2)
+	lui	a5,%hi(.LC1)
+	addi	a5,a5,%lo(.LC1)
 	sd	a5,-296(s0)
 	li	a5,9
 	sd	a5,-288(s0)
@@ -413,8 +405,8 @@ interpret_binop:
 .L36:
 	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC3)
-	addi	a5,a5,%lo(.LC3)
+	lui	a5,%hi(.LC2)
+	addi	a5,a5,%lo(.LC2)
 	sd	a5,-312(s0)
 	li	a5,9
 	sd	a5,-304(s0)
@@ -461,8 +453,8 @@ interpret_binop:
 .L35:
 	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC4)
-	addi	a5,a5,%lo(.LC4)
+	lui	a5,%hi(.LC3)
+	addi	a5,a5,%lo(.LC3)
 	sd	a5,-328(s0)
 	li	a5,9
 	sd	a5,-320(s0)
@@ -509,8 +501,8 @@ interpret_binop:
 .L34:
 	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC5)
-	addi	a5,a5,%lo(.LC5)
+	lui	a5,%hi(.LC4)
+	addi	a5,a5,%lo(.LC4)
 	sd	a5,-344(s0)
 	li	a5,9
 	sd	a5,-336(s0)
@@ -557,8 +549,8 @@ interpret_binop:
 .L31:
 	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC6)
-	addi	a5,a5,%lo(.LC6)
+	lui	a5,%hi(.LC5)
+	addi	a5,a5,%lo(.LC5)
 	sd	a5,-360(s0)
 	li	a5,8
 	sd	a5,-352(s0)
@@ -605,8 +597,8 @@ interpret_binop:
 .L30:
 	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC7)
-	addi	a5,a5,%lo(.LC7)
+	lui	a5,%hi(.LC6)
+	addi	a5,a5,%lo(.LC6)
 	sd	a5,-376(s0)
 	li	a5,9
 	sd	a5,-368(s0)
@@ -653,8 +645,8 @@ interpret_binop:
 .L29:
 	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC8)
-	addi	a5,a5,%lo(.LC8)
+	lui	a5,%hi(.LC7)
+	addi	a5,a5,%lo(.LC7)
 	sd	a5,-392(s0)
 	li	a5,8
 	sd	a5,-384(s0)
@@ -701,8 +693,8 @@ interpret_binop:
 .L27:
 	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC9)
-	addi	a5,a5,%lo(.LC9)
+	lui	a5,%hi(.LC8)
+	addi	a5,a5,%lo(.LC8)
 	sd	a5,-408(s0)
 	li	a5,9
 	sd	a5,-400(s0)
@@ -749,8 +741,8 @@ interpret_binop:
 .L33:
 	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC10)
-	addi	a5,a5,%lo(.LC10)
+	lui	a5,%hi(.LC9)
+	addi	a5,a5,%lo(.LC9)
 	sd	a5,-424(s0)
 	li	a5,8
 	sd	a5,-416(s0)
@@ -797,8 +789,8 @@ interpret_binop:
 .L32:
 	ld	a5,-472(s0)
 	ld	a4,32(a5)
-	lui	a5,%hi(.LC11)
-	addi	a5,a5,%lo(.LC11)
+	lui	a5,%hi(.LC10)
+	addi	a5,a5,%lo(.LC10)
 	sd	a5,-440(s0)
 	li	a5,9
 	sd	a5,-432(s0)
@@ -848,8 +840,8 @@ interpret_binop:
 	sw	a4,0(a5)
 	lw	a5,-36(s0)
 	mv	a1,a5
-	lui	a5,%hi(.LC12)
-	addi	a0,a5,%lo(.LC12)
+	lui	a5,%hi(.LC11)
+	addi	a0,a5,%lo(.LC11)
 	call	my_printf
 	j	.L25
 .L41:
@@ -1139,7 +1131,7 @@ interpret_store:
 	addi	sp,sp,64
 	jr	ra
 	.section	.rodata
-.LC13:
+.LC12:
 	.string	"ERROR: Variable not found\n"
 	.text
 .align 2
@@ -1163,8 +1155,8 @@ interpret_load:
 	sd	a0,-24(s0)
 	ld	a5,-24(s0)
 	bne	a5,zero,.L101
-	lui	a5,%hi(.LC13)
-	addi	a0,a5,%lo(.LC13)
+	lui	a5,%hi(.LC12)
+	addi	a0,a5,%lo(.LC12)
 	call	my_printf
 	ld	a5,-64(s0)
 	li	a4,5
@@ -1341,7 +1333,7 @@ interpret_load_none:
 	addi	sp,sp,48
 	jr	ra
 	.section	.rodata
-.LC14:
+.LC13:
 	.string	"not enough args\n"
 	.text
 .align 2
@@ -1374,8 +1366,8 @@ interpret_call:
 	ld	a5,0(a5)
 	ld	a5,16(a5)
 	beq	a4,a5,.L113
-	lui	a5,%hi(.LC14)
-	addi	a0,a5,%lo(.LC14)
+	lui	a5,%hi(.LC13)
+	addi	a0,a5,%lo(.LC13)
 	call	my_printf
 	ld	a5,-128(s0)
 	li	a4,4

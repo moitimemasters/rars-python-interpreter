@@ -1,0 +1,36 @@
+file: tests/while_loop_fibonacci.py
+started lexing
+ended lexing
+started parsing ast
+ended parsing ast
+started compiling
+ended compiling
+compiled instructions:
+	 Instruction: 2
+	 Instruction: 8
+	 Instruction: 2
+	 Instruction: 8
+	 Instruction: 2
+	 Instruction: 8
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 6
+	 Instruction: 0
+	 Instruction: 0
+	 Instruction: 7
+	 Instruction: 8
+	 Instruction: 0
+	 Instruction: 8
+	 Instruction: 0
+	 Instruction: 8
+	 Instruction: 0
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 8
+	 Instruction: 5
+	 Instruction: 13
+	 Instruction: 0
+started interpreting
+ended interpreting
+Interpretation result: 34

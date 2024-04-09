@@ -1,0 +1,4 @@
+file: tests/syntactically_incorrect.py
+started lexing
+ended lexing
+Invalid token at line 1, column 4

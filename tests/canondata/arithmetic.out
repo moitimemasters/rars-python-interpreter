@@ -1,0 +1,26 @@
+file: tests/arithmetic.py
+started lexing
+ended lexing
+started parsing ast
+ended parsing ast
+started compiling
+ended compiling
+compiled instructions:
+	 Instruction: 2
+	 Instruction: 2
+	 Instruction: 2
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 7
+	 Instruction: 7
+	 Instruction: 2
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 2
+	 Instruction: 7
+	 Instruction: 7
+started interpreting
+ended interpreting
+Interpretation result: 2.0

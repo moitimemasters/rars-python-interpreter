@@ -370,7 +370,6 @@ void compile_node(comp_f_args) {
             my_printf("node type: %d\n", node->type);
             break;
     }
-    my_printf("compiled node %d\n", node->type);
 }
 
 CompilationUnit *compile(Compiler *compiler) {
