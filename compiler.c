@@ -312,6 +312,7 @@ void compile_node(comp_f_args) {
     if (node == NULL) {
         return;
     }
+    my_printf("compiling node: %d\n", node->type);
     switch (node->type) {
         case AST_IDENT: {
             compile_ident(compiler, node, instructions);

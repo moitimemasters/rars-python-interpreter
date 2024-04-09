@@ -2,6 +2,6 @@ file: tests/non_parsable.py
 started lexing
 ended lexing
 started parsing ast
-address of if condition: 56
 ended parsing ast
 started compiling
+compiling node: 25

@@ -453,29 +453,29 @@ my_itoa:
 	jr	ra
 	.globl	my_vsprintf
 my_vsprintf:
-	addi	sp,sp,-112
-	sd	ra,104(sp)
-	sd	s0,96(sp)
-	addi	s0,sp,112
-	sd	a0,-88(s0)
-	sd	a1,-96(s0)
-	sd	a2,-104(s0)
+	addi	sp,sp,-128
+	sd	ra,120(sp)
+	sd	s0,112(sp)
+	addi	s0,sp,128
+	sd	a0,-104(s0)
+	sd	a1,-112(s0)
+	sd	a2,-120(s0)
 	sw	zero,-20(s0)
 	j	.L37
-.L43:
+.L44:
 	lw	a5,-20(s0)
-	ld	a4,-96(s0)
+	ld	a4,-112(s0)
 	add	a5,a4,a5
 	lbu	a5,0(a5)
 	mv	a4,a5
 	li	a5,37
 	beq	a4,a5,.L38
 	lw	a5,-20(s0)
-	ld	a4,-96(s0)
+	ld	a4,-112(s0)
 	add	a4,a4,a5
-	ld	a5,-88(s0)
+	ld	a5,-104(s0)
 	addi	a3,a5,1
-	sd	a3,-88(s0)
+	sd	a3,-104(s0)
 	lbu	a4,0(a4)
 	sb	a4,0(a5)
 	j	.L39
@@ -484,27 +484,33 @@ my_vsprintf:
 	addiw	a5,a5,1
 	sw	a5,-20(s0)
 	lw	a5,-20(s0)
-	ld	a4,-96(s0)
+	ld	a4,-112(s0)
 	add	a5,a4,a5
 	lbu	a5,0(a5)
 	sext.w	a5,a5
 	mv	a3,a5
-	li	a4,115
+	li	a4,118
 	beq	a3,a4,.L40
+	mv	a3,a5
+	li	a4,118
+	bgt	a3,a4,.L39
+	mv	a3,a5
+	li	a4,115
+	beq	a3,a4,.L41
 	mv	a3,a5
 	li	a4,115
 	bgt	a3,a4,.L39
 	mv	a3,a5
 	li	a4,100
-	beq	a3,a4,.L41
+	beq	a3,a4,.L42
 	mv	a4,a5
 	li	a5,102
-	beq	a4,a5,.L42
+	beq	a4,a5,.L43
 	j	.L39
-.L41:
-	ld	a5,-104(s0)
+.L42:
+	ld	a5,-120(s0)
 	addi	a4,a5,8
-	sd	a4,-104(s0)
+	sd	a4,-120(s0)
 	lw	a5,0(a5)
 	sw	a5,-60(s0)
 	addi	a4,s0,-80
@@ -514,38 +520,38 @@ my_vsprintf:
 	call	my_itoa
 	addi	a5,s0,-80
 	mv	a1,a5
-	ld	a0,-88(s0)
+	ld	a0,-104(s0)
 	call	my_strcpy
 	addi	a5,s0,-80
 	mv	a0,a5
 	call	my_strlen
 	mv	a5,a0
 	mv	a4,a5
-	ld	a5,-88(s0)
-	add	a5,a5,a4
-	sd	a5,-88(s0)
-	j	.L39
-.L40:
 	ld	a5,-104(s0)
+	add	a5,a5,a4
+	sd	a5,-104(s0)
+	j	.L39
+.L41:
+	ld	a5,-120(s0)
 	addi	a4,a5,8
-	sd	a4,-104(s0)
+	sd	a4,-120(s0)
 	ld	a5,0(a5)
 	sd	a5,-32(s0)
 	ld	a1,-32(s0)
-	ld	a0,-88(s0)
+	ld	a0,-104(s0)
 	call	my_strcpy
 	ld	a0,-32(s0)
 	call	my_strlen
 	mv	a5,a0
 	mv	a4,a5
-	ld	a5,-88(s0)
-	add	a5,a5,a4
-	sd	a5,-88(s0)
-	j	.L39
-.L42:
 	ld	a5,-104(s0)
+	add	a5,a5,a4
+	sd	a5,-104(s0)
+	j	.L39
+.L43:
+	ld	a5,-120(s0)
 	addi	a4,a5,8
-	sd	a4,-104(s0)
+	sd	a4,-120(s0)
 	fld	fa5,0(a5)
 	fsd	fa5,-40(s0)
 	fld	fa5,-40(s0)
@@ -557,19 +563,19 @@ my_vsprintf:
 	fsub.d	fa5,fa4,fa5
 	fsd	fa5,-56(s0)
 	lw	a5,-44(s0)
-	ld	a1,-88(s0)
+	ld	a1,-104(s0)
 	mv	a0,a5
 	call	my_itoa
-	ld	a0,-88(s0)
+	ld	a0,-104(s0)
 	call	my_strlen
 	mv	a5,a0
 	mv	a4,a5
-	ld	a5,-88(s0)
+	ld	a5,-104(s0)
 	add	a5,a5,a4
-	sd	a5,-88(s0)
-	ld	a5,-88(s0)
+	sd	a5,-104(s0)
+	ld	a5,-104(s0)
 	addi	a4,a5,1
-	sd	a4,-88(s0)
+	sd	a4,-104(s0)
 	li	a4,46
 	sb	a4,0(a5)
 	fld	fa4,-56(s0)
@@ -578,16 +584,35 @@ my_vsprintf:
 	fmul.d	fa5,fa4,fa5
 	fcvt.w.d a5,fa5,rtz
 	sext.w	a5,a5
-	ld	a1,-88(s0)
+	ld	a1,-104(s0)
 	mv	a0,a5
 	call	my_itoa
-	ld	a0,-88(s0)
+	ld	a0,-104(s0)
 	call	my_strlen
 	mv	a5,a0
 	mv	a4,a5
-	ld	a5,-88(s0)
+	ld	a5,-104(s0)
 	add	a5,a5,a4
+	sd	a5,-104(s0)
+	j	.L39
+.L40:
+	ld	a5,-120(s0)
+	addi	a4,a5,16
+	sd	a4,-120(s0)
+	ld	a4,0(a5)
+	sd	a4,-96(s0)
+	ld	a5,8(a5)
 	sd	a5,-88(s0)
+	ld	a5,-96(s0)
+	ld	a4,-88(s0)
+	mv	a2,a4
+	mv	a1,a5
+	ld	a0,-104(s0)
+	call	my_memcpy
+	ld	a5,-88(s0)
+	ld	a4,-104(s0)
+	add	a5,a4,a5
+	sd	a5,-104(s0)
 	nop
 .L39:
 	lw	a5,-20(s0)
@@ -595,16 +620,16 @@ my_vsprintf:
 	sw	a5,-20(s0)
 .L37:
 	lw	a5,-20(s0)
-	ld	a4,-96(s0)
+	ld	a4,-112(s0)
 	add	a5,a4,a5
 	lbu	a5,0(a5)
-	bne	a5,zero,.L43
-	ld	a5,-88(s0)
+	bne	a5,zero,.L44
+	ld	a5,-104(s0)
 	sb	zero,0(a5)
 	nop
-	ld	ra,104(sp)
-	ld	s0,96(sp)
-	addi	sp,sp,112
+	ld	ra,120(sp)
+	ld	s0,112(sp)
+	addi	sp,sp,128
 	jr	ra
 	.globl	my_sprintf
 my_sprintf:
@@ -677,8 +702,8 @@ strhash:
 	sd	a1,-40(s0)
 	sw	zero,-20(s0)
 	sw	zero,-24(s0)
-	j	.L47
-.L48:
+	j	.L48
+.L49:
 	lw	a5,-20(s0)
 	mv	a4,a5
 	mv	a5,a4
@@ -695,10 +720,10 @@ strhash:
 	lw	a5,-24(s0)
 	addiw	a5,a5,1
 	sw	a5,-24(s0)
-.L47:
+.L48:
 	lw	a4,-24(s0)
 	ld	a5,-40(s0)
-	bltu	a4,a5,.L48
+	bltu	a4,a5,.L49
 	lw	a5,-20(s0)
 	mv	a0,a5
 	ld	s0,40(sp)
@@ -812,8 +837,8 @@ hash_table_get:
 	ld	a5,8(a5)
 	ld	a5,0(a5)
 	sd	a5,-24(s0)
-	j	.L56
-.L59:
+	j	.L57
+.L60:
 	ld	a5,-24(s0)
 	ld	a5,0(a5)
 	sd	a5,-32(s0)
@@ -821,19 +846,19 @@ hash_table_get:
 	lw	a4,0(a5)
 	lw	a5,-44(s0)
 	sext.w	a5,a5
-	bne	a5,a4,.L57
+	bne	a5,a4,.L58
 	ld	a5,-32(s0)
 	ld	a5,8(a5)
-	j	.L58
-.L57:
+	j	.L59
+.L58:
 	ld	a5,-24(s0)
 	ld	a5,8(a5)
 	sd	a5,-24(s0)
-.L56:
+.L57:
 	ld	a5,-24(s0)
-	bne	a5,zero,.L59
+	bne	a5,zero,.L60
 	li	a5,0
-.L58:
+.L59:
 	mv	a0,a5
 	ld	s0,40(sp)
 	addi	sp,sp,48
@@ -849,31 +874,31 @@ linked_list_at:
 	ld	a5,0(a5)
 	sd	a5,-24(s0)
 	sd	zero,-32(s0)
-	j	.L61
-.L64:
+	j	.L62
+.L65:
 	ld	a5,-24(s0)
-	bne	a5,zero,.L62
+	bne	a5,zero,.L63
 	li	a5,0
-	j	.L63
-.L62:
+	j	.L64
+.L63:
 	ld	a5,-24(s0)
 	ld	a5,8(a5)
 	sd	a5,-24(s0)
 	ld	a5,-32(s0)
 	addi	a5,a5,1
 	sd	a5,-32(s0)
-.L61:
+.L62:
 	ld	a4,-32(s0)
 	ld	a5,-48(s0)
-	bltu	a4,a5,.L64
+	bltu	a4,a5,.L65
 	ld	a5,-24(s0)
-	bne	a5,zero,.L65
+	bne	a5,zero,.L66
 	li	a5,0
-	j	.L63
-.L65:
+	j	.L64
+.L66:
 	ld	a5,-24(s0)
 	ld	a5,0(a5)
-.L63:
+.L64:
 	mv	a0,a5
 	ld	s0,40(sp)
 	addi	sp,sp,48
@@ -914,8 +939,8 @@ hash_table_upsert:
 	ld	a5,8(a5)
 	ld	a5,0(a5)
 	sd	a5,-24(s0)
-	j	.L69
-.L72:
+	j	.L70
+.L73:
 	ld	a5,-24(s0)
 	ld	a5,0(a5)
 	sd	a5,-32(s0)
@@ -923,7 +948,7 @@ hash_table_upsert:
 	lw	a4,0(a5)
 	lw	a5,-60(s0)
 	sext.w	a5,a5
-	bne	a5,a4,.L70
+	bne	a5,a4,.L71
 	ld	a5,-32(s0)
 	ld	a5,8(a5)
 	sd	a5,-40(s0)
@@ -931,21 +956,21 @@ hash_table_upsert:
 	ld	a4,-72(s0)
 	sd	a4,8(a5)
 	ld	a5,-40(s0)
-	j	.L71
-.L70:
+	j	.L72
+.L71:
 	ld	a5,-24(s0)
 	ld	a5,8(a5)
 	sd	a5,-24(s0)
-.L69:
+.L70:
 	ld	a5,-24(s0)
-	bne	a5,zero,.L72
+	bne	a5,zero,.L73
 	lw	a5,-60(s0)
 	ld	a2,-72(s0)
 	mv	a1,a5
 	ld	a0,-56(s0)
 	call	hash_table_insert
 	li	a5,0
-.L71:
+.L72:
 	mv	a0,a5
 	ld	ra,72(sp)
 	ld	s0,64(sp)
@@ -984,8 +1009,8 @@ linked_list_reverse:
 	ld	a5,-56(s0)
 	ld	a5,0(a5)
 	sd	a5,-24(s0)
-	j	.L76
-.L78:
+	j	.L77
+.L79:
 	ld	a5,-24(s0)
 	ld	a5,8(a5)
 	sd	a5,-32(s0)
@@ -999,16 +1024,16 @@ linked_list_reverse:
 	ld	a4,-32(s0)
 	sd	a4,16(a5)
 	ld	a5,-32(s0)
-	bne	a5,zero,.L77
+	bne	a5,zero,.L78
 	ld	a5,-56(s0)
 	ld	a4,-24(s0)
 	sd	a4,0(a5)
-.L77:
+.L78:
 	ld	a5,-32(s0)
 	sd	a5,-24(s0)
-.L76:
+.L77:
 	ld	a5,-24(s0)
-	bne	a5,zero,.L78
+	bne	a5,zero,.L79
 	nop
 	nop
 	ld	s0,56(sp)

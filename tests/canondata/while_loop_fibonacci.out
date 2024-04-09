@@ -4,6 +4,28 @@ ended lexing
 started parsing ast
 ended parsing ast
 started compiling
+compiling node: 8
+compiling node: 0
+compiling node: 8
+compiling node: 0
+compiling node: 8
+compiling node: 0
+compiling node: 27
+compiling node: 6
+compiling node: 5
+compiling node: 0
+compiling node: 8
+compiling node: 6
+compiling node: 5
+compiling node: 5
+compiling node: 8
+compiling node: 5
+compiling node: 8
+compiling node: 5
+compiling node: 8
+compiling node: 5
+compiling node: 0
+compiling node: 5
 ended compiling
 compiled instructions:
 	 Instruction: 2

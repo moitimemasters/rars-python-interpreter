@@ -2,9 +2,18 @@ file: tests/logically_incorrect.py
 started lexing
 ended lexing
 started parsing ast
-address of if condition: 268763992
 ended parsing ast
 started compiling
+compiling node: 25
+compiling node: 6
+compiling node: 0
+compiling node: 0
+compiling node: 8
+compiling node: 5
+compiling node: 0
+compiling node: 8
+compiling node: 5
+compiling node: 0
 ended compiling
 compiled instructions:
 	 Instruction: 2
@@ -21,4 +30,4 @@ compiled instructions:
 	 Instruction: 7
 	 Instruction: 8
 started interpreting
-ERROR: Variable not found
+ERROR: Variable not found: a

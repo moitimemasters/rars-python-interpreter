@@ -1193,8 +1193,10 @@ compile_break:
 	jr	ra
 	.section	.rodata
 .LC1:
-	.string	"unrecognized node!\n"
+	.string	"compiling node: %d\n"
 .LC2:
+	.string	"unrecognized node!\n"
+.LC3:
 	.string	"node type: %d\n"
 	.text
 .align 2
@@ -1209,6 +1211,12 @@ compile_node:
 	sd	a2,-40(s0)
 	ld	a5,-32(s0)
 	beq	a5,zero,.L78
+	ld	a5,-32(s0)
+	lw	a5,0(a5)
+	mv	a1,a5
+	lui	a5,%hi(.LC1)
+	addi	a0,a5,%lo(.LC1)
+	call	my_printf
 	ld	a5,-32(s0)
 	lw	a5,0(a5)
 	mv	a3,a5
@@ -1334,14 +1342,14 @@ compile_node:
 	call	compile_if_statement
 	j	.L60
 .L63:
-	lui	a5,%hi(.LC1)
-	addi	a0,a5,%lo(.LC1)
+	lui	a5,%hi(.LC2)
+	addi	a0,a5,%lo(.LC2)
 	call	my_printf
 	ld	a5,-32(s0)
 	lw	a5,0(a5)
 	mv	a1,a5
-	lui	a5,%hi(.LC2)
-	addi	a0,a5,%lo(.LC2)
+	lui	a5,%hi(.LC3)
+	addi	a0,a5,%lo(.LC3)
 	call	my_printf
 	j	.L60
 .L78:

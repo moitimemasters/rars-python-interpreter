@@ -309,6 +309,7 @@ ASTNode *parse_lambda(ASTParser *parser, ParseErrorCode *error_code) {
     peeked = ast_peek(parser);
     if (peeked.type != TOK_CLR) {
         report_parse_error(error_code, "Expected \":\" after lambda arguments");
+        my_printf("peeked token is: %s\n", ast_peek(parser).lexeme);
         return NULL;
     }
     ast_consume(parser);
@@ -880,9 +881,6 @@ ASTNode *parse_condition_partial(ASTParser *parser, TokenType conditional_type,
         report_parse_error(error_code, "Unexpected indentation");
         return NULL;
     }
-    while (parser->current_indentation) {
-        retract_indentation(parser);
-    }
     return node;
 }
 
@@ -893,8 +891,6 @@ ASTNode *parse_if_statement(ASTParser *parser, ParseErrorCode *error_code) {
     if (!if_part) {
         return NULL;
     }
-    my_printf("address of if condition: %d\n",
-              if_part->data.if_partial.condition);
     ASTNode *node = create_ast_node(parser, AST_IF_STATEMENT);
     node->data.if_statement.if_part = if_part;
     node->data.if_statement.else_part = NULL;
@@ -921,9 +917,8 @@ ASTNode *parse_if_statement(ASTParser *parser, ParseErrorCode *error_code) {
         if (parser->current_indentation > current_indentation) {
             report_parse_error(error_code, "Unexpected indentation");
         }
-        while (parser->current_indentation) {
-            retract_indentation(parser);
-        }
+        my_printf("current indentation: %d, expected indentation: %d",
+                  parser->current_indentation, current_indentation);
         return node;
     }
     ASTNode *else_part =
@@ -1011,9 +1006,6 @@ ASTNode *parse_for_loop(ASTParser *parser, ParseErrorCode *error_code) {
         report_parse_error(error_code, "Unexpected indentation after for loop");
         return NULL;
     }
-    while (parser->current_indentation) {
-        retract_indentation(parser);
-    }
     return node;
 }
 
@@ -1080,9 +1072,6 @@ ASTNode *parse_while(ASTParser *parser, ParseErrorCode *error_code) {
         report_parse_error(error_code,
                            "Unexpected indentation after while loop");
         return NULL;
-    }
-    while (parser->current_indentation) {
-        retract_indentation(parser);
     }
     return node;
 }
@@ -1170,13 +1159,9 @@ ASTNode *parse_function_definition(ASTParser *parser,
         my_free(parser->pool, argument_list);
         my_free(parser->pool, subprogram);
         linked_list_free(subprogram->data.subprogram.statements);
-        report_parse_error(
-            error_code,
-            "Unexpected indentation after function definition loop");
+        report_parse_error(error_code,
+                           "Unexpected indentation after function definition");
         return NULL;
-    }
-    while (parser->current_indentation) {
-        retract_indentation(parser);
     }
     return node;
 }

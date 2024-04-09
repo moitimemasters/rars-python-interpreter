@@ -1132,7 +1132,7 @@ interpret_store:
 	jr	ra
 	.section	.rodata
 .LC12:
-	.string	"ERROR: Variable not found\n"
+	.string	"ERROR: Variable not found: %v\n"
 	.text
 .align 2
 	.globl	interpret_load
@@ -1155,6 +1155,9 @@ interpret_load:
 	sd	a0,-24(s0)
 	ld	a5,-24(s0)
 	bne	a5,zero,.L101
+	ld	a5,-40(s0)
+	ld	a1,8(a5)
+	ld	a2,16(a5)
 	lui	a5,%hi(.LC12)
 	addi	a0,a5,%lo(.LC12)
 	call	my_printf

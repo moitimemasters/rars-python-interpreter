@@ -375,7 +375,7 @@ void interpret_store(common_args) {
 void interpret_load(common_args) {
     PyObject *value = env_load(interpreter->env, instruction->data.load.ident);
     if (value == NULL) {
-        my_printf("ERROR: Variable not found\n");
+        my_printf("ERROR: Variable not found: %v\n", instruction->data.load.ident);
         *error = VariableNotFoundError;
         return;
     }

@@ -5,6 +5,16 @@ started parsing ast
 Error: Expected ":" after condition
 ended parsing ast
 started compiling
+compiling node: 8
+compiling node: 0
+compiling node: 9
+compiling node: 6
+compiling node: 6
+compiling node: 5
+compiling node: 0
+compiling node: 0
+compiling node: 0
+compiling node: 0
 ended compiling
 compiled instructions:
 	 Instruction: 2
@@ -20,4 +30,4 @@ compiled instructions:
 	 Instruction: 2
 started interpreting
 ended interpreting
-Interpretation result: 0
+Interpretation result: 2

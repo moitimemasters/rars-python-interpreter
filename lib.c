@@ -1,4 +1,5 @@
 #include "lib.h"
+#include <stdarg.h>
 
 #include "allocator.h"
 #include "lib.h"
@@ -146,6 +147,13 @@ void my_vsprintf(char *buf, const char *format, va_list args) {
                 *buf++ = '.';
                 my_itoa((int)(float_part * 1000), buf);
                 buf += my_strlen(buf);
+                break;
+            }
+            case 'v': {
+                // string_view_t (v - view)
+                string_view_t str = va_arg(args, string_view_t);
+                my_memcpy(buf, str.str, str.len);
+                buf += str.len;
                 break;
             }
         }

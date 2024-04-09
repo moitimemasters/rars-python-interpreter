@@ -2,25 +2,59 @@ file: tests/recursive_fibonacci.py
 started lexing
 ended lexing
 started parsing ast
-address of if condition: 268767832
 ended parsing ast
 started compiling
+compiling node: 28
+compiling node: 25
+compiling node: 6
+compiling node: 5
+compiling node: 0
+compiling node: 31
+compiling node: 0
+compiling node: 31
+compiling node: 6
+compiling node: 14
+compiling node: 6
+compiling node: 5
+compiling node: 0
+compiling node: 5
+compiling node: 14
+compiling node: 6
+compiling node: 5
+compiling node: 0
+compiling node: 5
+compiling node: 28
+compiling node: 31
+compiling node: 9
+compiling node: 5
+compiling node: 14
+compiling node: 5
+compiling node: 6
+compiling node: 5
+compiling node: 5
+compiling node: 6
+compiling node: 5
+compiling node: 0
+compiling node: 5
+compiling node: 5
+compiling node: 28
+compiling node: 31
+compiling node: 14
+compiling node: 0
+compiling node: 0
+compiling node: 5
+compiling node: 5
+compiling node: 6
+compiling node: 14
+compiling node: 0
+compiling node: 5
+compiling node: 14
+compiling node: 0
+compiling node: 5
 ended compiling
 compiled instructions:
 	 Instruction: 10
 	 Instruction: 8
-	 Instruction: 0
-	 Instruction: 2
-	 Instruction: 7
-	 Instruction: 0
-	 Instruction: 12
-	 Instruction: 0
-	 Instruction: 2
-	 Instruction: 7
-	 Instruction: 0
-	 Instruction: 12
-	 Instruction: 7
-	 Instruction: 11
 	 Instruction: 10
 	 Instruction: 8
 	 Instruction: 10
@@ -33,4 +67,5 @@ compiled instructions:
 	 Instruction: 12
 	 Instruction: 7
 started interpreting
-ERROR: Variable not found
+ended interpreting
+Interpretation result: 34

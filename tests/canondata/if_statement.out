@@ -2,11 +2,50 @@ file: tests/if_statement.py
 started lexing
 ended lexing
 started parsing ast
-address of if condition: 268766744
-address of if condition: 268783000
-address of if condition: 268788120
 ended parsing ast
 started compiling
+compiling node: 8
+compiling node: 0
+compiling node: 25
+compiling node: 6
+compiling node: 0
+compiling node: 0
+compiling node: 8
+compiling node: 5
+compiling node: 0
+compiling node: 6
+compiling node: 0
+compiling node: 0
+compiling node: 8
+compiling node: 5
+compiling node: 0
+compiling node: 6
+compiling node: 0
+compiling node: 0
+compiling node: 8
+compiling node: 5
+compiling node: 0
+compiling node: 8
+compiling node: 5
+compiling node: 0
+compiling node: 25
+compiling node: 6
+compiling node: 5
+compiling node: 0
+compiling node: 8
+compiling node: 5
+compiling node: 0
+compiling node: 25
+compiling node: 6
+compiling node: 5
+compiling node: 0
+compiling node: 8
+compiling node: 5
+compiling node: 0
+compiling node: 8
+compiling node: 5
+compiling node: 0
+compiling node: 5
 ended compiling
 compiled instructions:
 	 Instruction: 2
