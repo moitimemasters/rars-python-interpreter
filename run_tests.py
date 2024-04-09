@@ -69,6 +69,7 @@ def main():
         except DiffException as e:
             print(f"Test {py_file} failed:")
             print(e)
+            raise
         print(f"Test {py_file} passed")
 
 
